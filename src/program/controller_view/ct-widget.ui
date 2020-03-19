@@ -1,0 +1,329 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>QCtWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>QCtWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>1009</width>
+            <height>868</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Controller Monitor</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabWidget2</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Controller</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLayoutWidget" row="0" column="0">
+                        <property name="name">
+                            <cstring>layout4</cstring>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QwtPlot">
+                                <property name="name">
+                                    <cstring>ct_steering</cstring>
+                                </property>
+                                <property name="font">
+                                    <font>
+                                        <pointsize>6</pointsize>
+                                    </font>
+                                </property>
+                                <property name="midLineWidth">
+                                    <number>1</number>
+                                </property>
+                                <property name="canvasLineWidth">
+                                    <number>1</number>
+                                </property>
+                                <property name="xBottomAxis" stdset="0">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="xTopAxis" stdset="0">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="title">
+                                    <string>Steering</string>
+                                </property>
+                                <property name="titleFont">
+                                    <font>
+                                        <family>DejaVu LGC Sans</family>
+                                        <pointsize>8</pointsize>
+                                        <bold>1</bold>
+                                    </font>
+                                </property>
+                                <property name="legendFont">
+                                    <font>
+                                        <pointsize>6</pointsize>
+                                    </font>
+                                </property>
+                                <property name="legendPosition">
+                                    <enum>Right</enum>
+                                </property>
+                            </widget>
+                            <widget class="QwtPlot">
+                                <property name="name">
+                                    <cstring>ct_velocity</cstring>
+                                </property>
+                                <property name="font">
+                                    <font>
+                                        <pointsize>6</pointsize>
+                                    </font>
+                                </property>
+                                <property name="midLineWidth">
+                                    <number>1</number>
+                                </property>
+                                <property name="canvasLineWidth">
+                                    <number>1</number>
+                                </property>
+                                <property name="xBottomAxis" stdset="0">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="xTopAxis" stdset="0">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="title">
+                                    <string>Velocity</string>
+                                </property>
+                                <property name="titleFont">
+                                    <font>
+                                        <family>DejaVu LGC Sans</family>
+                                        <pointsize>8</pointsize>
+                                        <bold>1</bold>
+                                    </font>
+                                </property>
+                                <property name="legendFont">
+                                    <font>
+                                        <pointsize>6</pointsize>
+                                    </font>
+                                </property>
+                                <property name="legendPosition">
+                                    <enum>Right</enum>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Passat</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLayoutWidget" row="0" column="0">
+                        <property name="name">
+                            <cstring>layout13_2</cstring>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QwtPlot">
+                                <property name="name">
+                                    <cstring>pa_steering</cstring>
+                                </property>
+                                <property name="font">
+                                    <font>
+                                        <pointsize>6</pointsize>
+                                    </font>
+                                </property>
+                                <property name="midLineWidth">
+                                    <number>1</number>
+                                </property>
+                                <property name="canvasLineWidth">
+                                    <number>1</number>
+                                </property>
+                                <property name="xBottomAxis" stdset="0">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="xTopAxis" stdset="0">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="title">
+                                    <string>Steering</string>
+                                </property>
+                                <property name="titleFont">
+                                    <font>
+                                        <family>DejaVu LGC Sans</family>
+                                        <pointsize>8</pointsize>
+                                        <bold>1</bold>
+                                    </font>
+                                </property>
+                                <property name="legendFont">
+                                    <font>
+                                        <pointsize>6</pointsize>
+                                    </font>
+                                </property>
+                                <property name="legendPosition">
+                                    <enum>Right</enum>
+                                </property>
+                            </widget>
+                            <widget class="QwtPlot">
+                                <property name="name">
+                                    <cstring>pa_throttle</cstring>
+                                </property>
+                                <property name="font">
+                                    <font>
+                                        <pointsize>6</pointsize>
+                                    </font>
+                                </property>
+                                <property name="midLineWidth">
+                                    <number>1</number>
+                                </property>
+                                <property name="canvasLineWidth">
+                                    <number>1</number>
+                                </property>
+                                <property name="xBottomAxis" stdset="0">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="xTopAxis" stdset="0">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="title">
+                                    <string>Throttle</string>
+                                </property>
+                                <property name="titleFont">
+                                    <font>
+                                        <family>DejaVu LGC Sans</family>
+                                        <pointsize>8</pointsize>
+                                        <bold>1</bold>
+                                    </font>
+                                </property>
+                                <property name="legendFont">
+                                    <font>
+                                        <pointsize>6</pointsize>
+                                    </font>
+                                </property>
+                                <property name="legendPosition">
+                                    <enum>Right</enum>
+                                </property>
+                            </widget>
+                            <widget class="QwtPlot">
+                                <property name="name">
+                                    <cstring>pa_brake</cstring>
+                                </property>
+                                <property name="font">
+                                    <font>
+                                        <pointsize>6</pointsize>
+                                    </font>
+                                </property>
+                                <property name="midLineWidth">
+                                    <number>1</number>
+                                </property>
+                                <property name="canvasLineWidth">
+                                    <number>1</number>
+                                </property>
+                                <property name="xBottomAxis" stdset="0">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="xTopAxis" stdset="0">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="title">
+                                    <string>Brake</string>
+                                </property>
+                                <property name="titleFont">
+                                    <font>
+                                        <family>DejaVu LGC Sans</family>
+                                        <pointsize>8</pointsize>
+                                        <bold>1</bold>
+                                    </font>
+                                </property>
+                                <property name="legendFont">
+                                    <font>
+                                        <pointsize>6</pointsize>
+                                    </font>
+                                </property>
+                                <property name="legendPosition">
+                                    <enum>Right</enum>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<customwidgets>
+</customwidgets>
+<variables>
+    <variable access="public">long   ct_steering_set_curve;</variable>
+    <variable access="public">double ct_steering_set_ts[300];</variable>
+    <variable access="public">double ct_steering_set_x[300];</variable>
+    <variable access="public">double ct_steering_set_y[300];</variable>
+    <variable access="public">long   ct_steering_get_curve;</variable>
+    <variable access="public">double ct_steering_get_ts[300];</variable>
+    <variable access="public">double ct_steering_get_x[300];</variable>
+    <variable access="public">double ct_steering_get_y[300];</variable>
+    <variable access="public">long   ct_velocity_set_curve;</variable>
+    <variable access="public">double ct_velocity_set_ts[300];</variable>
+    <variable access="public">double ct_velocity_set_x[300];</variable>
+    <variable access="public">double ct_velocity_set_y[300];</variable>
+    <variable access="public">long   ct_velocity_get_curve;</variable>
+    <variable access="public">double ct_velocity_get_ts[300];</variable>
+    <variable access="public">double ct_velocity_get_x[300];</variable>
+    <variable access="public">double ct_velocity_get_y[300];</variable>
+
+    <variable access="public">long   pa_steering_torque_curve;</variable>
+    <variable access="public">double pa_steering_torque_ts[300];</variable>
+    <variable access="public">double pa_steering_torque_x[300];</variable>
+    <variable access="public">double pa_steering_torque_y[300];</variable>
+    <variable access="public">long   pa_steering_angle_curve;</variable>
+    <variable access="public">double pa_steering_angle_ts[300];</variable>
+    <variable access="public">double pa_steering_angle_x[300];</variable>
+    <variable access="public">double pa_steering_angle_y[300];</variable>
+    <variable access="public">long   pa_steering_ct_curve;</variable>
+    <variable access="public">double pa_steering_ct_ts[300];</variable>
+    <variable access="public">double pa_steering_ct_x[300];</variable>
+    <variable access="public">double pa_steering_ct_y[300];</variable>
+    <variable access="public">long   pa_throttle_set_curve;</variable>
+    <variable access="public">double pa_throttle_set_ts[300];</variable>
+    <variable access="public">double pa_throttle_set_x[300];</variable>
+    <variable access="public">double pa_throttle_set_y[300];</variable>
+    <variable access="public">long   pa_throttle_get_curve;</variable>
+    <variable access="public">double pa_throttle_get_ts[300];</variable>
+    <variable access="public">double pa_throttle_get_x[300];</variable>
+    <variable access="public">double pa_throttle_get_y[300];</variable>
+    <variable access="public">long   pa_brake_set_curve;</variable>
+    <variable access="public">double pa_brake_set_ts[300];</variable>
+    <variable access="public">double pa_brake_set_x[300];</variable>
+    <variable access="public">double pa_brake_set_y[300];</variable>
+    <variable access="public">long   pa_brake_get_curve;</variable>
+    <variable access="public">double pa_brake_get_ts[300];</variable>
+    <variable access="public">double pa_brake_get_x[300];</variable>
+    <variable access="public">double pa_brake_get_y[300];</variable>
+</variables>
+<layoutdefaults spacing="2" margin="4"/>
+<includehints>
+    <includehint>qwt_plot.h</includehint>
+    <includehint>qwt_scale.h</includehint>
+</includehints>
+</UI>

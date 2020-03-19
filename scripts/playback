@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pushd src
+python LaunchCtrl.py -l $1
+popd

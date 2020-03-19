@@ -1,0 +1,16 @@
+# By default, processes print their output, are not restarted, and are local
+# @quiet supresses output, @restart automatically restarts them
+# @sleep on its own line is a sleep in seconds
+
+./central -u          @quiet  
+@sleep 1
+./param_server
+@sleep 1
+./fake_estop          @restart
+./velodyne            @restart
+./applanix            @restart @quiet
+./ladybug             @restart @quiet
+./localize_velodyne   @restart @quiet
+@sleep 2
+./perception_view     @restart
+./ladybug_view        @restart

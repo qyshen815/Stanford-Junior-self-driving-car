@@ -1,0 +1,522 @@
+
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out
+                                                          % if you need a4paper
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4
+                                                          % paper
+
+\IEEEoverridecommandlockouts                              % This command is only
+                                                          % needed if you want to
+                                                          % use the \thanks command
+\overrideIEEEmargins
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+
+
+% The following packages can be found on http:\\www.ctan.org
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+%\usepackage{amssymb}  % assumes amsmath package installed
+
+\usepackage{color}
+\usepackage{graphicx} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+\usepackage{subfig}
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage{fmtcount}
+
+\newcommand{\vx}{\vec{x}}
+\newcommand{\todo}[1]{\textcolor{red}{[[#1]]}}
+\newcommand{\outline}[1]{\paragraph{#1}}
+\newcommand{\logodds}[1]{\log \frac{\Pr(Y = 1 | #1)}{\Pr(Y = -1 | #1)}}
+\newcommand{\zT}{z_{1:T}}
+
+\include{latex_macros}
+
+
+\title{\LARGE \bf
+Towards 3D Object Recognition \\
+via Classification of Arbitrary Object Tracks
+}
+
+\author{ Alex Teichman, Jesse Levinson, Sebastian Thrun \\
+  Stanford Artificial Intelligence Laboratory\\
+  \{teichman, jessel, thrun\}@cs.stanford.edu
+  }
+
+%\author{Alex Teichman, Jesse Levinson, and Sebastian Thrun%
+%\thanks{This work was not supported by any organization}% <-this % stops a space
+%\thanks{H. Kwakernaak is with Faculty of Electrical Engineering, Mathematics and Computer Science,
+%        University of Twente, 7500 AE Enschede, The Netherlands
+%        {\tt\small h.kwakernaak@autsubmit.com}}%
+%\thanks{P. Misra is with the Department of Electrical Engineering, Wright State University,
+%        Dayton, OH 45435, USA
+%        {\tt\small pmisra@cs.wright.edu}}%
+%}
+
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+\begin{abstract}
+Object recognition is a critical next step for autonomous robots, but a solution to the problem has remained elusive. Prior 3D-sensor-based work largely classifies individual point cloud segments or uses class-specific trackers. In this paper, we take the approach of classifying the tracks of all visible objects. Our new track classification method, based on a mathematically principled method of combining log odds estimators, is fast enough for real time use, is non-specific to object class, and performs well (98.5\% accuracy) on the task of classifying correctly-tracked, well-segmented objects into car, pedestrian, bicyclist, and background classes.
+
+We evaluate the classifier's performance using the Stanford Track Collection, a new dataset of about 1.3 million labeled point clouds in about 14,000 tracks recorded from an autonomous vehicle research platform. This dataset, which we make publicly available, contains tracks extracted from about one hour of 360-degree, 10Hz depth information recorded both while driving on busy campus streets and parked at busy intersections.
+  
+\end{abstract}
+
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+
+Object recognition in dynamic environments is one of the primary unsolved challenges facing the robotics community.  A solution would include segmentation, tracking, and classification components, and would allow for the addition of new object classes without the need for an expert to specify new models.  Joint solutions are currently impractical; however, if the classification of well-segmented, correctly-tracked objects were solved, there is a clear path towards a joint solution using EM-like methods or multi-hypothesis trackers.
+
+The recent introduction of dense 3D sensors makes now an ideal time to explore a large dataset approach to track classification.  These sensors enable data-driven segmentation and tracking of \textit{arbitrary} objects -- that is, all objects in the environment regardless of object class.  This is especially effective in the driving context, where objects often actively work to stay well-segmented from each other.  Tracking and segmentation greatly facilitate the process of labeling large amounts of data, as labeling an object which has been correctly segmented and tracked can provide hundreds or thousands of training examples in a single keypress.
+
+Our particular task of track classification is inspired by the autonomous driving problem, in which it is useful to track \textit{all} objects in the environment and additionally recognize some object classes that must be treated specially.  We address a multiclass problem in which tracks must be classified as car, pedestrian, bicyclist, or background (any other object class).
+
+None of the algorithms described here are specifically adapted to any particular dense 3D sensor, and the addition of new object classes requires only a labeled dataset of tracks that include the new object class. In this sense, our algorithms apply well beyond our particular sensors and classification task.
+
+The contributions of this paper are three-fold.  First, we describe a novel approach to the classification of arbitrary object tracks which performs well on a large, real-world data set.  This algorithm makes progress towards the overall goal of object recognition in dynamic 3D environments.  Second, we adapt the ideas of hybrid generative / discriminative models \cite{Raina2004} to alleviate the overly strong conditional independence assumptions made when combining log odds estimates over time.  Third, we provide a large dataset of labeled and tracked 3D point clouds to the research community.
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{static_imagery/example_scan.png}
+  \caption{Example scan of two other cars and a bicyclist at an intersection.  Points are colored by return intensity.}
+\end{figure}
+
+
+\subsection{Related Work}
+
+Current object recognition methods generally fall into two categories.  First, multi-class object recognition in static scenes continues to be an active area of research, \textit{e.g.} in \cite{Lai2009, Triebel2007, Douillard2009, Spinello2010a, Espinace2010}.  One path to object recognition in dynamic scenes is to solve static scene object recognition so well that tracking detections is sufficient, as in \cite{Bansal2010, Gavrila2006}.  However, this approach is currently not possible for general object recognition, and the temporal nature of our task offers much useful information.
+
+Second, object recognition via the tracking of \textit{specific} object classes has been well-studied, \textit{e.g.} in \cite{Andriluka2008, Petrovskaya2009, Wu2007, Schulz2003, Schulz2006}, but these methods require the explicit specification of new tracker models for each additional object class.  In general, object recognition in dynamic scenes using class-specific trackers will (presumably) obtain better performance for the classes they are designed for, but at the cost of additional expert time to specify new models if they are needed.  For specific systems, \textit{e.g.} those that are only concerned with recognizing humans for a human-robot interaction task, this is an entirely appropriate tradeoff; however, in this paper, we propose a classification method that can increase the number of classes without necessitating onerous work by an object recognition expert.
+
+There is only limited prior work on methods that classify tracks of arbitrary objects.  The work of \cite{Luber2008} considers the task of learning exemplar models for arbitrary object tracks in an unsupervised way.  In contrast, the method in this paper is fully supervised, but can handle the large numbers of diverse distractor objects that are seen in operation of the autonomous vehicle on typical streets.  The most similar work to ours, \cite{Spinello2010}, fuses 2D laser and camera imagery to track pedestrians and cars at ranges less than 15 meters.  It is clear that there remains a large gap between the state of the art and what would be required for a practical, high-reliability object recognition implementation that works at long range.  Our work helps close this gap by demonstrating high track classification performance on a very large dataset set at longer ranges than have previously been considered.
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{static_imagery/Junior2.jpg}
+  \caption{Junior, the autonomous vehicle research platform.  In this work, we use a Velodyne dense LIDAR sensor and an Applanix inertial measurement unit to track objects while moving.}
+  \label{fig:junior}
+\end{figure}
+
+This paper is structured as follows.  In Section~\ref{sec:stc}, we discuss the Stanford Track Collection and the track extraction process.  In Section~\ref{sec:classification} we describe the log odds estimator (boosting) and our method of combining boosting outputs.  In Section~\ref{sec:descriptors} we review the descriptors used by the boosting classifiers.  Finally, results and conclusions are presented in Sections~\ref{sec:results}~and~\ref{sec:conclusions}.
+
+\section{The Stanford Track Collection}
+\label{sec:stc}
+
+The purpose of this dataset is to provide a large-scale testing ground for track classification in busy street scenes.  The dataset includes over 1.3 million labeled segmented objects across roughly 14,000 tracks, with a maximum range of about 70 meters and mean range of about 30 meters.  Table~\ref{fig:stc_tab} details the breakdown by class, and Figure~\ref{fig:stc} shows the distribution of range to objects.  The large percentage of tracks that do not fall into the car, pedestrian, or bicyclist classes (83\%) is a natural consequence of collecting the dataset directly from an autonomous vehicle research platform while driving on normal streets; the class distribution thus reflects that of a vehicle's typical environment.  The dataset is available at \cite{StanfordTrackCollection}.
+
+In the following sections, we will make use of several terms: a \textit{scan} is the set of depth measurements recorded during one 360-degree revolution of the dense 3D sensor; a \textit{track} is a temporal series of 3D point clouds of the same object, derived from segmentation of the scans; and a \textit{segment} is a single point cloud from a track.
+
+\subsection{Details}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{static_imagery/example_objects_blurred.pdf}
+  \caption{Example segments from tracks of objects.  Columns contain the three foreground object classes (car, pedestrian, bicyclist) and background objects (everything else). \textit{All} objects in the environment are tracked, and the task is to classify tracks with the appropriated label.  Points are colored by laser return intensity.}
+  \label{fig:test_examples}
+\end{figure}
+
+\begin{table}
+  \centering
+  \input{ICRA_FINAL/plots/stc_table}
+  \caption{Breakdown of the Stanford Track Collection by class.  Tracks were collected from busy streets and intersections.}
+  \label{fig:stc_tab}
+\end{table}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{ICRA_FINAL/plots/testset_purehistogram_frame.pdf}
+  \caption{Histogram of distance to tracked objects in the test set.}
+  \label{fig:stc}
+\end{figure}
+
+
+To ensure valid results, the training set and test set are drawn from different locations at different times.  Pooling all tracks, then drawing them at random into the test and training sets would be flawed; it is common for several distinct tracks to exist for the same object, as occlusions can cause a tracked object to be lost and then picked up as a new track.
+
+The details of the labeling in this dataset are motivated by the autonomous driving task.  For example, because it is relatively common for two pedestrians to be segmented together, this occurrence is labeled as a pedestrian in the dataset.  Similarly, rollerbladers, skateboarders, pedestrians walking bicycles, pedestrians pulling suitcases, and pedestrians on crutches are all labeled as pedestrians in this dataset.  The car class contains sedans, vans, trucks, cars with trailers, etc., but does not include tractor trailers or large buses.  There are many reasonable choices of where to draw class lines, and do not believe any particular choice is essential to this work provided it is consistently applied.
+
+To avoid confounding failures of the track classification method with failures of the tracking and segmentation components of a full object recognition system, we invalidate \textit{foreground} tracks (those of cars, pedestrians, and bicyclists) in which more than 10\% of the segments are incorrect due to tracking or under-segmentation errors.  The over-segmentation of an object, \textit{i.e.} when an object is segmented into more than one part, is \textit{not} considered a segmentation error, as this is a common case that must be dealt with in practice.  Additionally, with background tracks, what constitutes a tracking or segmentation error is frequently ambiguous.  As this case is also a common one that a track classifier must handle correctly, tracking and segmentation errors of \textit{background} objects are \textit{not} considered inconsistent.  About 350 inconsistent tracks exist in the dataset; this constitutes about 2\% of the entire dataset or about 13\% of foreground tracks.
+
+Finally, we require that all tracks have at least ten segments (\textit{i.e.} the objects is seen for at least one second) and that at least one of these segments has greater than 75 points.
+
+\subsection{Track Extraction Process}
+
+Our research vehicle, shown in Figure~\ref{fig:junior}, senses the environment with a Velodyne HDL-64E S2, a dense 64-beam scanning LIDAR that provides 360-degree coverage at 10~Hz, generating just over 1~million 3D~points with associated infrared remittance values per second.  A tightly coupled GPS/IMU pose system, the Applanix LV-420, provides inertial updates and global position estimates at 200~Hz, enabling tracking while the vehicle is moving.  The LIDAR is calibrated using the algorithm of \cite{Levinson2010}.
+
+Scans are segmented using a connected components algorithm on an obstacle map.  The 2D obstacle grid is built using standard efficient methods, then clustered with a flood fill algorithm.  Clusters that are too large or too small to be of interest are dropped.
+
+Tracking of cluster centroids is accomplished using linear Kalman filters.  The data association problem is resolved by distance from measurement centroid to the expected position of each filter.  Any cluster not matched to a filter spawns a new filter.  Any filter not matched to a cluster has its prediction step run but not its update step, increasing the uncertainty in position; the filter is removed after position uncertainty exceeds a threshold.
+
+We note that the specific segmentation and tracking algorithms discussed here are not central to our overall approach, and more sophisticated algorithms could be readily substituted in different contexts.
+
+%\begin{figure}
+%  \centering  %\includegraphics[width=\linewidth]{static_imagery/training_examples.pdf}
+%  \caption{Example clusters from the training set tracks.  Points are %colored by laser return intensity.}
+%  \label{fig:training_examples}
+%\end{figure}
+
+\section{Classification Methods}
+\label{sec:classification}
+
+We first describe the boosting methods used to classify individual segments, and then we describe how the outputs of the boosting classifiers are combined into a final log odds estimate for a track.  We make some references to the descriptors used in these sections, but defer those details to Section~\ref{sec:descriptors}.
+
+\subsection{Boosting Framework}
+\label{sec:boosting}
+
+Boosting is a method of combining the predictions of many weak classifiers into a single, higher-accuracy strong classifier.  Intuitively, the weak classifiers encode simple rules: for example, ``if the object has a large bounding box, then it is probably not a pedestrian,'' or ``an object that has a side profile that looks like this one is probably a bicyclist.''
+
+We use two boosting classifiers in our system.  First, the \textit{segment classifier} makes a prediction when given a set of \textit{segment descriptors}, \textit{i.e.} a set of vectors which describe the appearance of an object at a point in time.  Second, the \textit{holistic classifier} makes a prediction when given a set of \textit{holistic descriptors} of a track, \textit{i.e.} a set of vectors that describe speed, acceleration, and other properties of the track as a whole.
+
+Taking the optimization perspective on boosting, in a two-class problem we desire a solution to
+\begin{align}
+  \minimize{H} \E \left[ \exp \left( -\frac{1}{2}Y \, H(Z) \right) \right] \label{eqn:expectation_optimization},
+\end{align}
+where the expectation is over the joint distribution, $Y$ is the class label, $Z$ is a set of descriptors, and $H$ is the strong classifier.  The $1/2$ term causes the optimal solution to this problem to be $H(z) = \log \frac{\Pr(Y = 1 | z)}{\Pr(Y = -1 | z)}$; see \cite{Friedman2000} for details.  In this paper, we assume all boosting classifiers use this form and thus output log odds estimates rather than the usual $1 / 2$ log odds.
+
+In practice, we approximate the expectation with a sum, resulting in
+\begin{align*}
+  \minimize{H} \sum_{m=1}^M \exp \left(-\frac{1}{2}y_m H(z_m) \right),
+\end{align*}
+with training examples $(y_m, z_m)$, where $y_m \in \{-1, +1\}$ is the class label and $z_m$ is the descriptor set for training example $m$.
+
+Extending to the multiclass boosting formulation, we use a 1-vs-all scheme, resulting in the optimization problem
+\begin{align*}
+  \minimize{H} \sum_{c=1}^C \sum_{m=1}^M \exp \left(-\frac{1}{2}y_m^c H(z_m, c) \right).
+\end{align*}
+Here, the strong classifier $H$ makes a prediction for each class $c$.  The integer class label $y_m$ is one of $\{1, 2, \dots, C \}$.  If $y_m = c$, $y_m^c = +1$; otherwise $y_m^c = -1$.  Background objects have $y_m^c = -1$ for all $c$.
+
+We use a variant of GentleBoost \cite{Friedman2000} and JointBoost \cite{Torralba2004} to handle the multi-class, multi-descriptor, high-dimensional nature of the problem.  As in JointBoost, the weak classifiers are shared across the three 1-vs-all classification problems; unlike JointBoost, since we do not consider problems with extremely large numbers of classes, we force all weak classifiers to make predictions for all 1-vs-all classification problems.
+
+As is usual in boosting, the strong classifier $H$ is defined as a sum of the weak classifiers $h_k$ for all $k \in \{1, 2, \dots, K - 1\}$, \textit{i.e.}
+\begin{align*}
+  H(z, c) = \sum_k h_k(z, c).
+\end{align*}
+Our weak classifiers take the form
+\begin{eqnarray*}
+  h_k(z, c) = \begin{cases}
+    a_k^c & \text{if $||f_k(z) - x_k||_2 \leq \theta_k$} \\
+    0 & \text{otherwise}
+  \end{cases},
+\end{eqnarray*}
+where $\theta_k$ is in $\R$, $f_k$ chooses a particular descriptor in the set $z$, and $x_k$ is a descriptor in the same space as $f_k(z)$.  The response value $a_k^c$ is positive if the weak classifier predicts the descriptor to be of class $c$, and negative otherwise; $|a_k^c|$ is the confidence of the prediction.  Geometrically, this means that a weak classifier makes a prediction $a_k^c$ about a descriptor $f_k(z)$ if the descriptor falls within a hypersphere of radius $\theta_k$ centered at the point $x_k$.  
+
+The strong classifier can be imagined as a set of different-sized hyperspheres living across many descriptors spaces of different dimensions.  A test example will have a descriptor in each of these descriptor spaces, and the weak classifier hyperspheres which contain it all respond with their own predictions for each class.
+
+The strong classifier is learned using the procedure of GentleBoost
+\cite{Friedman2000}; new weak classifiers are iteratively added by solving
+\begin{align}
+  \minimize{ f_K, x_K, \theta_K, \vec{a}_K} \sum_c \sum_m w_m^c \exp \left( -\frac{1}{2} y_m^c h_K(z_m, c) \right), \label{eqn:opt}
+\end{align}
+where $w_m^c = \exp(-\frac{1}{2} y_m^c \sum_k h_k(z_m, c))$ is the multiclass boosting weight.
+
+This problem is solved through a combination of directed search, dynamic programming, and convex optimization.  We wish to direct the learning process to focus its attention on difficult examples.  Concretely, a training example is sampled from the boosting weights distribution and a descriptor space is chosen uniformly at random; this specifies an $f_K$ and an $x_K$.  Given $f_K$, $x_K$, and $\theta_K$, the value of $\vec{a}_K$ can be found analytically with a single Newton step for each class.  Dynamic programming efficiently solves for $\vec{a}_K$ for each possible $\theta$, \textit{i.e.} one $\theta$ per training example other $x_K$.  This process is repeated for a number of choices of $(f_K, x_K)$ pairs.  The best evaluated choice of $(f_K, x_K, \theta_K, \vec{a}_K)$ in terms of the optimization objective (\ref{eqn:opt}) is then added as a new weak classifier.
+
+\subsection{The Augmented Discrete Bayes Filter}
+\label{sec:adbf}
+
+We have now described a method for producing log odds estimates given the descriptors of a segment (\textit{e.g.} object shape) or the descriptors of a track as a whole (\textit{e.g.} mean speed).  What remains is to specify a principled and effective method of combining these into a final log odds estimate for a track.
+
+Central to our approach is the fact that a boosting classifier outputs an estimate of the log odds.  This enables their combination with a discrete Bayes filter.  Other log odds estimators, such as logistic regression, could be substituted into this framework.
+
+To simplify the notation, the following section considers only two-class models; the extension to multiclass is straightforward.
+
+\pagebreak
+For reference, we provide the definitions of several symbols below.
+\begin{itemize}
+\item $z_t$ -- The segment descriptors for the $t$-th segment in a track.  These include spin images, bounding box size, and virtual orthographic camera views.
+\item $w$ -- The holistic descriptors of a track, which include mean speed, maximum speed, maximum angular velocity, etc.
+\item $\L(x) = \logodds{x}$ -- The log odds given $x$, for any choice of $x$.
+\item $\L_0 = \log \frac{\Pr(Y = 1)}{\Pr(Y = -1)}$ -- The log prior   odds.
+\item $H^H$ -- The holistic classifier.  Returns a log odds estimate given the holistic descriptors $w$ of a track.
+\item $H^S$ -- The segment classifier.  Returns a log odds estimate given the segment descriptors $z_t$ of segment $t$.
+\item $\L_0^S$ -- The empirical estimate of the log prior odds for the segment classifier.
+\item $\L_0^H$ -- The empirical estimate of the log prior odds for the holistic classifier.
+\end{itemize}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1.25in]{static_imagery/graphical_model_T_blurred.png}
+  \caption{The graphical model encoding the independencies in the discrete Bayes filter for our task.  Each track has one label~$y$, one set of holistic descriptors~$w$, and one set of segment descriptors~$z_t$ for each segment in the track.  $T$ is the total number of segments in the track.}
+  \label{fig:graph}
+\end{figure}
+
+As in the discrete Bayes filter, the independencies of the model are the same as those in \naive Bayes; see Figure~\ref{fig:graph}.
+
+We desire an estimate of $\L(w, \zT)$, the log odds given all the information known about a track.  Expanding this term out, we have
+\begin{align}
+  \L(w, z_{1:T}) & = \logodds{w, \zT} \notag \\
+  & =  \L_0 + \log \frac{\Pr(w, \zT | Y = 1)}{\Pr(w, \zT | Y = -1)} \notag \\
+  & = \L_0 + \log \frac{\Pr(w | Y = 1)}{\Pr(w | Y = -1)} + \sum_{t=1}^T \log \frac{\Pr(z_t | Y = 1)}{\Pr(z_t | Y = -1)} \notag \\
+  & = \L(w) + \sum_{t=1}^T \left( \L(z_t) - \L_0 \right) \notag \\
+  & \approx H^H(w) + \sum_{t=1}^T \left( H^S(z_t) - \L_0^S \right). \label{eqn:ndbf}
+\end{align}
+
+The \textit{\naive discrete Bayes filter}, (\ref{eqn:ndbf}), is arrived at from $\L(w, \zT)$ via Bayes' rule, the conditional independence assumptions shown in Figure~\ref{fig:graph}, and then another application of Bayes' rule.  The final approximation is a result of substituting in the holistic classifier $H^H$ and the segment classifier $H^S$, which provide estimates of the log odds given the holistic descriptors and the segment descriptors, respectively.
+
+A readily apparent shortcoming of the \naive discrete Bayes filter is that the holistic classifier $H^H$ becomes increasingly negligible as track length increases. If the conditional independence assumptions were strictly correct, this behavior would be desired.  However, due to a variety of possible dependencies between segments that arise in practice, the individual segment classifier estimates are not truly conditionally independent given the object class. This shortcoming is addressed in the \textit{normalized discrete Bayes filter},
+\begin{align*}
+  H^H(w) + \frac{1}{T}\sum_{t=1}^T \left( H^S(z_t) - \L_0^S \right).
+\end{align*}
+
+Finally, we notice that the (again, incorrect) conditional independence assumption $W \perp Z_{1:T} \; | \; Y$ remains, and that we can compensate for this approximation by learning additional parameters $\alpha, \beta, \gamma \in \R$ that weight the relative importance of each term.  This gives rise to the \textit{augmented discrete Bayes filter} (ADBF), 
+\begin{align}
+  H^A(w, \zT) = \alpha \L_0^H & + \beta \left( H^H(w) - \L_0^H \right) \notag \\
+  & + \gamma \frac{1}{T}\sum_{t=1}^T \left( H^S(z_t) - \L_0^S \right). \label{eqn:adbf}
+\end{align}
+The weights are learned via the unconstrained convex optimization problem
+\begin{align}
+  \minimize{\alpha, \beta, \gamma} \sum_m \log \left( 1 + \exp \left(-y_m H^A \left( w_m, \zT^m \right) \right) \right). \label{eqn:adbf_opt}
+\end{align}
+
+This formulation is equivalent to logistic regression on the output of the holistic and segment classifiers with an intercept term.  We note that the optimization problem
+\begin{align*}
+  \minimize{H} \E \left[ \log \left( 1 + e^{-YH(Z)} \right) \right]
+\end{align*}
+has the same optimal solution of $H(z) = \logodds{z}$ as in~(\ref{eqn:expectation_optimization}); therefore the final augmented discrete Bayes filter is optimized to produce the best log odds estimate possible.
+
+In summary, to obtain a log odds estimator for a track, we cannot simply throw all descriptors into a logistic regression or boosting model because the length of a track is variable.  The discrete Bayes filter handles the variable length of tracks nicely, but, like \naive Bayes, makes strong conditional independence assumptions that are frequently incorrect.  Like logistic regression, the ADBF learns parameters that can compensate for these mistakes to some extent.
+
+The ADBF builds on ideas used in \cite{Raina2004} for document classification, in which weights are learned to combine terms in a multinomial \naive Bayes model for different regions of a document.  Here, we use a comparatively complex discriminative model in place of the simple generative model of multinomial \naive Bayes, and combine entirely different models that operate on different descriptor sets.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.95\linewidth]{static_imagery/anecdote_horizontal.pdf}
+  \caption{Schematic drawing of the classification process.  Log odds estimates from the segment classifier and from the holistic classifier are combined using the \textit{augmented discrete Bayes filter}.  In this example, a distant bicyclist is initially difficult to distinguish from a pedestrian but becomes recognizable as it draws nearer.  The holistic classifier, evaluating statistics of the track such as mean speed and maximum acceleration, is fairly confident that the object is not a pedestrian, but relatively uncertain otherwise.  A transient occlusion causes an incorrect segment classification, but the overall prediction is correct.}
+  \label{fig:anecdote}
+\end{figure*}
+
+
+\subsection{Implementation Details}
+
+The number of candidate weak classifier centers -- that is, the number of $(f_K, x_K)$ pairs -- evaluated at each round of boosting was set to 20.  The segment classifier was trained until 1000 weak classifiers, and the holistic classifier until 100.  To learn the weights in the ADBF, part of the training set was used for training segment and holistic classifiers and the other part was used in the optimization problem~(\ref{eqn:adbf_opt}).
+
+We found that, in training the segment classifier, using a random sampling of 20\% of the training segments did not hurt performance, likely because tracks were sampled at about 10Hz and the variation from one segment to the next is relatively low.
+
+Training of the segment classifier is the slowest part of the training procedure and takes on the order of a few hours in a multithreaded implementation running on an octocore desktop.
+
+
+\section{Descriptors}
+\label{sec:descriptors}
+
+In this section, we review the descriptors used for the segment and holistic boosting classifiers.  In general, we believe that the details of the descriptors are not as important as the availability of a wide range of descriptors for the classifier to consider.
+
+
+
+\subsection{Holistic Descriptors}
+
+Holistic descriptors describe the track as a whole.  In our system, these include (a)~maximum~speed, (b)~mean~speed, (c)~maximum~acceleration, (d)~mean~acceleration, (e)~maximum~angular~velocity, and (f)~the~segment descriptors applied to the accumulated point cloud of all segments in the track.  Each motion descriptor is computed relative to a velocity estimate of the track's centroid smoothed over five consecutive segments, or about half a second.  We note that there is significant noise in these estimates due to  occlusions and segmentation jitter.
+
+The accumulated segment descriptors, while unintuitive for moving objects, can provide complete views of stationary objects that are badly occluded in most or all individual segments.
+
+\subsection{Segment Descriptors}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.95\linewidth]{static_imagery/vocii.pdf}
+  \caption{Examples of side, top, and front views of objects using virtual orthographic camera intensity images.  Pixel intensities reflect the average LIDAR return intensity.  Several HOG descriptors are computed on each view.  Alignment into a canonical orientation enables seeing consistent views of objects.}
+  \label{fig:descriptors}
+\end{figure}
+
+We use a total of 29 segment descriptors which encode various aspects of object appearance: oriented bounding box size, 4 different parameterizations of spin images \cite{Johnson1999}, and 24 different parameterizations of the histogram of oriented gradients \cite{Dalal2005} descriptor computed on virtual orthographic camera intensity images.
+
+Central to the descriptor pipeline is the concept of a canonical orientation of a point cloud.  In a coordinate system where $z$ is up, the canonical orientation is a rotation of the segment around the $z$ axis in which the long and short sides of the object are aligned with the $x$ and $y$ axes.  We use a simple RANSAC algorithm to fit the dominant line in the XY-projection of the segment's points.
+
+Virtual orthographic camera images of the front, side, and top views are taken relative to the canonical orientation of the segment.  As such, descriptors derived from these images are invariant to rotations of the 3D object around the vertical axis.  Image pixels measure average brightness of the return intensities from the sensor.  Examples of the orthographic intensity images are shown in Figure~\ref{fig:descriptors}.
+
+The histogram of oriented gradients descriptor captures local object appearance in images with invariance to small translations in the gradient locations.  A window size and offset from the edges of the projected segment are specified to capture different parts of an object, such as the front or back wheel of a bicycle; in some cases, these descriptors will be invariant to partial occlusion. 
+
+Spin images are all taken about the vertical axis, as other rotations are generally significant in the driving context; cars rarely appear upside down, for example.  Spin images are ``whitened'', \textit{i.e.} scaled to have zero mean and unit variance, so they will be invariant to point cloud density.
+
+\section{Results}
+\label{sec:results}
+
+Performance was evaluated on the Stanford Track Collection.  An example of the classification process is shown in Figure~\ref{fig:anecdote}.  The prediction for each track is taken to be the class with the maximum log odds, or background if the log odds for all classes are negative.  We note that the log odds approach presented in Section~\ref{sec:adbf} is more naturally suited to the case in which a track can have multiple positive classifications.  For example, it may be useful to have both ``car'' and ``police car'' classes, where instances of the latter are also instances of the former.
+
+Because the dataset is drawn from the tracks recorded in actual driving sequences, a large number of background tracks populate the test set.  As such, a classifier which simply predicts background for all test tracks would be 81.8\% accurate.
+
+Accuracy results are summarized in Table~\ref{tab:results}; the ADBF achieves 98.5\% accuracy.  Precision-recall curves for the three classes and a confusion matrix are shown in Figures~\ref{fig:pr}~and~\ref{fig:confusion}, respectively.  The holistic classifier alone reaches only 93.0\% accuracy; this method is insufficient on its own, but when combined properly with the segment classifier can improve performance.
+
+\addtocounter{footnote}{1}
+\footnotetext[\value{footnote}]{For comparison to the other segment-wise results, the classification for the track is applied to each individual segment.}
+\begin{table}
+  \centering
+  \input{ICRA_FINAL/results_mll/results_mll_table.tex}
+  \caption{Summary of accuracy results for each 1-vs-all problem and for the overall problem.}
+  \label{tab:results}
+\end{table}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{ICRA_FINAL/results_mll/results_mll_pr_combined.pdf}
+  \caption{Precision-recall curve for classification using the augmented discrete Bayes filter.}
+  \label{fig:pr}
+\end{figure}
+
+\begin{figure} [h!]
+  \centering
+  \includegraphics[width=\linewidth]{ICRA_FINAL/results_mll/results_mll_confusion_combined.pdf}
+  \caption{Confusion matrix for classification using the augmented discrete Bayes filter.  Entries in the matrix are numbers of tracks.}
+  \label{fig:confusion}
+\end{figure}
+
+
+
+Classifying individual segments results in 93.1\% accuracy, vs 97.5\% accuracy when classifying with the augmented discrete Bayes filter, an error reduction of about 65\%.\footnote{While a labeled track is allowed to have up to 10\% of its segments be incorrect due to segmentation or tracking errors, the total percentage of incorrectly labeled segments due to this cutoff is below 1\%.}  Perhaps the largest failure case is illustrated by Figure~\ref{fig:acchist_numpts}, which shows degradation of the segment classifier's accuracy as the number of observed points in the segment decreases.  This result includes both long-range and badly occluded objects, both of which tend to be difficult test cases for the classifier.
+
+Classification speed is fast enough to enable real-time use of the system when considering only objects on the road.  The average time to compute a classification for a segment, including descriptor computation and amortizing holistic descriptor computation time across the entire track, is about 2 milliseconds in our multithreaded implementation on an octocore computer.  Caching of shared computation in the descriptor pipeline is essential.
+
+There are a number of reasons for the strong performance of our system.  Segmentations of dense 3D data make possible descriptors that see objects from consistent viewpoints, as we use here with the virtual orthographic camera intensity images.  Segmentation also provides more consistent descriptors since background noise is removed; in contrast, consider the case of HOG descriptors of pedestrians in camera images, which can have widely varying backgrounds (and therefore widely varying descriptors) for the same pedestrian.  Classifying tracks rather than individual segments allows multiple views of an objects to contribute to the final prediction and is a key component of achieving high performance.
+
+
+
+
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+We have developed a new multiclass track classification method which demonstrates high accuracy on a large, real-world dataset.  Our method, which relies on segmentation and tracking made possible by dense 3D sensors, provides a component of a joint solution to 3D object recognition, which includes segmentation, tracking, and classification.  The addition of new object classes does not require the specification of new tracker models, but rather only supplemental labeled tracks of the new object class.  Finally, our method is fast enough for real time use in plausible implementations.
+
+In this work, we have assumed one possible decomposition of the full object recognition problem - namely, into segmentation, tracking, and track classification components.  Our experiments demonstrate an effective method of track classification given correct segmentation and tracking.  Initial work on the full object recognition problem indicates that the majority of classification errors are due to failures of segmentation and tracking, so that direction is one of great interest for making progress on object recognition.  Additionally, better occlusion-invariant descriptors would be useful. Dense 3D sensors should enable this work, since depth information can provide occlusion labels.
+
+\section{Acknowledgments}
+
+We are deeply grateful to Mike Sokolsky for maintaining the autonomous vehicle research platform, to Christian Plagemann, Neal Parikh, and David Stavens for helpful comments, and to Angad Singh and Jim Lin for assistance with data labeling.  The authors acknowledge financial support by the DARPA NeoVision 2 program, and additional financial support by Boeing.
+
+\bibliographystyle{IEEEtran}
+\bibliography{icra2011}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{ICRA_FINAL/results_mll/results_mll_acchist_numpts_framewise.pdf}
+  \caption{Accuracy vs number of points for segment-wise classification.  Objects with few points account for the majority of misclassifications.}
+  \label{fig:acchist_numpts}
+\end{figure}
+
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% GRAVEYARD
+
+
+Object recognition in dynamic is one of the primary unsolved challenges facing the robotics community. In practice, a robotic system that interacts with its environment often sees many views of the same object, due to the robot's ego motion, the object's motion, or both. These changing views often convey additional information about the object's class. Thus, in order to classify objects, it would be intuitively beneficial to consider the entire perceived history of each tracked object.
+
+Camera-based tracking of arbitrary objects is extremely difficult because good segmentation is almost impossible to come by in general.  \cite{Bose2007} addresses some of these issues by applying a stationary camera and background subtraction, but this approach is inapplicable to mobile robots.  Tracking and classification in camera data has been applied for specific object classes to get around the lack of general segmentation \cite{Gupte2002, Morris2006, Andriluka2008}. A vast amount of work has been done on camera-based pedestrian detection, but \cite{Dollar2009} shows that some recent pedestrian detection methods do not perform satisfactorily on real-world data, despite good performance on the INRIA pedestrian dataset \cite{Dalal2005}.
+
+More broadly, our results suggest that the general object recognition task in robotics stands much to gain by considering the track classification task.
+
+
+The primary contribution of this paper is to describe a novel approach for classifying arbitrary tracked objects from a moving robot platform. The core classification algorithm is driven by the combination of boosting classifiers using a discrete Bayes filter. In addition, we introduce a massive real-world dataset of labeled and tracked 3D point clouds to the research community, and finally, we analyze situations in which classification fails, suggesting further areas to be targeted for improvement.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{ICRA_FINAL/plots/bgfg-vs-dist-testset_track.pdf}
+  \caption{Histogram of distances to foreground (\textit{i.e.} car, pedestrian, or bicyclist) and background objects in the test set.}
+  \label{fig:stc}
+\end{figure}
+
+Laser perception in general has proven essential in autonomous vehicle navigation, as demonstrated by teams in the Urban Challenge, \textit{e.g.} \cite{Bohren2008, Urmson2008, Montemerlo2008}.
+Clustering, tracking, and classification into moving and unmoving classes are treated in \cite{Tipaldi2009, Darms2009, Darms2008, Wang2007}.  This flavor of classification is mostly based on the tracker rather than the content of the clusters, and addresses the goal of determining motion properties rather than semantic labels.
+
+
+We emphasize here that the tracking of arbitrary objects comes at a cost: segmentation and tracking errors are currently unavoidable in some situations, and this generally results in incorrect behavior of the final object recognition system.  To avoid confusing failures of the classification method and failures of tracking and segmentation, we have manually removed car, pedestrian, and bicyclist tracks that exhibit incorrect tracking or segmentation.  A total of 310 such tracks (3\%) exist in the Stanford Track Collection, and are ignored in both training and testing.
+
+
+Since we do not consider problems with extremely large numbers of classes as in \cite{Torralba2004}, we forego the complication of choosing which weak classifiers should predict for which classes and instead make all weak classifiers predict for all classes.  
+
+Intuitively, this means that a weak classifier makes a prediction $a_t^c$ about a descriptor $f_k(z)$ if it ``looks like'' a descriptor $x_k$, and no prediction otherwise.
+
+
+We have demonstrated that arbitrary object recognition in the real world can be significantly improved by considering tracks of objects over time. In particular, when consistent tracks of well segmented objects are available, our algorithms provide exceptional accuracy in a multiclass classification problem on tracks collected from real driving scenarios.  
+
+We have shown a mathematically principled way of combining the output of boosting classifiers or other log-odds estimators, and introduce the augmented discrete Bayes filter as a way of alleviating the errors introduced by the conditional independence assumptions of the discrete Bayes filter.
+
+
+Segmentations of dense 3D data additionally allow for fast object recognition.  In a runtime scenario in which a system only considers objects on or near the road, the number of segmented objects which require classification is relatively low.  This is in stark contrast to object recognition in images using sliding window detectors, which must make orders of magnitude more classifications per scene.
+
+
+We make the core library which manages this process available as open source software at \cite{pipeline}.
+
+
+The algorithms discussed in this paper are generic enough to apply to a wide variety of problems well beyond autonomous driving. As none of the descriptors we employed were specifically engineered for any particular object class, our contribution should generalize to many object classification tasks in which segmentation and tracking are available.
+
+Finally, by considering tracks of objects, we have demonstrated that it is possible with relative ease to amass an extremely large dataset of labeled point clouds. In this manner, at least an order of magnitude more data can be labeled by a human than can be done without using a tracker.
+
+Because the task is track classification, there are two sources of descriptors we draw on for the boosting classifiers described above.  First, the \textit{frame descriptors} of the $t$th frame, $z_t$,  describe the point cloud of a frame in a track, and include spin images, bounding box size, and virtual orthographic camera views.  Second, the \textit{holistic descriptors}, $w$, are those that describe a track as a whole, and include mean speed, maximum speed, maximum angular velocity, etc.
+
+  We define $z_t$ to be the frame descriptors for the $t$-th frame in a track, which include spin images, bounding box size, and virtual orthographic camera views.  We define $w$ to be the holistic descriptors of a track, which include mean speed, maximum speed, maximum angular velocity, etc.
+
+For example, if $z$ is a set of several frame descriptors which includes bounding box size, and if $f_k(z)$ is the bounding box size, then $x_k$ would also be a bounding box size.  The weak classifier $h_k$, given the descriptors of a frame $z$, would make a prediction about that frame by testing if $||f_k(z) - x_k||_2 < \theta_k$ were true.  If so, it would return $a_k^c$ for each class $c$.
+
+, so we start by sampling a training example from the boosting weights distribution; training examples classified incorrectly by the strong classifier will be much more likely to be sampled.  Given this training example, which includes several descriptors in different descriptor spaces, we then choose a descriptor from the training example at random.  
+
+\addtocounter{footnote}{1}
+\footnotetext[\value{footnote}]{For comparison to the other segment-wise results, the classification for the track is applied to each individual segment.}
+\begin{table}
+  \centering
+  \begin{tabular}{|l|c|}
+    \multicolumn{2}{c}{\textbf{Track classification}} \\
+    \hline
+    Method & Accuracy \\
+    \hline
+    Augmented discrete Bayes filter & 97.8\% \\
+    Normalized discrete Bayes filter & 97.4\% \\
+    \Naive discrete Bayes filter & 97.3\%  \\
+    Segment classifier only & 97.1\% \\
+    Holistic classifier only & 90.9\% \\
+    Prior only & 82.8\% \\
+    \hline
+    \multicolumn{2}{c}{} \\
+    \multicolumn{2}{c}{\textbf{Single segment classification}} \\
+    \hline
+    Method & Accuracy \\
+    \hline
+    Augmented discrete Bayes filter$^{\decimal{footnote}}$ & 97.7\% \\
+    Segment classifier only & 93.5\% \\
+    Prior only & 80.3\% \\
+    \hline
+    \end{tabular}
+  \caption{Summary of results.  The augmented discrete Bayes filter cuts the number of pedestrian false negatives nearly in half compared to the \naive version.}
+  \label{tab:results}
+\end{table}
+
+While the absolute percentage change of the augmented vs \naive discrete Bayes filters is small, the augmented version cuts the number of pedestrian false negatives nearly in half, and reduces errors overall by 18.5\%.
+
+Object tracks can be generated from offline recorded data, or in real time from live data.  The procedure first segments the scan, then matches segments to existing tracks and updates them.
+
+A key part of the system is a mathematically principled way of combining the outputs of boosting classifiers or other log odds estimators.  We introduce the augmented discrete Bayes filter as a method of alleviating the errors introduced by the conditional independence assumptions of the discrete Bayes filter.
+
+We make available our large, real-world dataset relevant to track classification in an autonomous driving context.  By considering tracks of objects, it is relatively easy to amass an extremely large dataset of labeled point clouds.
+
+Ongoing research suggests new opportunities for and self-supervised and semi-supervised learning using this method due to the relatively high precision of track classification and the tendency for segmentation and tracking errors to cause false negatives rather than false positives.  We hope to explore these opportunities in future work.
+
+
+Neighboring points in space that have significant vertical distance are marked as obstacles and placed into a 10cm-resolution flat obstacle grid.  Additionally, points greater than 20cm above the minimum height of its containing cell in a 1m-resolution terrain grid are considered obstacles.
+
+  Points close to each other in the horizontal plane are tested for significant vertical distance.  To do this efficiently, the points from each beam are put into bins based on horizontal beam angle, and comparisons are made only between neighboring (\textit{i.e.} in vertical beam angle) beams
+
+  
+
+  
+Finally, we are interested in broader application of the augmented discrete Bayes filter as it is potentially useful for any task which involves combining log odds estimates over time or from different sources.

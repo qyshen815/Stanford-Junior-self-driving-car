@@ -1,0 +1,28 @@
+<package>
+  <description brief="opencv_candidate">
+    opencv_candidate
+  </description>
+  <author>Ethan Rublee</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes="" />
+  <url>http://ros.org/wiki/opencv_candidate</url>
+  <depend package="eigen" />
+  <depend package="opencv2" />
+  <depend package="sensor_msgs" />
+  <export>
+    <cpp cflags="-I${prefix}/include"
+      lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lopencv_candidate -lopencv_candidate_ros" />
+  </export>
+  
+  <rosbuild2>
+    <!--<depend thirdparty="OpenCV"/> -->
+    <depend package="sensor_msgs"/>
+    <export>
+      <include_dir>${opencv_candidate_SOURCE_DIR}/include</include_dir>
+      <lib>opencv_candidate</lib>
+      <lib>opencv_candidate_ros</lib>
+    </export>
+  </rosbuild2>
+</package>
+
+

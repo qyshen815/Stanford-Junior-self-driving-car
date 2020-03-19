@@ -1,0 +1,482 @@
+\documentclass[conference]{IEEEtran}
+%\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out
+\usepackage{times}
+
+% numbers option provides compact numerical references in the text. 
+\usepackage[numbers]{natbib}
+%\usepackage{url}
+%\urlstyle{same}
+\usepackage{multicol}
+\usepackage[bookmarks=true]{hyperref}
+\usepackage{comment}
+\usepackage{flushend}
+
+
+\pdfinfo{
+   /Author (Alex Teichman and Sebastian Thrun)
+   /Title  (Tracking-based semi-supervised learning)
+   /CreationDate (D:20101201120000)
+   /Subject (perception)
+   /Keywords (robots;perception;semi-supervised learning)
+}
+
+% -- Custom additions
+\usepackage{color}
+\usepackage{graphicx} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+\usepackage{subfig}
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage{fmtcount}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\include{latex_macros}
+
+\newcommand{\todo}[1]{\textcolor{red}{[[#1]]}}
+\newcommand{\outline}[1]{\paragraph{#1}}
+\newcommand{\logodds}[1]{\log \frac{\Pr(Y = 1 | #1)}{\Pr(Y = -1 | #1)}}
+\newcommand{\logprior}{\log \frac{\Pr(Y = 1)}{\Pr(Y = -1)}}
+\newcommand{\zT}{z_{1:T}}
+
+\begin{document}
+
+% paper title
+\title{Tracking-based semi-supervised learning}
+
+% You will get a Paper-ID when submitting a pdf file to the conference system
+\author{Alex Teichman }
+
+\author{\authorblockN{Alex Teichman, Sebastian Thrun}
+\authorblockA{Stanford University \\
+  Department of Computer Science \\
+  \{teichman,thrun\}@stanford.edu}}
+%\author{\authorblockN{Michael Shell}
+%\authorblockA{School of Electrical and\\Computer Engineering\\
+%Georgia Institute of Technology\\
+%Atlanta, Georgia 30332--0250\\
+%Email: mshell@ece.gatech.edu}
+%\and
+%\authorblockN{Homer Simpson}
+%\authorblockA{Twentieth Century Fox\\
+%Springfield, USA\\
+%Email: homer@thesimpsons.com}
+%\and
+%\authorblockN{James Kirk\\ and Montgomery Scott}
+%\authorblockA{Starfleet Academy\\
+%San Francisco, California 96678-2391\\
+%Telephone: (800) 555--1212\\
+%Fax: (888) 555--1212}}
+
+
+% avoiding spaces at the end of the author lines is not a problem with
+% conference papers because we don't use \thanks or \IEEEmembership
+
+
+% for over three affiliations, or if they all won't fit within the width
+% of the page, use this alternative format:
+% 
+%\author{\authorblockN{Michael Shell\authorrefmark{1},
+%Homer Simpson\authorrefmark{2},
+%James Kirk\authorrefmark{3}, 
+%Montgomery Scott\authorrefmark{3} and
+%Eldon Tyrell\authorrefmark{4}}
+%\authorblockA{\authorrefmark{1}School of Electrical and Computer Engineering\\
+%Georgia Institute of Technology,
+%Atlanta, Georgia 30332--0250\\ Email: mshell@ece.gatech.edu}
+%\authorblockA{\authorrefmark{2}Twentieth Century Fox, Springfield, USA\\
+%Email: homer@thesimpsons.com}
+%\authorblockA{\authorrefmark{3}Starfleet Academy, San Francisco, California 96678-2391\\
+%Telephone: (800) 555--1212, Fax: (888) 555--1212}
+%\authorblockA{\authorrefmark{4}Tyrell Inc., 123 Replicant Street, Los Angeles, California 90210--4321}}
+
+
+\maketitle
+
+\begin{abstract}
+  
+In this paper, we consider a semi-supervised approach to the problem of track classification in dense 3D range data.  This problem involves the classification of objects that have been segmented and tracked without the use of a class-specific tracker.
+
+We propose a method based on the EM algorithm: iteratively 1) train a classifier, and 2) extract useful training examples from unlabeled data by exploiting tracking information.  We evaluate our method on a large multiclass problem in dense LIDAR data collected from natural street scenes.  When given only three hand-labeled training tracks of each object class, the final accuracy of the semi-supervised algorithm is comparable to that of the fully-supervised equivalent which uses two orders of magnitude more.
+
+Finally, we show that a simple algorithmic speedup based on incrementally updating a boosting classifier can reduce learning time by a factor of three.
+
+\end{abstract}
+
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+
+Currently, object recognition capabilities are a fundamental limitation of many practical robotic systems.  To learn about new objects from non-robotics-experts, we need new learning methods which do not require large, hand-labeled training sets.  We aim at making progress towards this goal.
+
+In this paper, we consider a decomposition of the object recognition problem into segmentation, tracking, and track classification components.  In particular, we consider \emph{model-free} segmentation and tracking, \ie that which works without a class-specific tracking or segmentation model.  A solution to the track classification problem would reduce object recognition to a segmentation and tracking problem.  There are many ways to think about the object recognition problem, but, as we will show in this paper, this decomposition enables us to greatly reduce the burden of the training process via semi-supervised learning.
+
+In general, model-free segmentation and tracking is hard to come by.  However, depth information such as that provided by a LIDAR sensor or stereo camera with projected texture can provide useful depth segmentations in some contexts.  We focus our experiments on the autonomous driving scenario, where depth segmentations in LIDAR data are frequently correct because the objects of interest actively avoid collision with the environment.  We expect the results in this paper to be useful in any situation in which model-free segmentation and tracking are available, and perhaps can be built upon to develop methods for those cases in which they are not.
+
+The approach we take is based on the distinction between track classification, \ie classifying a sequence of segmented LIDAR point clouds of an object recorded over time, and frame classification, \ie classifying a single segmented LIDAR point cloud of an object at a single point in time.  The process iterates between two steps: first, a frame classifier is trained on a given training set, and second, track classification is run on an unlabeled set to find new training examples.  Because the track classifier uses the frame classifier as a component, improvements in the frame classifier result in better track predictions on the next iteration.
+
+A \naive implementation of this which ignores the tracking information makes little progress, as the training examples that get added - the ones the frame classifier is most confident about - are by definition not those that would be most useful in the training process.  Using tracking information, a machine learning algorithm can automatically find new, useful training examples that improve classifier accuracy.  See Figure~\ref{fig:ssl_intuition} for an example.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{11-05-30_rss_static_img/ssl_intuition2.jpg}
+  \caption{A machine learning classifier which correctly recognizes several frames of a track of a bicyclist can infer that the remaining frames also are of a bicyclist.  This enables the addition of new, useful training examples that include changes in pose (as above), occlusion level, and viewing distance.}
+  \label{fig:ssl_intuition}
+\end{figure}
+
+This approach may seem inapplicable to rigid object classes such as cars, but, perhaps surprisingly, turns out to be effective here as well. This is likely due in part to occlusion: for example, two different vehicles might look very similar when only the front of them is seen, allowing the learning algorithm to propagate a label from one to the other.  Our experiments bear out the hypothesis that the proposed method works for rigid object classes such as cars.
+
+Tracking errors, such as when an object is temporarily segmented together with some other object or when the tracker jumps from one object to another, are a strong potential cause of failure in tracking-based semi-supervised learning.  In practice, they are often difficult to avoid.  However, we show empirically that, while inconsistent tracks certainly exist in our unlabeled dataset, the proposed method is able to learn effectively.
+
+We use a variant of boosting in our experiments that makes it easy to work with multiple high-dimensional descriptor spaces and allows for intuitive incremental updating of the classifier.  However, we expect the general message of tracking-based semi-supervised learning to apply to many different classifier types whenever model-free segmentation and tracking is available.
+
+The primary contribution of this paper is to show that tracking-based semi-supervised learning is an effective method of training object recognition systems with a very small amount of hand-labeled data.  In a multiclass track classification experiment on real-word data collected from unstructured, unstaged environments, we show that three hand-labeled training examples of each class can be used to train a classifier that performs comparably to the fully-supervised equivalent.  Additionally, we develop an extension to the basic algorithm which uses incremental training of a boosting classifier to increase the speed of the learning process by a factor of three.
+
+Related work is deferred until after the discussion of our approach.
+
+
+\section{Algorithm details}
+
+\subsection{Tracking-based semi-supervised learning}
+
+\renewcommand{\S}{\ensuremath{\mathbb{S}}\xspace}
+\newcommand{\U}{\ensuremath{\mathbb{U}}\xspace}
+\newcommand{\B}{\ensuremath{\mathbb{B}}\xspace}
+\newcommand{\W}{\ensuremath{\mathbb{W}}\xspace}
+\newcommand{\C}{\ensuremath{\mathbb{C}}\xspace}
+
+The distinction between \textit{track classification}, in which a prediction is made for an object tracked over time, and \textit{frame classification}, in which a prediction is made for an object at a single point in time, is essential to our approach.  Track classifications are generated by combining the outputs of the frame classifier across an entire track.  A confident classification of a track allows many individual frames, some which the frame classifier may currently get wrong, to be added to the training set.
+
+Tracking-based semi-supervised learning is initialized with a small set of hand-labeled seed tracks and a large set of background tracks.  Fortunately, labeled background objects are often freely available - in our case, by collecting tracks of objects in areas known to have no pedestrians, bicyclists, or cars in them and automatically labeling them all as background.  
+
+The semi-supervised learning procedure, which bears a strong resemblance to hard-EM, is outlined in Algorithm~\ref{alg:ssl}.  Hard decisions, \ie assigning a label rather than a probability distribution, are made about each unlabeled track at each iteration of the algorithm, but they are remade each time.  Only non-background classes are inducted into the working set \W because, in the initial stages, nearly everything in the unlabeled set will be confidently classified as background.  Initially, the classifier will recognize only those tracks that look extremely similar to the seed tracks.  As the algorithm proceeds, its knowledge of what each class looks like will slowly spread to more distant (in terms of the descriptor space) examples.  The procedure converges when the number of inducted tracks levels off.
+
+
+\begin{algorithm}[h]
+  \caption{Tracking-based semi-supervised learning}
+  \label{alg:ssl}
+  \begin{algorithmic}
+    \STATE $\tau$ is a confidence threshold chosen by hand
+    \STATE $\S$ is a small set of seed tracks, labeled by hand
+    \STATE $\U$ is a large set of unlabeled tracks
+    \STATE $\B$ is a large set of background tracks
+    \STATE
+    \STATE $\W := \S \cup \B$
+    \REPEAT
+    \STATE Train frame classifier \C on \W
+    \STATE $\W := \S \cup \B$
+    \FOR{$u \in \U$}
+    \STATE Classify track $u$ using \C
+    \STATE $c := \operatorname{confidence}(u)$
+    \STATE $l := \operatorname{classification}(u)$
+    \IF{$c \geq \tau$ and $l \neq \mbox{``background''}$}
+    \STATE Add $u$ to $\W$ with label $l$
+    \ENDIF
+    \ENDFOR
+    \UNTIL{converged}
+  \end{algorithmic}
+\end{algorithm}
+
+
+\subsection{Frame classification}
+\label{sec:boosting}
+
+We now consider a particular implementation of Algorithm~\ref{alg:ssl}.  We note that the general method is likely effective for many specific implementations.  This section is a brief summary of the method; more details can be found in~\cite{Teichman2011}.
+
+The frame classifier \C of Algorithm~\ref{alg:ssl} is implemented by a boosting classifier.  Boosting is a procedure for combining the predictions of many relatively inaccurate \textit{weak classifiers} into a single higher-accuracy prediction. In our case, the weak classifiers encode simple rules about the various frame descriptors, such as ``a very wide object is unlikely to be a pedestrian'' or ``an object that looks like this one from the top is likely to be a car''.
+
+We use a variant of GentleBoost \cite{Friedman2000} and JointBoost \cite{Torralba2004} for frame classification.  As in JointBoost, the weak classifiers are shared across the three 1-vs-all classification problems; unlike JointBoost, since we do not consider problems with extremely large numbers of classes, we force all weak classifiers make predictions for all 1-vs-all classification problems.  To simplify the notation, the following discussion will consider only single class problems.   The extension to multiclass is straightforward.  In the following, each training example is a pair $(y_m, z_m)$ where $y_m \in \{-1, 1\}$ is the class label and $z_m$ is a set of descriptors.
+
+The set $z_m$ includes a total of 29 descriptors which encode various aspects of object appearance: oriented bounding box size, 4 different parameterizations of spin images \cite{Johnson1999}, and 24 different parameterizations of the histogram of oriented gradients \cite{Dalal2005} descriptor computed on virtual orthographic camera intensity images \cite{Teichman2011}.
+
+Boosting provides a stagewise additive solution to the optimization problem
+\begin{align}
+  \minimize{H} \quad \frac{1}{M} \sum_m \exp \left(-y_m H(z_m) \right).     \label{eqn:boosting}
+\end{align}
+The strong classifier $H$ is defined as a sum of the weak classifiers $h_k$ for all $k \in \{1, 2, \dots, K\}$, \textit{i.e.}
+\begin{align*}
+  H(z) = \sum_k h_k(z).
+\end{align*}
+
+Our weak classifiers take the form
+\begin{eqnarray*}
+  h_k(z) = \begin{cases}
+    a_k & \text{if $||f_k(z) - x_k||_2 < \theta_k$} \\
+    0 & \text{otherwise}
+  \end{cases},
+\end{eqnarray*}
+where $f_k(z)$ chooses a particular descriptor in the set $z$, and $x_k$ is a descriptor in the same space as $f_k(z)$.
+
+Geometrically, this means that a weak classifier makes a prediction $a_k$ about a descriptor $f_k(z)$ if the descriptor falls within a ball of radius $\theta_k$ centered at the point $x_k$. The response value $a_k$ is positive if the weak classifier predicts the descriptor to be of class 1, and negative otherwise; $|a_k|$ is the confidence of the prediction.
+
+Classifier training proceeds as normal in boosting. Learning of weak classifiers ends when the objective function (\ref{eqn:boosting}) value crosses a threshold.
+
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{11-05-30_rss_static_img/example_objects_blurred.pdf}
+  \caption{Example segmented objects from the dataset.}
+  \label{fig:example_objs}
+\end{figure}
+
+
+\begin{table}
+  \centering
+  \input{11-05-30_rss_static_img/stc_table}
+  \caption{Breakdown of the dataset by class.  Tracks were collected from busy streets and intersections.  In the experiments, the fully-supervised baseline was given all the labels in the training set; the semi-supervised method of this paper was given three hand-labeled training examples of each class, approximately 3000 automatically-labeled background objects, and the remainder of the training set without labels.}
+  \label{tab:stc_tab}
+\end{table}
+
+
+\subsection{Track classification}
+
+\newcommand{\Htr}{H^{\mbox{\tiny{Tr}}}}
+\newcommand{\Hf}{H^{\mbox{\tiny{F}}}}
+
+Track classifications are computed by applying a normalized discrete Bayes filter to the frame classification outputs.  We desire an estimate of $\L(\zT) = \logodds{\zT}$, the log odds given all the information known about a track.  Expanding this term out using Bayes' rule, a conditional independence assumption, and another application of Bayes' rule, we have
+\begin{align}
+  \L(z_{1:T}) & = \logodds{\zT} \notag \\
+  & =  \L_0 + \log \frac{\Pr(\zT | Y = 1)}{\Pr(\zT | Y = -1)} \notag \\
+  & = \L_0 + \sum_{t=1}^T \log \frac{\Pr(z_t | Y = 1)}{\Pr(z_t | Y = -1)} \notag \\
+  & = \L_0 + \sum_{t=1}^T \left( \log \frac{\Pr(Y = 1 | z_t)}{\Pr(Y = -1 | z_t)} - \L_0 \right) \notag \\
+  & \approx \widetilde{\L_0} + \sum_{t=1}^T \left( \Hf(z_t) -\widetilde{\L_0} \right) \label{eqn:ndbf}
+\end{align}
+where $\L_0$ is the log prior odds $\logprior$, $\widetilde{\L_0}$ is its empirical estimate from the training set, and $\Hf$ denotes the frame classifier.  Boosting classifiers naturally output an estimate of $\frac{1}{2} \logodds{\zT}$ due to the exponential loss function, so we assume here that the frame classifier outputs are adjusted appropriately.
+
+However, in (\ref{eqn:ndbf}), $\widetilde{\L_0}$ gets overwhelmed as track size increases.  This is undesirable in practice and reflects the convenient but incorrect assumption that consecutive frames in a track are conditionally independent given their label.  As in \cite{Teichman2011}, we instead use the normalized discrete Bayes filter
+\begin{align*}
+\widetilde{\L_0} +\frac{1}{T} \sum_{t=1}^T \left( \Hf(z_t) - \widetilde{\L_0} \right) \label{eqn:htr}
+\end{align*}
+to compute track classifications.
+
+\section{Experimental results}
+
+\subsection{Dataset}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{img/ssl_accuracy.pdf}
+  \caption{Test set performance of the semi-supervised method approaches fully-supervised performance.  Each epoch is one iteration of the main loop in Algorithm~\ref{alg:ssl}.  We report results on the natural distribution of object classes found in the real world; classifying everything as background results in 81.8\% correct.  See Figure~\ref{fig:conf} for per-class performance details.}
+  \label{fig:core}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{img/baseline_confusion_matrix.pdf} \\
+  \vspace{0.1in}
+  \includegraphics[width=\linewidth]{img/ssl_confusion_matrix.pdf}
+  \caption{The confusion matrix produced by the fully-supervised baseline (top) is closely matched by that of the semi-supervised method (bottom).  Quantities in each cell are numbers of test set tracks.  Final accuracies of the methods are \protect\input{ssl_baseline_accuracy} and \protect\input{ssl_accuracy}, respectively.}
+  \label{fig:conf}
+\end{figure}
+
+
+
+We evaluate our method using the Stanford Track Collection \cite{StanfordTrackCollection}, a dataset of about 13,000 tracks (a total of about 1.3 million frames) extracted from natural, unstaged street scenes with a dense LIDAR system mounted on a car.  Data was recorded while driving and while parked at busy intersections with many people, bicyclists, and cars.  See Figure~\ref{fig:example_objs} for some examples of what objects look like in such data.  Motion of the car was offset using a high accuracy GPS/IMU system.
+
+The dataset is split approximately in half into geographically separate training and testing sets.  Details on dataset size can be found in Table~\ref{tab:stc_tab}.  The baseline supervised method is given the training set with all labels; semi-supervised methods are given three hand-labeled training examples of each class (\S~from~Algorithm~\ref{alg:ssl}), approximately 3000 automatically-labeled background objects (\B), and the remainder of the training set without labels (\U).  Segmentation and tracking problems are out of the scope of this paper, so quantitative test results consider only \textit{consistent} tracks; otherwise errors due to bad segmentation or tracking would confound the errors made by the track classifier.
+
+Importantly, the set \U contains \textit{all} tracks that were extracted from the environment, including those that have tracking and segmentation errors.  This means the semi-supervised methods discussed in this paper must be robust to some inconsistent tracks, as would be required in the practical application of a system built on them.  Inconsistent tracks are typically due to tracking errors and transient segmentation errors.  Such inconsistent tracks make up about 11\% of the cars, pedestrians, and bicyclists in the dataset.
+
+Track extraction details can be found in \cite{Teichman2011}; they are not critical to the results presented here.  The extraction process is essentially depth segmentation followed by Kalman filter tracking of the extracted segments.
+
+In all experiments, the induction confidence threshold $\tau$ was set to 5 and the objective function threshold value for training the frame classifier was set to 0.02, with a minimum of 1000 weak classifiers.
+
+\subsection{Comparison with fully-supervised baseline}
+\label{sec:core}
+Figure~\ref{fig:core} shows the results of running the semi-supervised learning method of Algorithm~\ref{alg:ssl} with three hand-labeled training examples of each class; this produces final test-set accuracy comparable to that of the fully-supervised equivalent.  Confusion matrices for the two cases are shown in Figure~\ref{fig:conf}.  To ensure a fair comparison, the baseline classifier was allowed the same number of weak classifiers as the maximum amount used by the semi-supervised method.
+
+
+\subsection{Comparison with non-tracking method}
+
+To confirm that the tracking information is essential to this approach, we tested the obvious alternative of running a semi-supervised method the same as that in Algorithm~\ref{alg:ssl}, but which inducts frames rather than entire tracks.  Induction plots for the two methods are shown in Figure~\ref{fig:tracking_vs_not}.  Without using tracking information, the semi-supervised learning algorithm can only add new training examples which the classifier is already confident about.  As it adds training examples closer to the boundaries between classes, errors are introduced and the accuracy of the inducted frames drops.  The final test-set accuracy of the non-tracking method is \input{frame_accuracy}, compared to \input{ssl_accuracy} when using tracking information.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{img/frame_induction.pdf} \\
+  \vspace{0.1in}
+  \includegraphics[width=\linewidth]{img/ssl_induction.pdf}
+  \caption{Ignoring tracking information (top) results in the learning algorithm adding training examples into its training set with incorrect labels.  Using tracking information (bottom), these errors are largely avoided.}
+  \label{fig:tracking_vs_not}
+\end{figure}
+
+\subsection{Accuracy as a function of amount of unlabeled data}
+
+To analyze the effect of the amount of unlabeled data on the final semi-supervised performance, we varied the amount of unlabeled data provided, ran the algorithm to completion, and recorded the final accuracy.  Results are shown in Figure~\ref{fig:quantity}.  In this experiment, we provided about 4000 additional unlabeled tracks to the semi-supervised method beyond those used in Section~\ref{sec:core} and show that the semi-supervised method, with three hand-labeled tracks of each object class, can equal or outperform the fully-supervised one.
+
+Two major sources of error must be considered in an analysis of this sort.  First, individual log files used for unlabeled data can have widely disproportionate numbers of objects from each class.  Second, it is not uncommon for there to exist several separate tracks that correspond to the same real-world object that become fully occluded and then reappear.  Randomizing the order of tracks presented could incorrectly make it appear that additional data fails to increase performance when it is actually because this additional data is nearly identical to data already seen.  To address these sources of error, the order of the unlabeled tracks was not randomized and tracks of each class were added in proportion to their representation in the full unlabeled set.  As before, the baseline classifier was allowed the same number of weak classifiers as the maximum amount used by the semi-supervised method.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{img/accuracy_vs_quantity.pdf}
+  \caption{Tracking-based semi-supervised learning requires a certain quantity of unlabeled data without which only little progress can be made.  Intuitively, the learning algorithm can't bridge the gap in descriptor space between two very different examples of the same class without a sufficient quantity of objects connecting the two.}
+  \label{fig:quantity}
+\end{figure}
+
+
+\begin{comment}
+\subsection{Accuracy as a function of labeling effort}
+\label{sec:effort}
+
+In Figure~\ref{fig:effort} we show quantitatively how well the supervised vs semi-supervised methods perform given equal amounts of hand-labeled training tracks.
+
+A set of \todo{x} unlabeled tracks was given to the semi-supervised method.  To produce this plot, we adopted a minor variation on Algorithm~\ref{alg:ssl}: when a track is inducted, only the incorrectly classified frames of that track are added to the new training set.  This helps reduce the memory requirements of the method, which are otherwise problematic.  This experiment does not produce strong performance at just a few hand-labeled seed tracks, as was shown in Figure~\ref{fig:quantity}, likely because the seed tracks here were chosen randomly rather than picked specifically to be good examples.
+
+We found it was possible to get strong performance with very few seed tracks by increasing the amount of unlabeled data provided, but that doing so often resulted in running out of memory.  This highlights a key challenge in making use of tracking-based semi-supervised learning: an online learning algorithm will probably be required for larger quantities of unlabeled data.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{11-05-30_rss_static_img/effort.pdf}
+  \caption{High accuracy can be achieved with substantially less human labeling effort when using tracking-based semi-supervised learning than with the comparable fully-supervised method.}
+  \label{fig:effort}
+\end{figure}
+
+\end{comment}
+
+
+\subsection{Speedup with incremental training}
+\label{sec:rr}
+
+The semi-supervised learning run of Figure~\ref{fig:core} took approximately 25 hours to complete on a modern 12-core desktop.  About 7\% to 1\% (depending on how far in the learning process the algorithm has gotten) of the time taken for each epoch is spent searching for new training examples in the unlabeled data; the rest is spent training the classifier.
+
+To improve this, we consider incremental training of a single boosting classifier rather than retraining from scratch each epoch.  When given a new training set, we wish to first relearn the response values of all existing weak classifiers, then continue to learn new weak classifiers until the objective function reaches the stopping threshold.  We refer to this method as CSSL-RR, for continuous semi-supervised learning with response relearning.  This procedure is described in Algorithm~\ref{alg:rr}.
+
+\begin{algorithm}[h]
+  \caption{Incremental training of a boosting classifier}
+  \label{alg:rr}
+  \begin{algorithmic}
+    \STATE Recompute the log prior odds $\widetilde{\L_0} \approx \logprior$
+    \STATE Reset the training example weights to be $\exp(-y_m \L_0)$
+    \FOR{$k \in \{1 \dots K\}$}
+    \STATE Compute $M' = \{m : ||f_k(z_m) - x_k||_2 < \theta_k\}$
+    \STATE $a_k := \left( \sum_{m \in M'} w_m y_m \right) /  \left( \sum_{m \in M'} w_m \right)$
+    \FOR{$m \in M'$}
+    \STATE $w_m := w_m \exp(-y_m a_k)$
+    \ENDFOR
+    \ENDFOR
+    \STATE Learn new weak classifiers until converged
+  \end{algorithmic}
+\end{algorithm}
+
+The \naive alternative - to resume training of a previous boosting classifier without relearning the response values of the weak classifiers - fails because many new weak classifiers must be added to compensate for the mistakes that old weak classifiers have made.  In this case, the number of weak classifiers rises quickly, reaching 12,636 by epoch four, compared to only 2,477 in the version of Algorithm~\ref{alg:rr}, and this required additional training makes the \naive version too slow to be of use.  See Figure~\ref{fig:cssl} for a comparison of the three methods.  The final accuracy of the accelerated version was unchanged.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{img/ssl_vs_cssl.pdf}
+  \caption{The \naive method of incrementally training the classifier (CSSL) is substantially slower than retraining from scratch each iteration (SSL).  Many new weak classifiers must be learned to correct the mistakes of previous weak classifiers.  Using the procedure of Algorithm~\ref{alg:rr}, \ie relearning the weak classifier response values before resuming the training procedure, however, provides a substantial increase in speed (CSSL-RR).}
+  \label{fig:cssl}
+\end{figure}
+
+\subsection{Qualitative analysis}
+\label{sec:qual}
+To obtain a qualitative understanding of how our method performs, we drove the sensor platform on previously-unseen streets, extracted all tracks in the environment, classified those tracks using the semi-supervised learning algorithm described in Section~\ref{sec:rr}, and projected the classification of those tracks into aligned camera images of the area.  Some examples of the output are shown in Figure~\ref{fig:example_output}.  We note that this is an example of the full object recognition problem, whereas this paper primarily addresses only the track classification subproblem.  Errors in tracking and segmentation result in object recognition errors that are not reflected in the track classification results.
+
+A video of these results can be seen at \cite{video}.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=7in]{11-05-30_rss_static_img/fullsize_examples_more.jpg}
+  \caption{Track classifications in LIDAR data projected into aligned camera data for visualization.  Best viewed in color.  Cars are outlined in red, pedestrians in blue, bicyclists in green, and background in gray.  Objects without outlines were not tracked.  Tracking and segmentation errors (beyond the scope of this paper) are the major cause of failures.  A video of these results can be seen at \cite{video}.}
+  \label{fig:example_output}
+\end{figure*}
+
+
+\section{Related Work}
+
+Machine learning methods can be broken down into two broad categories: inductive methods, which learn a prediction rule, and transductive methods, which make a prediction for each example in a given dataset but can not (easily) produce a prediction for an example outside the given dataset.  Many semi-supervised methods fall into the transductive category.  As we are interested in robotics applications in which predictions on never-before-seen examples must be made in a timely manner, we are most focused on inductive semi-supervised methods.
+
+Many methods of reducing the burden of labeling have been explored as labeling is often a major task in the building of intelligent systems.  Here, we briefly survey the broad categories of these methods and mention a few specific examples that are closely related to the work of this paper.  \citet{Zhu2007} provides a good survey of semi-supervised methods.
+
+In transfer learning \cite{Pan2010}, data from one distribution is used to improve the performance of a system on a different distribution.  In a recent example from the robotics literature, \citet{Lai2010,Lai2009} show that it is possible to use 3D models from the Google 3D Warehouse to improve object recognition in depth data.
+
+Co-training \cite{Mitchell1998} assumes that two conditionally independent views of the same underlying data are available.  Alternating training and classification on the two different views allows the learning algorithm to leverage large amounts of unlabeled data.  Perhaps surprisingly, co-training in the robotics literature is scarce.  In computer vision, \citet{Christoudias2009} proposed a variant of co-training that can improve multi-view object recognition and audio-visual gesture recognition.
+
+Self-supervised methods exploit the presence of a reliable automatic labeling source inherent in the system to train a classifier on a different data modality.  For example, \citet{Dahlkamp2006} trained a vision-based road detection system for autonomous driving on labels provided by a laser range finder, significantly extending the range of road detection while requiring no extra human supervision. \citet{Lookingbill2007} employed reverse optical flow and close range sensors to automatically learn about the visual appearance of distant obstacles.  More recently, \citet{Wurm2009} used a measure of vibration as a source of self-supervision to train a laser-based vegetation detector.
+
+Unsupervised clustering methods can ease the labeling task by grouping unlabeled examples.  \citet{Triebel2010} locate similar objects in dense 3D point clouds.  \citet{Luber2008} track moving objects in line scanner data and perform unsupervised clustering on the tracks.
+
+Graph-based semi-supervised learning methods \cite{Zhu2003} construct a graph of labeled and unlabeled training examples where edges encode the similarity of examples, typically distance between examples in the descriptor space.  These methods have several appealing interpretations and are easy to implement.  Basic implementations, however, are inherently transductive and scale cubically with the number of unlabeled examples, though some progress has been made in improving this, \eg in the work of \citet{Liu2010}.  
+
+Other methods of generating useful label propagation between distant regions of the descriptor space also exist.  For example, \citet{Socher2010} use information from newspaper articles to inform image classification.
+
+\citet{Ali2011} demonstrate a system that could be considered the pure-vision analogue of our method, known as FlowBoost.  Starting with a sparse labeling (every 64th frame, for example) tracking information and a boosting classifier are iteratively applied to fill in the gaps.  This method avoids the difficulty of model-free tracking in video data, but at the cost of being unable to process completely-unlabeled video sequences.
+
+It is worth mentioning the related topic of discriminative tracking, \eg \cite{Kalal2010, Stalder2009, Tang2007}, in which semi-supervised methods are sometimes used to address the model-free tracking problem.  In contrast, we assume model-free segmentation and tracking is given, and a semi-supervised method is used to address the track classification problem.  As one example of a discriminative tracker, \citet{Kalal2010} use a Lucas-Kanade tracker to provide their discriminative tracker with image patches that are known to be either the tracked object or background.
+
+Independent of the level of supervision, object recognition using depth sensors has become a promising area of research.  \citet{Douillard2010} use semi-supervised training of a CRF to address semantic mapping of urban environments - that is, point-wise classification into classes such as car, people, foliage, grass, wall, etc.  In contrast, the recent work of \citet{Spinello2010} considers track classification, as we do here, though they use a fully-supervised approach.  Additionally, they track detections of objects made by classifiers, whereas we track all objects provided by depth segmentation and classify the resulting tracks.
+
+\section{Conclusion} 
+\label{sec:conclusion}
+
+In this paper, we have shown that tracking-based semi-supervised learning given only three hand-labeled training examples of each class can perform comparably to equivalent fully-supervised methods.  We also show that a simple algorithmic speedup based on incremental training of boosting classifiers can increase the efficiency of learning by a factor of about three.
+
+Given the relatively high reliability of track classification and ease of training, the primary performance bottleneck in object recognition systems such as the one discussed in Section~\ref{sec:qual} is tracking and segmentation.  This is encouraging.  Using the methods of this paper, the cost of scaling up an object recognition system (in terms of trained human time) could be very much lower than previously possible.
+
+However, no method is without tradeoffs.  This system and other similar ones based on track classification are entirely dependent on some relatively reliable method of segmenting potential objects.  In our case, this role is filled by depth segmentations available due to range finders and the cooperation of the environment.  In many other scenarios, such as object recognition in cluttered indoor environments or using exclusively cameras, model-free segmentation is not so freely available.  It is an open question as to whether methods such as the one proposed in this paper can be adapted to such a scenario, but given the effectiveness of the method it seems worthy of investigation.
+
+Unfortunately, there is no guarantee that this method will not diverge because of tracking and segmentation errors or simply because some distant or highly occluded objects are indistinguishable from background.  In practice, this appears to be held in check by the large quantity of automatically labeled background data that is provided.  Further difficulties may be encountered if one desired finer class distinctions, for example between sedans and trucks; evidently, the labels are able to propagate from one to the other, likely due to occlusions.  In this case, we suspect that providing sufficient seed labels at the boundaries will prevent leakage of label propagation from one side to the other, though this has not yet been tested.
+
+A further challenge along these lines is the memory constraint: the boosting algorithm used here requires all training examples to be loaded into main memory before learning.  To consider larger unlabeled datasets containing days or weeks worth of data, it will probably be necessary to use an online learning algorithm.
+
+
+\section*{Acknowledgments}
+
+We are grateful to Mike Sokolsky for maintaining the autonomous vehicle research platform and to Christian Plagemann for helpful comments.
+
+
+%% Use plainnat to work nicely with natbib. 
+\small
+\bibliographystyle{plainnat}
+\bibliography{rss2011}
+%\bibliography{references}
+
+\end{document}
+
+
+\begin{align*}
+  H^{Tr}(\zT) = \L_0 + \frac{1}{T}\sum_{t=1}^T \left( H^F(z_t) - \L_0 \right),
+\end{align*}
+
+
+In controlled environments, there are reasonable workarounds.  For example, beacons or easily-recognizable patterns can be attached to objects that must be recognized.  This is not possible in the unstructured environments that we would like robots to operate in.
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1.25in]{11-05-30_rss_static_img/tracking_error.jpg}
+  \caption{An example segmentation error: a car has been grouped together with a pole and a bush.  In practice, a tracking-based semi-supervised learning must be able to handle   Inconsistent tracks such as this one are included in the unlabeled set that the semi-supervised learner must consider.}
+  \label{fig:seg}
+\end{figure}
+
+
+\footnote{CSSL terminated due to numerical instability: another drawback of the \naive method.  When many new training examples are added that the current classifier gets badly wrong, the exponential loss function quickly blows up.  This is not insurmountable, but there seemed no reason to continue.}.
+
+
+
+Additionally, there is an obvious active learning extension to the work of this paper which could improve performance or reduce the need for automatically labeled background data.  Scaling up the method of this paper to extremely large quantities of unlabeled data also may present some implementational challenges, especially as the working set \W of Algorithm~\ref{alg:ssl} grows too large to fit in main memory.  Distribution of the unlabeled data across a large number of computers and training independent boosting classifiers at each round could provide a solution.
+
+classifies the front of an SUV as `car' might also correctly classify the front of a truck as `car' because the two look so similar; then, when the back of the limousine becomes unoccluded, new training examples of the entire limousine are added.  
+
+The method of \citet{Kalal2010} is related to tracking-based semi-supervised learning in that it uses model-free tracking (i.e., a tracker which does not use knowledge of object class) to produce additional useful training examples.  In terms of the most generic framework they present, our structural constraints are defined by the classification of entire tracks as a whole.
+
+Tracking essentially enables label propagation over very long distances in the descriptor space which would not otherwise be possible.
+
+
+Essential to our approach is the distinction between frame classification, in which a single segmented point cloud of an object is classified, and track classification, in which a series of segmented point clouds over time is classified.
+
+
+\begin{figure}
+  \centering
+%\includegraphics[width=1.25in]{11-05-30_rss_static_img/tracking_error_2.pdf}
+  \includegraphics[width=\linewidth]{11-05-30_rss_static_img/tracking_error_2.pdf}
+  \caption{An example tracking error in which a track jumps from a bush to a car to a pole.  In practice, a tracking-based semi-supervised learning algorithm must be able to handle some level of inconsistent tracks such as this one.  The unlabeled set used by the semi-supervised learner of this paper includes tracks such as these.}
+  \label{fig:tracking_error}
+\end{figure}
+
+
+
+While the areas of robot control, navigation, and mapping still have important unsolved research topics, there generally exist reasonable solutions which can handle real-world robotic problems in this areas.  One gaping hole in this robotic software suite is perception.  To achieve a greater degree of autonomy, robots need functional object recognition.
+
+
+As an example of one reason this might be the case, consider a system that correctly recognizes an SUV as `car' but fails to recognize a truck as `car'.  Because the front of these two vehicles look so similar, a track which contains mostly frames of just the front of a truck because of occlusion might be classified correctly; then the unoccluded frames of the truck can be automatically added to the training set with the correct label.

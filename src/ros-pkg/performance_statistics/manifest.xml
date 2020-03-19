@@ -1,0 +1,21 @@
+<package>
+  <description brief="performance_statistics">
+
+     performance_statistics
+
+  </description>
+  <author>Alex Teichman</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/performance_statistics</url>
+  <depend package="matplotlib_interface"/>
+  <depend package="name_mapping"/>
+  
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -Wl,-rpath ${prefix}/lib -lperformance_statistics"/>
+  </export>
+
+
+</package>
+
+

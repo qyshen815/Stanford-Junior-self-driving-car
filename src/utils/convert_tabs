@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Converts all tabs in current directory sources to 8 spaces
+
+for aa in `ls *.c *.cpp *.h` ; do cat $aa | sed s/\\t/"        "/g > $aa.TAB ; mv $aa.TAB $aa ; done
+
+

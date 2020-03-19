@@ -1,0 +1,36 @@
+Current process to correct a set of logfiles:
+---------------------------------------------
+
+First, make sure that your Velodyne logfiles have index files.  You
+can generate index files by running vlf_index.  The index files will
+have the same names as the vlf files with .index.gz tacked on the end.
+
+vlf_index data.log.gz data.vlf
+
+1.  Create a config file.  The config file is a text file that
+describes the inputs to the SLAM programs.  The first line is the
+number of logfile paths (N).  The next N lines are paths to look for
+logfiles.  The next line is the number of DGC/VLF logfile pairs (M).
+The next M lines contain the logfile name, the vlf logfile name, and
+then a zero or one describing whether or not to optimize this
+trajectory.  example-config.txt is a simple example config file.
+
+1.  Run find_overlap to locate places to do scanmatching.  This will
+generate a match-file.
+
+./find_overlap config.txt matchfile.txt
+
+3.  Run match_scans to do scan matching for each of the matches in the
+matchfile.  This will update the match file.
+
+./match_scans config.txt matchfile.txt 
+
+4.  Run correct_indexes to generated fixed index files.
+
+./correct_indexes config.txt matchfile.txt
+
+5.  Run correct_logfiles config.txt to generate fixed versions of the
+original .log.gz files.
+
+./correct_logfiles config.txt
+

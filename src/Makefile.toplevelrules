@@ -1,0 +1,209 @@
+COPYALL = function copyall { \
+		for i in $$1 xxxx ; do \
+			if [ -f $$i ] ; then \
+				$(CP) $$i $$2 ; \
+			fi \
+		done \
+	  } \
+
+RECURSE = function recurse { \
+		for i in $$2 xxxx ; do \
+			if [ -d $$1/$$i ] ; then \
+                                if ! $(MAKE) -C $$1/$$i $$3 ; then \
+                                        exit -1; \
+                                fi; \
+			fi \
+		done \
+	  } \
+
+RECURSEALL = function recurseall { \
+	      echo ; \
+              echo "    ***************" ; \
+	      echo "    E X T E R N A L" ; \
+	      echo "    ***************" ; \
+	      $(RECURSE); recurse ext "$(EXT_PACKAGES)" $$1 ; \
+	      echo ; \
+	      echo "    *******************" ; \
+	      echo "    I N T E R F A C E S" ; \
+	      echo "    *******************" ; \
+	      $(RECURSE); recurse interface "$(INTERFACE_PACKAGES)" $$1 ; \
+	      echo ; \
+	      echo "    *****************" ; \
+	      echo "    L I B R A R I E S" ; \
+	      echo "    *****************" ; \
+	      $(RECURSE); recurse library "$(LIBRARY_PACKAGES)" $$1 ; \
+	      echo ; \
+	      echo "    ***************" ; \
+	      echo "    P R O G R A M S" ; \
+	      echo "    ***************" ; \
+	      $(RECURSE); recurse program "$(PROGRAM_PACKAGES)" $$1 ; \
+	      echo ; \
+	      echo "    *******" ; \
+	      echo "    T E S T" ; \
+	      echo "    *******" ; \
+	      $(RECURSE); recurse test "$(TEST_PACKAGES)" $$1 ; \
+	  } \
+
+RECURSEALLQUIET = function recurseallquiet { \
+	      $(RECURSE); recurse ext "$(EXT_PACKAGES)" $$1 ; \
+	      $(RECURSE); recurse library "$(LIBRARY_PACKAGES)" $$1 ; \
+	      $(RECURSE); recurse interface "$(INTERFACE_PACKAGES)" $$1 ; \
+	      $(RECURSE); recurse program "$(PROGRAM_PACKAGES)" $$1 ; \
+	      $(RECURSE); recurse test "$(TEST_PACKAGES)" $$1 ; \
+	  } \
+
+tar:	home export external library interface program testdir
+	$(SILENT) $(MKDIR) $(TAR_DIR)
+	$(SILENT) $(MKDIR) $(TAR_DIR)/RACE-SOFT
+	$(SILENT) $(MKDIR) $(TAR_DIR)/RACE-PARAM
+	$(SILENT) $(MKDIR) $(TAR_DIR)/RACE-DATA
+	$(SILENT) $(CP) $(BIN_DIR)/* $(TAR_DIR)/RACE-SOFT
+	$(SILENT) $(RM) $(TAR_DIR)/RACE-SOFT/*.log.gz
+	$(SILENT) $(RM) $(TAR_DIR)/RACE-SOFT/*.traj
+	$(SILENT) $(CP) ../param/*.ini $(TAR_DIR)/RACE-PARAM/
+	$(SILENT) $(CP) ../param/roadrunner-std.ini $(TAR_DIR)/RACE-PARAM/roadrunner.ini
+	$(SILENT) $(CP) ../param/*.txt $(TAR_DIR)/RACE-DATA/
+	tar -cf $(TAR_DIR).tar $(TAR_DIR)
+	gzip $(TAR_DIR).tar
+	$(RM) $(TAR_DIR)
+
+home: 
+	$(SILENT) $(MKDIR) $(LIB_DIR)
+	$(SILENT) $(MKDIR) $(BIN_DIR)
+	$(SILENT) $(MKDIR) $(INC_DIR)
+	$(SILENT) $(MKDIR) $(INC_DIR)
+
+export:
+	$(ECHO)
+	$(ECHO) "    ***********"
+	$(ECHO) "    E X P O R T"
+	$(ECHO) "    ***********"
+	$(ECHO)
+	$(ECHO) " --> Gathering header files"
+	$(SILENT) $(RECURSEALLQUIET); recurseallquiet export	
+	$(ECHO) " <-- Complete"
+
+install:
+	$(ECHO) "    *************"
+	$(ECHO) "    I N S T A L L"
+	$(ECHO) "    *************"
+	if test -d $(INSTALL_DIR) ; then \
+		echo "Install directory $(INSTALL_DIR) already exists." ; \
+		echo -n "Make backup and continue? yes/[no]: " ; \
+		read -e ANSWER ; \
+		if [ "$$ANSWER" = "yes" ] ; then \
+			TMPFILE=`mktemp -d $(INSTALL_DIR).XXXX` ; \
+			echo "Moving $(INSTALL_DIR) to" $$TMPFILE ; \
+			$(MV) $(INSTALL_DIR)/* $$TMPFILE ; \
+		else \
+			exit ; \
+		fi \
+	fi
+	$(SILENT) $(MKDIR) $(INSTALL_DIR)
+	$(SILENT) $(MKDIR) $(INSTALL_DIR)/bin
+	$(SILENT) $(MKDIR) $(INSTALL_DIR)/param
+	$(SILENT) $(RECURSE); recurse ext "$(EXT_PACKAGES)" install
+	$(SILENT) $(RECURSE); recurse program "$(PROGRAM_PACKAGES)" install
+	$(CP) roadrunner.ini $(INSTALL_DIR)/param
+	$(COPYALL); copyall "../param/*.tfm" $(INSTALL_DIR)/param
+	$(COPYALL); copyall "../param/*.ini" $(INSTALL_DIR)/param
+	$(COPYALL); copyall "../param/*.txt" $(INSTALL_DIR)/param
+	$(COPYALL); copyall "../param/*.bt" $(INSTALL_DIR)/param
+	$(COPYALL); copyall "../param/*.map" $(INSTALL_DIR)/param
+	$(CP) -r ../param/sounds $(INSTALL_DIR)/param
+
+
+HAVE_ROS := false
+ifdef ROS_ROOT
+ROSPACK := $(ROS_ROOT)/bin/rospack
+ifneq "$(strip $(wildcard $(ROS_ROOT)))" ""
+HAVE_ROS := true
+ROS_PACKAGE_PATH := $(ROS_PACKAGE_PATH):$(VLR_ROOT)/src/ros-pkg
+endif
+endif
+
+rospkgs:
+	$(ECHO) "    *************"
+	$(ECHO) "        R O S    "
+	$(ECHO) "    *************"
+	if [ "$(HAVE_ROS)" = "true" ] ; then \
+		rosmake -V $(ROS_PACKAGES) ;\
+	else \
+		echo "  !! ROS does not appear to be installed " ;\
+		echo "" ;\
+	fi
+
+ros-clean:
+	@for pkg in $(ROS_PACKAGES); do cd ros-pkg/$$pkg && echo Cleaning $$pkg && make clean > /dev/null 2>&1 && cd ../..; done;
+
+
+make-alldirs:
+	$(SILENT) $(RECURSEALL); recurseall ""
+
+test:
+	$(SILENT) $(RECURSEALL); recurseall test
+
+testloud:
+	$(SILENT) $(RECURSEALL); recurseall testloud
+
+loud:
+	$(SILENT) $(MAKE) MAKEFLAGS= LOUD=1 total
+
+clean: ros-clean
+	$(ECHO)
+	$(ECHO) "    *********"
+	$(ECHO) "    C L E A N"
+	$(ECHO) "    *********"
+	$(ECHO)
+	$(SILENT) $(RECURSEALL); recurseall clean
+
+dep:
+	$(ECHO)
+	$(ECHO) "    ***********"
+	$(ECHO) "    D E P E N D"
+	$(ECHO) "    ***********"
+	$(ECHO)
+	$(SILENT) $(RECURSEALL); recurseall dep
+
+relink:
+	$(ECHO)
+	$(ECHO) "    ***********"
+	$(ECHO) "    R E L I N K"
+	$(ECHO) "    ***********"
+	$(ECHO)
+	$(SILENT) $(RECURSEALL); recurseall relink
+
+distclean: ros-clean
+	$(ECHO)
+	$(ECHO) "    *****************"
+	$(ECHO) "    D I S T C L E A N"
+	$(ECHO) "    *****************"
+	$(ECHO)
+	$(SILENT) $(RECURSEALL); recurseall distclean
+	$(SILENT) $(RM) $(LIB_DIR)
+	$(SILENT) $(RM) $(INC_DIR)
+	$(SILENT) $(RM) $(INC_DIR)
+	$(SILENT) $(RM) $(BIN_DIR)
+	$(SILENT) $(RM) $(DOC_DIR)/*.log $(DOC_DIR)/*.aux  $(DOC_DIR)/*.dvi
+	$(SILENT) $(RM) $(VLR_ROOT)/src/Makefile.vars
+	$(SILENT) $(RM) $(VLR_ROOT)/src/*~
+	$(SILENT) $(RM) $(VLR_ROOT)/src/.\#*
+	$(SILENT) $(RM) $(VLR_ROOT)/src/\#*
+	$(SILENT) $(RM) $(VLR_ROOT)/src/core
+
+debug:
+	$(SILENT) $(MAKE) DEBUG=1 total
+
+docs:	
+	$(SILENT) doxygen doxystuff/Doxyfile
+
+patch:
+	utils/make_patch
+
+count:
+	utils/count_source
+
+.PHONY:	  tar home export install make-alldirs test testloud loud clean relink \
+	  distclean debug docs patch count ros-clean
+
+# DO NOT DELETE

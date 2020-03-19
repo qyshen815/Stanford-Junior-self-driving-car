@@ -1,0 +1,28 @@
+include ../../Makefile.conf
+
+# delete any fields you don't need
+
+CFLAGS +=
+IFLAGS += 
+LFLAGS += 
+LINK =
+
+MODULE_NAME = 
+
+SOURCES = 
+QT_SOURCES =
+
+PUBLIC_INCLUDES = 
+PUBLIC_LIBRARIES = 
+PUBLIC_BINARIES = 
+
+GTK_TARGETS =
+GTK2_TARGETS =
+QT_TARGETS =
+GRAPHICS_TARGETS =
+TARGETS = 
+TEST_TARGETS =
+
+# rules
+
+include ../../Makefile.rules

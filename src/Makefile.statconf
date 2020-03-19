@@ -1,0 +1,294 @@
+SHELL = /bin/bash
+
+INTERFACE_LIBS = -lcan_interface -lapplanix_interface -lparam_interface \
+                 -lvelodyne_interface \
+		 -lplanner_interface -levent_notify_interface\
+		 -llocalize_interface -lperception_interface \
+		 -lerror_interface -lerror_interface \
+		 -lradar_interface -lestop_interface \
+		 -lgls_interface -lghostcar_interface -lpassat_interface \
+		 -lsimulator_interface -lcontroller_interface \
+		 -lpidcontrol_interface -lhci_interface -lhealthmon_interface \
+		 -llatency_interface -lheartbeat_interface \
+		 -lplayback_interface -lpower_interface -ltimesync_interface \
+		 -lcamera_interface -lladybug_interface \
+		 -lshm_wrapper -lvelocore -lipc_interface \
+		 -ltrajectory_points_interface -lldlrs_interface
+
+GLOBAL_LIBS = -lparam_interface -lkdtree -llogio -llltransform \
+	      -lsockutils -lserial -lglobal -lipc -lz -lproj
+
+GRAPHICS_LIBS += -lpassatmodel -lvehiclemodels -limagery \
+	      	 -lrndfgl -lgui3D -lskybox -lgl_support -ltextures \
+		 -lglut -lglui -lGL -lGLU -L/usr/X11R6/lib -lX11 -lXext -lXi \
+		 -lXmu -lbil -limage
+
+ifeq (1,$(HAVE_IPP))
+  IFLAGS += -I$(IPPROOT)/include/
+  LFLAGS += -L$(IPPROOT)/sharedlib -L$(IPPROOT)/lib
+	
+  ifeq (1,$(HAVE_64BIT))
+    IPPLIBS = -ljpeg.ipp -lippcoreem64t -lippjem64t -lippiem64t -lippsem64t 
+  else
+    IPPLIBS = -ljpeg.ipp -lippj -lippi -lipps -lippcore
+  endif
+endif
+
+GTK2_INCLUDES += `pkg-config gtk+-2.0 --cflags` -I/opt/gnome/include
+GTK_INCLUDES = `gtk-config --cflags` -I/opt/gnome/include
+GTK_LIBS += `pkg-config gtk+-2.0 --libs` `gtk-config --libs` -lgtk_support
+
+ifeq (1,$(HAVE_LIBCURL))
+GRAPHICS_LIBS += -lcurl
+endif
+
+ifeq (1,$(HAVE_VIDEOOUT))
+IFLAGS += `pkg-config --cflags libavformat libavcodec libavutil`
+GRAPHICS_LIBS += `pkg-config --libs libavformat libavcodec libavutil`
+ifeq (1,$(HAVE_SWSCALE))
+IFLAGS += `pkg-config --cflags libswscale`
+GRAPHICS_LIBS += `pkg-config --libs libswscale`
+GRAPHICS_LIBS += -lswscale
+endif
+GRAPHICS_LIBS += -lvideoout -lavcodec -lavformat 
+endif
+
+define GRAPHICS_libtemplate
+$(1)_LFLAGS += $(GRAPHICS_LIBS) $(GLOBAL_LIBS)
+endef
+
+define QT_libtemplate
+$(1)_LFLAGS += $(QT_LIBS) $(GRAPHICS_LIBS) $(GLOBAL_LIBS)
+endef
+
+define GTK_libtemplate
+$(1)_LFLAGS += $(GTK_LIBS) $(GRAPHICS_LIBS) $(GLOBAL_LIBS)
+endef
+
+define GTK2_libtemplate
+$(1)_LFLAGS += $(GTK_LIBS) $(GRAPHICS_LIBS) $(GLOBAL_LIBS)
+endef
+
+define gtest_libtemplate
+$(1)_LFLAGS += -lgtest -lgtest_main 
+endef
+
+define QT_inctemplate
+IFLAGS += $(QT_INCLUDES)
+SOURCES += $(QT_SOURCES)
+endef
+
+define GTK_inctemplate
+IFLAGS += $(GTK_INCLUDES)
+endef
+
+define GTK2_inctemplate
+IFLAGS += $(GTK2_INCLUDES)
+endef
+
+CCACHE = /usr/bin/ccache
+
+ifdef COMPILER_ICC
+    CC = icc
+    CXX = icpc
+    LINK = icpc
+    AR = xiar cru
+else
+ifeq (1,$(USE_CCACHE))
+    CC = $(CCACHE) /usr/local/bin/gcc # /usr/bin/gcc
+    CXX = $(CCACHE) /usr/local/bin/g++ # /usr/bin/g++
+    LINK = $(CCACHE) /usr/local/bin/g++ # /usr/bin/g++
+else
+    CC = gcc
+    CXX = g++
+    LINK = g++
+endif
+    CFLAGS = -Wall -W -Wnested-externs -Wno-write-strings
+    CXXFLAGS = -Wall -W -D_REENTRANT -Wno-write-strings
+    AR = ar r
+endif
+
+LCOV = lcov
+GENHTML = genhtml
+RM = rm -rf
+RANLIB = ranlib
+CP = cp -f
+MV = mv -f
+LN = ln -s
+NEWER = cmp -s
+TOUCH = touch
+MKDIR = mkdir -p
+ECHO = @echo
+
+ifndef LOUD
+SILENT = @
+MAKEFLAGS += -s
+else
+SILENT =
+export LOUD
+endif
+
+SRC_DIR = $(VLR_ROOT)/src
+DOC_DIR = $(VLR_ROOT)/doc
+INC_DIR = $(VLR_ROOT)/include
+LIB_DIR = $(VLR_ROOT)/lib
+BIN_DIR = $(VLR_ROOT)/bin
+TAR_DIR = drivinginstall
+
+INSTALL_DIR = /home/driving/driving
+
+pathsearch = $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH)))))
+
+CFLAGS += -D_LARGEFILE64_SOURCE -frounding-math
+CXXFLAGS += -D_LARGEFILE64_SOURCE -frounding-math
+
+CFLAGS += -D_REENTRANT
+ifdef NO_STRICT_ALIASING
+CFLAGS += -Wno-strict-aliasing
+CXXFLAGS += -Wno-strict-aliasing
+endif
+
+ifndef COMPILER_ICC
+ifeq ($(GCC_VERSION), GCC4)
+CFLAGS += -Wno-pointer-sign
+endif
+endif
+
+ifdef DEBUG
+CFLAGS += -g -fno-inline
+CXXFLAGS += -g -fno-inline
+else
+CFLAGS += -O2
+CXXFLAGS += -O2
+endif
+
+ifdef COVERAGE
+CXXFLAGS += -fprofile-arcs -ftest-coverage
+LFLAGS += -lgcov
+endif
+
+ifdef FOUND_SUSE
+CFLAGS += -finline-limit=2000 -DFOUND_SUSE
+CXXFLAGS += -finline-limit=2000 
+endif
+
+ifdef MEMORY_DEBUG
+CFLAGS += -DMEMORY_DEBUG
+CXXFLAGS += -DMEMORY_DEBUG
+LFLAGS += -ldmalloc
+endif
+
+IFLAGS += -I$(INC_DIR) 
+LFLAGS += -L$(LIB_DIR) -L/usr/local/lib $(USER_LIBS) -lpthread -lm 
+
+ifeq (1,$(HAVE_QT))
+CXXFLAGS += -DUSE_QT
+
+ifndef QT_INCLUDES
+QT_INCLUDES += -I$(QTROOT)/include
+endif
+
+ifndef QT_LIBS
+QT_LIBS += -L$(QTROOT)/lib -lqgui3D -lqt-mt
+endif
+
+ifndef UIC
+ UIC = $(QTROOT)/bin/moc
+endif
+
+ifndef MOC
+ MOC = $(QTROOT)/bin/moc
+endif
+
+endif
+
+ifeq (1,$(HAVE_IPP))
+CFLAGS += -DHAVE_IPP
+CXXFLAGS += -DHAVE_IPP
+endif
+
+ifdef HAVE_LIBCURL
+CFLAGS += -DHAVE_LIBCURL
+CXXFLAGS += -DHAVE_LIBCURL
+endif
+
+ifeq (1,$(HAVE_VIDEOOUT))
+CFLAGS += -DHAVE_VIDEOOUT
+CXXFLAGS += -DHAVE_VIDEOOUT
+endif
+
+ifdef HAVE_SWSCALE
+CFLAGS += -DHAVE_SWSCALE
+CXXFLAGS += -DHAVE_SWSCALE
+endif
+
+ifdef NO_JOYSTICK
+CFLAGS += -DNO_JOYSTICK
+CXXFLAGS += -DNO_JOYSTICK
+else
+CFLAGS += -DHAVE_JOYSTICK
+CXXFLAGS += -DHAVE_JOYSTICK
+endif
+
+ifdef NO_TCPD
+CFLAGS += -DNO_TCPD
+CXXFLAGS += -DNO_TCPD
+else
+CFLAGS += -DHAVE_TCPD
+CXXFLAGS += -DHAVE_TCPD
+endif
+
+ifdef NO_LIBJPEG
+CFLAGS += -DNO_LIBJPEG
+CXXFLAGS += -DNO_LIBJPEG
+else
+CFLAGS += -DHAVE_LIBJPEG
+CXXFLAGS += -DHAVE_LIBJPEG
+endif
+
+ifdef NO_ZLIB
+CFLAGS += -DNO_ZLIB
+CXXFLAGS += -DNO_ZLIB
+else
+CFLAGS += -DHAVE_ZLIB
+CXXFLAGS += -DHAVE_ZLIB
+endif
+
+ifdef NO_LIBART
+CFLAGS += -DNO_LIBART
+CXXFLAGS += -DNO_LIBART
+else
+CFLAGS += -DHAVE_LIBART
+CXXFLAGS += -DHAVE_LIBART
+endif
+
+ifdef NO_READLINE
+CFLAGS += -DNO_READLINE
+CXXFLAGS += -DNO_READLINE
+else
+CFLAGS += -DHAVE_READLINE
+CXXFLAGS += -DHAVE_READLINE
+endif
+
+ifdef NO_STRICT_ALIASING
+CFLAGS += -DNO_STRICT_ALIASING
+CXXFLAGS += -DNO_STRICT_ALIASING
+else
+CFLAGS += -DHAVE_STRICT_ALIASING
+CXXFLAGS += -DHAVE_STRICT_ALIASING
+endif
+
+ifeq ($(ARCH), Darwin)
+CFLAGS += -D__DARWIN__
+CXXFLAGS += -D__DARWIN__
+LFLAGS += -Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
+LFLAGS_DYNAMIC = -dynamiclib
+EXT=dylib
+MODEXT=cbomod
+else
+LFLAGS_DYNAMIC = -shared
+EXT=so
+MODEXT=so
+endif
+
+all:

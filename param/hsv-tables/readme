@@ -1,0 +1,29 @@
+Author: Jake Askeland
+Date:   2010-07-16
+
+Shape tables
+-------------
+For use with [RACE_ROOT]/src/program/traffic_lights/image_data.cpp.
+Holds binary lookup table data for traffic light hue or saturation in the following format:
+
+[uint16] minimum lookup input
+[uint16] maximum lookup input
+[double] output gain
+[array of type given by file extension... eg: uint8] table data (usually a histogram)
+
+These files describe histograms created with the matlab function 
+[RACE_ROOT]/src/program/traffic_lights/create_hsv_tables.m
+which searches the directories ./red_lights/ ./ylw_lights/ ./grn_lights/ 
+for png files of actual traffic lights from log files. 
+
+To create these png files:
+	- run traffic_light_notify with the debug [D] option
+	- click in the gui window
+	- type 'r' to begin recording frames where traffic lights are requested
+	- type 'r' again to stop recording
+	- use an image editor to crop .hsv.png files to just around the traffic light
+	- save each cropped light as a png file in either grn_lights/ red_lights/ or ylw_lights/
+	- run the matlab function create_hsv_tables.m
+	- store the resulting files in [RACE_ROOT]/param/hsv-tables/
+
+These files are eventually processed by [RACE_ROOT]/src/program/traffic_lights/ShapeTable.h.

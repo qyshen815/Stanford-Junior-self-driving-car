@@ -1,0 +1,17 @@
+<package>
+  <description brief="libdevil">
+
+     libdevil
+
+  </description>
+  <author>Soeren Kammel</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/libdevil</url>
+  <export>
+    <cpp cflags="-I${prefix}/build/devil-1.7.8/include -frounding-math" lflags="-L${prefix}/build/devil-1.7.8/lib/.libs -Wl,-rpath,${prefix}/build/devil-1.7.8/lib/.libs -lIL"/>
+  </export>
+
+</package>
+
+

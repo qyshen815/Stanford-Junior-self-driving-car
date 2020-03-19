@@ -1,0 +1,464 @@
+install_includes = $(SILENT) \
+	for i in $(PUBLIC_INCLUDES) xxxx ; do \
+		if test -f $$i && ! $(NEWER) $(INC_DIR)/`basename $$i` $$i ; then \
+			echo "  -- Sym-linking $$i to $(INC_DIR)" ; \
+			export dir=`pwd` ; \
+			$(RM) -f $(INC_DIR)/`basename $$i` ; \
+			$(LN) -s $$dir/$$i $(INC_DIR) ; \
+		else if test -d $$i && ! $(NEWER) $(INC_DIR)/$$i $$i ; then \
+			echo "  -- Sym-linking $$i to $(INC_DIR)" ; \
+			export dir=`pwd` ; \
+			$(RM) -f $(INC_DIR)/$$i ; \
+			$(LN) -s $$dir/$$i $(INC_DIR) ; \
+		fi; \
+		fi; \
+	done 
+
+install_libraries = $(SILENT) \
+	for i in $(PUBLIC_LIBRARIES) xxxx ; do \
+		if test -f $$i && ! $(NEWER) $(LIB_DIR)/`basename $$i` $$i ; then \
+			echo "  -- Sym-linking $$i to $(LIB_DIR)" ; \
+			export dir=`pwd` ; \
+			$(RM) -f $(LIB_DIR)/`basename $$i` ; \
+			$(LN) -s $$dir/$$i $(LIB_DIR) ; \
+		fi; \
+	done 
+
+install_binaries = $(SILENT) \
+	for i in $(PUBLIC_BINARIES) xxxx ; do \
+		if test -f $$i && ! $(NEWER) $(BIN_DIR)/`basename $$i` $$i ; then \
+			echo "  -- Sym-linking $$i to $(BIN_DIR)" ; \
+			export dir=`pwd` ; \
+			$(RM) -f $(BIN_DIR)/`basename $$i` ; \
+			$(LN) -s $$dir/$$i $(BIN_DIR) ; \
+		fi; \
+	done 
+
+install_global = $(SILENT) \
+	for i in $(PUBLIC_BINARIES) xxxx ; do \
+		if test -f $$i && ! $(NEWER) $(INSTALL_DIR)/bin/$$i $$i ; then \
+			echo "  -- Installing $$i in $(INSTALL_DIR)/bin" ; \
+			export dir=`pwd` ; \
+			$(CP) $$dir/$$i $(INSTALL_DIR)/bin/$$i ; \
+		fi; \
+	done 
+
+run_loud_tests = $(SILENT) \
+	for i in $(TEST_TARGETS) xxxx ; do \
+		if test ! "$$i" = "xxxx" ; then \
+		   echo "  -- Testing $$i" ; \
+		   ./$$i ; \
+		fi ; \
+	done 
+
+run_brief_tests = $(SILENT) \
+	for i in $(TEST_TARGETS) xxxx ; do \
+		if test ! "$$i" = "xxxx" ; then \
+		   echo "  -- Testing $$i" ; \
+		   ./$$i | ../../utils/parse_test.py ; \
+		fi ; \
+	done 
+
+run_eval = $(SILENT) \
+  for i in $(EVAL_TARGETS) xxxx ; do \
+    if test ! "$$i" = "xxxx" ; then \
+       echo "  -- Running $$i" ; \
+       ./$$i ; \
+    fi ; \
+  done 
+
+remove_includes = $(SILENT) \
+	for i in $(PUBLIC_INCLUDES) xxxx ; do \
+		if test ! "$$i" = "xxxx" ; then \
+			$(RM) -f $(INC_DIR)/$$i ; \
+		fi ; \
+	done 
+
+remove_libraries = $(SILENT) \
+	for i in $(PUBLIC_LIBRARIES) xxxx ; do \
+		if test ! "$$i" = "xxxx" ; then \
+			$(RM) -f $(LIB_DIR)/$$i ; \
+		fi ; \
+	done 
+
+remove_binaries = $(SILENT) \
+	for i in $(PUBLIC_BINARIES) xxxx ; do \
+		if test ! "$$i" = "xxxx" ; then \
+			$(RM) -f $(BIN_DIR)/$$i ; \
+		fi ; \
+	done 
+
+uic_declarations = $(SILENT) \
+  for i in $(UIC_SOURCES) xxxx ; do \
+    if test ! "$$i" = "xxxx" && test $$i -nt $${i//.ui/.h} ; then \
+      echo "  -- UIC'ing $$i to $${i//.ui/.h} (QT)" ; \
+      $(UIC) $$i -o $${i//.ui/.h}; \
+    fi ; \
+  done 
+
+# obsolete with qt 4
+#uic_implementations = $(SILENT) \
+#  for i in $(UIC_SOURCES) xxxx ; do \
+#    if test ! "$$i" = "xxxx" && test $$i -nt $${i//.ui/.cpp} ; then \
+#      echo "  -- UIC'ing $$i to $${i//.ui/.cpp} (QT)" ; \
+#      $(UIC) $$i -i $${i//.ui/.h} -o $${i//.ui/.cpp}; \
+#    fi ; \
+#  done 
+    
+remove_uic = $(SILENT) \
+  for i in $(UIC_SOURCES) xxxx ; do \
+    if test ! "$$i" = "xxxx" && test $$i ; then \
+      $(RM) $${i//.ui/.h}; \
+      $(RM) $${i//.ui/.cpp}; \
+    fi ; \
+  done 
+
+rcc_implementations = $(SILENT) \
+  for i in $(RCC_SOURCES) xxxx ; do \
+    if test ! "$$i" = "xxxx" && test $$i -nt $${i//.qrc/.cpp} ; then \
+      echo "  -- RCC'ing $$i to $${i//.qrc/.cpp} (QT)" ; \
+      $(RCC) -o $${i//.qrc/.cpp} $$i; \
+    fi ; \
+  done 
+    
+remove_rcc = $(SILENT) \
+  for i in $(RCC_SOURCES) xxxx ; do \
+    if test ! "$$i" = "xxxx" && test $$i ; then \
+      $(RM) $${i//.qrc/.cpp}; \
+    fi ; \
+  done 
+
+remove_objects = $(SILENT) \
+  for i in $(SOURCES) xxxx ; do \
+    if test ! "$$i" = "xxxx" && test $$i ; then \
+      export dir=`dirname $$i`; \
+      $(RM) $$dir/*.o ; \
+      $(RM) $$dir/*.a ; \
+      $(RM) $$dir/*.so ; \
+      $(RM) $$dir/*.dylib ; \
+      $(RM) $$dir/*.cbomod ; \
+    fi ; \
+  done 
+    
+moc_implementations = $(SILENT) \
+  for i in $(MOC_SOURCES) xxxx ; do \
+    if test ! "$$i" = "xxxx" ; then \
+      export dir=`dirname $$i`; \
+      export base=`basename $$i`; \
+      if test $$i -nt $$dir/moc_$${base//.h/.cpp} ; then \
+      	echo "  -- MOC'ing $$i to $$dir/moc_$${base//.h/.cpp} (QT)" ; \
+      	$(MOC) $$i -o $$dir/moc_$${base//.h/.cpp}; \
+      fi ; \
+    fi ; \
+  done 
+   	
+remove_moc = $(SILENT) \
+  for i in $(MOC_SOURCES) xxxx ; do \
+    if test ! "$$i" = "xxxx" ; then \
+      export dir=`dirname $$i`; \
+      export base=`basename $$i`; \
+      $(RM) $$dir/moc_$${base//.h/.cpp}; \
+    fi ; \
+  done 
+
+MAKEEACH = function makeeach { \
+	for i in $$1 xxxx ; do \
+		if test ! "$$i" = "xxxx" ; then \
+			if ! $(MAKE) -j$(CPUCOUNT) $$i ; then \
+                                exit -1; \
+                        fi; \
+		fi ; \
+	done \
+	} \
+
+
+# Check for ROS.
+HAVE_ROS := false
+ifdef ROS_ROOT
+ROSPACK := $(ROS_ROOT)/bin/rospack
+ifneq "$(strip $(wildcard $(ROS_ROOT)))" ""
+HAVE_ROS := true
+ROS_PACKAGE_PATH := $(ROS_PACKAGE_PATH):$(VLR_ROOT)/src/ros-pkg
+endif
+endif
+
+# Convenience targets for telling the user about ROS.
+.PHONY: no_ros
+no_ros:
+	@echo "     This package requires ROS, which you do not appear to have.  Skipping package build.  If you think you have ROS, make sure ROS_ROOT is set and that rospack exists at ROS_ROOT/bin/rospack."
+
+.PHONY: ros_deps
+ros_deps:
+	@echo "  -- Building ROS Dependencies: " $(ROS_DEPS)
+	rosmake -s $(ROS_DEPS)
+	
+# If we have ROS_DEPS and we have ROS, add the appropriate LFLAGS and IFLAGS.
+ifeq "$(strip $(HAVE_ROS))" "true"
+ifneq "$(strip $(ROS_DEPS))" ""
+IFLAGS += `for i in $(ROS_DEPS) ; do rospack export --lang=cpp --attrib=cflags $$i ; done`
+LFLAGS += `for i in $(ROS_DEPS) ; do rospack export --lang=cpp --attrib=lflags $$i ; done`
+endif
+endif
+
+.PHONY: ros_show_flags
+ros_show_flags:
+	@echo "ROS cflags: "
+	for i in $(ROS_DEPS); do rospack export --lang=cpp --attrib=cflags $$i | xargs -n1; done
+	@echo
+	@echo "ROS lflags: "
+	for i in $(ROS_DEPS); do rospack export --lang=cpp --attrib=lflags $$i | xargs -n1; done
+
+MAKE_TARGETS += $(TARGETS)
+ifeq (1,$(HAVE_QT))
+MAKE_TARGETS += $(QT_TARGETS)
+endif
+MAKE_TARGETS += $(GTK_TARGETS) $(GTK2_TARGETS) $(GRAPHICS_TARGETS)
+
+# If we have ROS_DEPS but don't have ROS, then don't build anything for this package.
+ifneq "$(strip $(ROS_DEPS))" ""
+ifneq "$(strip $(HAVE_ROS))" "true"
+MAKE_TARGETS = no_ros
+endif
+endif
+
+
+libraries:
+	$(SILENT) $(MAKEEACH); makeeach "$(filter %.a, $(MAKE_TARGETS))"
+	$(SILENT) $(MAKEEACH); makeeach "$(filter %.so, $(MAKE_TARGETS))"
+	$(SILENT) $(MAKEEACH); makeeach "$(filter %.dylib, $(MAKE_TARGETS))"
+	$(SILENT) $(MAKEEACH); makeeach "$(filter %.cbomod, $(MAKE_TARGETS))"
+
+binaries:
+	$(SILENT) $(MAKEEACH); makeeach "$(filter-out %.a, $(MAKE_TARGETS))"
+
+tests:
+	$(SILENT) $(MAKEEACH); makeeach "$(TEST_TARGETS)"
+	
+evals:
+	$(SILENT) $(MAKEEACH); makeeach "$(EVAL_TARGETS)"
+
+all:	
+ifdef TDD
+	$(MAKE) test
+else
+	$(ECHO) ""
+	$(ECHO) " --> Making $(MODULE_NAME)"
+	$(uic_declarations)
+#	$(uic_implementations)
+	$(rcc_implementations)
+	$(moc_implementations)
+	$(create_include_directories)
+	$(install_includes)
+ifneq (Makefile.depend, $(wildcard Makefile.depend))
+	$(SILENT) $(MAKE) depend
+endif
+	$(SILENT) $(MAKE) libraries
+	$(install_libraries)
+	$(SILENT) $(MAKE) binaries
+	$(install_binaries)
+	$(ECHO) " <-- Complete"
+endif
+
+clean:
+	$(ECHO) "  -- Cleaning up "$(MODULE_NAME)
+	$(SILENT) $(RM) *.o *.a *.so *.lcov *.gcda *.gcno *.dylib *.cbomod core a.out Makefile.depend Makefile.depend.bak $(MAKE_TARGETS) $(TEST_TARGETS) $(EVAL_TARGETS) $(EXTRA_CLEAN)
+	$(SILENT) $(RM) -rf .lcov
+
+	$(remove_uic)
+	$(remove_rcc)
+	$(remove_objects)
+	$(ECHO) " <-- Complete"
+
+relink:
+	$(SILENT) $(RM) $(filter-out %.a, $(MAKE_TARGETS))
+	$(SILENT) for i in $(filter-out %.a, $(MAKE_TARGETS)) ; do \
+		$(MAKE) $$i ; \
+	done
+	$(ECHO) " <-- Complete"
+
+testloud:
+	$(ECHO) ""
+	$(ECHO) " --> Testing $(MODULE_NAME)"
+	$(install_includes)
+ifneq (Makefile.depend, $(wildcard Makefile.depend))
+	$(SILENT) $(MAKE) depend
+endif
+	$(SILENT) $(MAKE) libraries
+	$(install_libraries)
+	$(SILENT) $(MAKE) binaries
+	$(install_binaries)
+	$(SILENT) $(MAKE) tests
+	$(run_loud_tests)
+	$(ECHO) " <-- Complete"
+
+eval:
+	$(ECHO) ""	
+	$(ECHO) " --> Building $(MODULE_NAME)"
+	$(SILENT) $(MAKE) binaries
+	$(ECHO) " --> Evaluating $(MODULE_NAME)"	
+	$(SILENT) $(MAKE) evals
+	$(run_eval)
+	$(ECHO) " <-- Complete"
+
+test:
+	$(ECHO) ""
+	$(ECHO) " --> Testing $(MODULE_NAME)"
+	$(install_includes)
+ifneq (Makefile.depend, $(wildcard Makefile.depend))
+	$(SILENT) $(MAKE) depend
+endif
+	$(SILENT) $(MAKE) libraries
+	$(install_libraries)
+	$(SILENT) $(MAKE) binaries
+	$(install_binaries)
+	$(SILENT) $(MAKE) tests
+	$(run_brief_tests)
+	$(ECHO) " <-- Complete"
+
+testcov:
+	$(ECHO) ""
+	$(ECHO) " --> Testing coverage for $(MODULE_NAME)"
+	make clean
+	$(SILENT) $(MKDIR) .lcov
+	$(install_includes)
+ifneq (Makefile.depend, $(wildcard Makefile.depend))
+	$(SILENT) $(MAKE) depend
+endif
+	$(SILENT) $(MAKE) COVERAGE=1 libraries
+	$(install_libraries)
+	$(SILENT) $(MAKE) COVERAGE=1 binaries
+	$(install_binaries)
+	$(SILENT) $(MAKE) COVERAGE=1 tests
+	$(LCOV) --directory . --zerocounters
+	$(run_brief_tests)
+	$(LCOV) --directory . --capture --output-file .lcov/dgc.info
+	$(GENHTML) -o .lcov .lcov/dgc.info
+	$(ECHO) " <-- Complete"
+
+install:
+	$(install_global)
+
+distclean:
+	$(ECHO) "  -- Cleaning up $(MODULE_NAME)"
+	$(SILENT) $(RM) *.o *.a *.so *.dylib *.cbomod *~ core a.out .lcov *.gcda *.gcno
+	$(SILENT) $(RM) Makefile.depend Makefile.depend.bak $(MAKE_TARGETS) $(TEST_TARGETS) $(EXTRA_CLEAN)
+	$(remove_includes)
+	$(remove_libraries)
+	$(remove_binaries)
+	$(RM) core gmon.out *~ .\#* \#*
+
+	$(remove_uic)
+	$(remove_objects)
+	$(ECHO) " <-- Complete"
+
+export:
+	$(install_includes)
+
+dep depend:
+	$(ECHO) "  -- Assigning dependencies"
+	$(SILENT) $(TOUCH) Makefile.depend
+	$(SILENT) if test ! "$(SOURCES)x" = x ; then \
+		$(CC) -M -MG $(SOURCES) $(IFLAGS) $(filter -D%, $(CFLAGS)) > Makefile.depend ; \
+	fi
+	$(SILENT) $(RM) Makefile.depend.bak
+	if [ "$(ROS_DEPS)" != "" ]; then \
+ 	echo "  -- ROS dependencies:" $(ROS_DEPS); \
+	echo "       If you get a compilation error regarding one of these packages, try 'make ros_deps' first."; \
+	fi
+
+
+debug:
+	$(SILENT) $(MAKE) DEBUG=1 all
+
+loud:
+	$(SILENT) $(MAKE) MAKEFLAGS= LOUD=1 all
+
+.SUFFIXES: .c .o .a .so .C
+
+.PHONY:	   all clean loud dep depend install debug export distclean relink phase1 phase2 test testloud testcov
+
+$(foreach target,$(GRAPHICS_TARGETS),$(eval $(call GRAPHICS_libtemplate,$(target))))
+$(foreach target,$(GTK_TARGETS),$(eval $(call GTK_libtemplate,$(target))))
+$(foreach target,$(GTK2_TARGETS),$(eval $(call GTK2_libtemplate,$(target))))
+
+$(foreach target,$(GTK_TARGETS),$(eval $(call GTK_inctemplate,$(target))))
+$(foreach target,$(GTK2_TARGETS),$(eval $(call GTK2_inctemplate,$(target))))
+
+$(foreach target,$(TEST_TARGETS),$(eval $(call gtest_libtemplate,$(target))))
+
+ifeq (1,$(HAVE_QT))
+$(foreach target,$(QT_TARGETS),$(eval $(call QT_libtemplate,$(target))))
+$(foreach target,$(QT_TARGETS),$(eval $(call QT_inctemplate,$(target))))
+endif
+
+%.o:	%.c
+	$(ECHO) "  -- Compiling $< to $@ (C)"
+	$(SILENT) $(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
+
+%.a:	
+	$(ECHO) "  -- Archiving $^ into $@"
+	$(SILENT) $(AR) $@ $^ >& /dev/null
+	$(SILENT) $(RANLIB) $@
+
+%.o:	%.C
+	$(ECHO) "  -- Compiling $< to $@ (C++)"
+	$(SILENT) $(CXX) $(CXXFLAGS) $(IFLAGS) -c $< -o $@
+
+%.o:	%.cpp
+	$(ECHO) "  -- Compiling $< to $@ (C++)"
+	$(SILENT) $(CXX) $(CXXFLAGS) $(IFLAGS) -c $< -o$@
+
+%.pb.o:	%.pb.cc
+	$(ECHO) "  -- Compiling $< to $@ (C++)"
+	$(SILENT) $(CXX) $(filter-out -W,$(CXXFLAGS)) $(IFLAGS) -c $< 
+
+%.o:	%.cc
+	$(ECHO) "  -- Compiling $< to $@ (C++)"
+	$(SILENT) $(CXX) $(CXXFLAGS) $(IFLAGS) -c $< -o$@
+
+%.so:	
+%.dylib:	
+	$(ECHO) "  -- Archiving $^ into $@ (C/C++)"
+	$(SILENT) $(CXX) $(LFLAGS) $(LFLAGS_DYNAMIC) -o $@ $^
+
+%.cbomod:	
+	$(ECHO) "  -- Archiving $^ into $@ (C/C++)"
+	$(SILENT) $(CXX) $(LFLAGS) $(LFLAGS_DYNAMIC) -o $@ $^
+	$(ECHO) "  -- Installing $^ into $(CBO_MODDIR)"
+	$(SILENT) cp $@ $(CBO_MODDIR)
+
+%:	
+ifneq (,$(findstring gcc,$(LINK)))
+	echo "  -- Linking "$^" to "$@" (C)" 
+else
+	echo "  -- Linking "$^" to "$@" (C++)"
+endif
+	$(SILENT) $(LINK) $(filter %.o, $^) $(filter %.a, $^) -o $@ -L. $(patsubst lib%.a,-l%,$(filter %.a, $^)) $(LFLAGS) $($@_LFLAGS)
+
+.SECONDARY:
+
+# Google protol buffer compilation
+
+%.pb.cc %.pb.h: 	%.proto
+	$(ECHO) "  -- Creating protocol buffer from $< (PB)"
+	$(SILENT) /usr/local/bin/protoc --cpp_out=. $<
+
+# QT Moc preprocessor
+
+./%.h: %.ui
+	$(ECHO) "  -- Creating Header file for $< (uic)"
+	$(SILENT) $(UIC) $< -o $@
+
+./%.cpp: %.ui
+	$(ECHO) "  -- Creating C++ file for $< (uic)"
+	$(SILENT) $(UIC) -impl $*.h $< -o $@
+
+./%-moc.cpp %-moc.cpp: %.h
+	$(ECHO) "  -- Creating MOC C++ file for $< (moc)"
+	$(SILENT) $(MOC) -o $@ $<
+
+ifeq (Makefile.depend, $(wildcard Makefile.depend))
+include Makefile.depend
+endif
+
+

@@ -1,0 +1,101 @@
+# Config file for HCI module that maps
+# keys to sound clips, format is:
+# key filename
+# - No whitespace in keys or filenames!
+# - No duplicate keys! (first one in file wins)
+
+# messages
+
+warning				warning.ogg
+carfront			carfront.ogg
+leftlane			leftlane.ogg
+returnlane			returnlane.ogg
+exceedspeed			exceedspeed.ogg
+mph				mph.ogg
+activating			activating.ogg
+deactivating			deactivating.ogg
+acc				acc.ogg
+LaneDepartureWarning		LaneDepartureWarning.ogg
+NowInLane			NowInLane.ogg
+LaneChangeCanceled		LaneChangeCanceled.ogg
+failure				failure.ogg
+
+# pidcontrol
+
+Starting			starting.ogg
+Killed				killed.ogg
+CRASHED				crashed.ogg
+Lost				lostheart.ogg
+
+# perception
+
+perception_warning		perception_warning.ogg
+perception			perception.ogg
+sensor				sensor.ogg
+sensor_failure			sensor_failure.ogg
+ibeo				ibeo.ogg
+velodyne			velodyne.ogg
+radar				radar.ogg
+applanix			applanix.ogg
+localize			localize.ogg
+
+tracking_car			tracking_car.ogg
+proximity_warning		proximity_warning.ogg
+
+# module names
+ 
+PASSAT				passat.ogg
+TEST_MODULE			test_module.ogg
+SENSOR_VIEW			sensor_view.ogg
+PARAM_SERVER			param_server.ogg
+
+# directions
+
+left				left.ogg
+right				right.ogg
+
+# planner
+
+waitingforpermission		waitingforpermission.ogg
+readytogo			readytogo.ogg
+
+# numbers
+ 
+0				zero.ogg
+1				one.ogg
+2				two.ogg
+3				three.ogg
+4				four.ogg
+5				five.ogg
+6				six.ogg
+7				seven.ogg
+8				eight.ogg
+9				nine.ogg
+
+0cm				0cm.ogg
+1cm				1cm.ogg
+2cm				2cm.ogg
+3cm				3cm.ogg
+4cm				4cm.ogg
+5cm				5cm.ogg
+6cm				6cm.ogg
+7cm				7cm.ogg
+8cm				8cm.ogg
+9cm				9cm.ogg
+10cm				10cm.ogg
+11cm				11cm.ogg
+12cm				12cm.ogg
+13cm				13cm.ogg
+14cm				14cm.ogg
+15cm				15cm.ogg
+16cm				16cm.ogg
+17cm				17cm.ogg
+18cm				18cm.ogg
+19cm				19cm.ogg
+20cm				20cm.ogg
+25cm				25cm.ogg
+30cm				30cm.ogg
+35cm				35cm.ogg
+40cm				40cm.ogg
+45cm				45cm.ogg
+50pluscm			50pluscm.ogg

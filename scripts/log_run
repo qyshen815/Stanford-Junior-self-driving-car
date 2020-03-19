@@ -1,0 +1,88 @@
+#!/usr/bin/python
+
+# This script starts up several log processes, then prompts the user at the end
+# to choose a name for the resulting logs
+
+import os
+import re
+import sys
+import subprocess
+import signal
+import time
+
+def exithandler(signum, frame):
+  if dgclog.returncode == None:
+    dgclog.terminate()
+  if llflog.returncode == None:
+    llflog.terminate()
+  if vlflog.returncode == None:
+    vlflog.terminate()
+  if camlog.returncode == None:
+    camlog.terminate()
+  print "\nExiting"
+  name = None
+  while name == None:
+    name = raw_input("Please give a name (blank to ignore log):")
+    if name != None and re.search("[^0-9a-zA-Z_\-]", name):
+      print "Invalid character in file name!"
+      name = None
+  if name != "":
+    files = os.listdir(sys.argv[1])
+    for file in files:
+      if file.startswith("tmplog"):
+        os.rename("".join((sys.argv[1], "/", file)), \
+            "".join((sys.argv[1], "/", name, file[6:])))
+  sys.exit(0)
+  return
+
+if len(sys.argv) != 2:
+  print "Usage:", sys.argv[0], " /directory/to/save/to"
+  sys.exit(0)
+
+if not os.path.exists(sys.argv[1]):
+  answer = raw_input("Target directory does not exist.  Create it? (y/N)")
+  if answer.lower() == "y" or answer.lower() == "yes":
+    os.makedirs(sys.argv[1])
+  else:
+    sys.exit(0)
+else:
+  subprocess.call("".join(("rm -rf ", sys.argv[1], "/tmplog*")), shell=True)
+    #"".join((sys.argv[1],"/tmplog*"))))
+
+pwd = os.getenv("PWD")
+
+prefix = "./"
+if re.search("scripts/*$",pwd):
+  prefix = "../bin/"
+
+print "Starting Logs..."
+
+nullout = file('/dev/null', 'a+')
+dgclog = subprocess.Popen(("".join((prefix, "dgc_logger")), \
+    "".join((sys.argv[1], "/tmplog"))), stdout=nullout, stderr=nullout)
+llflog = subprocess.Popen(("".join((prefix, "ladybug_logger")), \
+    "".join((sys.argv[1], "/tmplog"))), stdout=nullout, stderr=nullout)
+vlflog = subprocess.Popen(("".join((prefix, "velodyne_logger")), \
+    "".join((sys.argv[1], "/tmplog"))), stdout=nullout, stderr=nullout)
+camlog = subprocess.Popen(("".join((prefix, "camera_logger")), \
+    "".join((sys.argv[1], "/tmplog"))), stdout=nullout, stderr=nullout)
+
+signal.signal(signal.SIGINT, exithandler)
+
+starttime = time.time();
+while True:
+  time.sleep(1)
+  curtime = time.time();
+  diff = time.gmtime(curtime - starttime);
+  sys.stdout.write("                                                \r")
+  sys.stdout.write("".join(("Logfile time elapsed ", \
+      time.strftime("%H:%M:%S",diff), "\r")))
+  sys.stdout.flush()
+  dgclog.poll()
+  llflog.poll()
+  vlflog.poll()
+  camlog.poll()
+  if dgclog.returncode != None:
+    print "Logfile died!  Cleaning up..."
+    exithandler(None,None)
+

@@ -1,0 +1,31 @@
+workspace_path_ effort_experiment
+
+hand_labeled_percents_
+8
+0.01
+0.02
+0.03
+0.1
+0.3
+0.6
+0.8
+1.0
+
+max_num_epochs_ 99
+confidence_thresh_ 5
+min_objective_ 0.02
+
+background_paths_
+2
+background/path/one
+background/path/two
+
+hand_labeled_paths_
+2
+hand_labeled/path/one
+hand_labeled/path/two
+
+unlabeled_paths_
+2
+unlabeled/path/one
+unlabeled/path/two

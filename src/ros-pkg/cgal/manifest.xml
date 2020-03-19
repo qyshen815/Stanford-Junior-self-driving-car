@@ -1,0 +1,17 @@
+<package>
+  <description brief="cgal">
+
+     cgal
+
+  </description>
+  <author>teichman</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cgal</url>
+  <export>
+    <cpp cflags="-I${prefix}/build/CGAL-3.6/include -frounding-math" lflags="-L${prefix}/build/CGAL-3.6/lib -Wl,-rpath,${prefix}/build/CGAL-3.6/lib -lCGAL"/>
+  </export>
+
+</package>
+
+

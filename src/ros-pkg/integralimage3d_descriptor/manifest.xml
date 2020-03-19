@@ -1,0 +1,20 @@
+<package>
+  <description brief="integralimage3d_descriptor">
+
+     integralimage3d_descriptor
+
+  </description>
+  <author>christian</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/integralimage3d_descriptor</url>
+  <depend package="roscpp"/>
+  <depend package="pipeline"/>
+  <depend package="cluster_descriptors"/>
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -Wl,-rpath ${prefix}/lib -lintegralimage3d_descriptor"/>
+  </export>
+
+</package>
+
+

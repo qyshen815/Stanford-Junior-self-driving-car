@@ -1,0 +1,20 @@
+MDF_name	vail_demo02.mdf.txt
+RNDF	VAIL_rndf_20091017.txt
+format_version	1.0
+creation_date	17-Oct-09
+checkpoints
+num_checkpoints	3
+44
+44
+45
+end_checkpoints
+speed_limits
+num_speed_limits	6
+1	0	3
+2	0	8
+63 0 6
+64 0 8
+22	0	5
+24	0	5
+end_speed_limits
+end_file

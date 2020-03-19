@@ -1,0 +1,2 @@
+#!/bin/tcsh 
+wc -l `ls */*/*.cpp */*/*.cc */*/*.c */*/*.h | grep -v "ext/" | grep -v "vehiclemodels" | grep -v "passatmodel" | grep -v "touaregmodel"` | tail -1 | awk '{ print $1 }'

@@ -1,0 +1,382 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Microsoft FrontPage 6.0">
+   <TITLE>Intel&reg; Integrated Performance Primitives IJG Implementation for Linux*</TITLE>
+	<style>
+<!--
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	color:black; margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<h1><I><B>Intel<SUP>&reg;</SUP>
+Integrated Performance Primitives<br>
+IJG Implementation for Linux*</B></I></h1>
+</CENTER>
+
+
+<h5><A HREF="#Disclaimer">Disclaimer</A> <BR>
+<A HREF="#License_Definitions">License Definitions<br>
+</A><A HREF="#Overview">Overview</A><BR> 
+<A HREF="#System_Requirements">System Requirements</A><BR>
+<A HREF="#Package_Contents">Package Contents</A> <BR>
+<A HREF="#Installation">Installation</A> <BR>
+<A HREF="#How_to_Build_Source_Code">How to Build Source Code</A><BR>
+<A HREF="#Running_the_Software">Running the Software</A><BR>
+<A HREF="#Support">Technical Support and Feedback</A><BR>
+</h5>
+
+<h2><a NAME="Disclaimer"></a>Disclaimer</h2>
+
+<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="COLOR: windowtext; FONT-SIZE: 10pt; mso-bidi-font-size: 7.5pt">INFORMATION
+IN THIS DOCUMENT IS PROVIDED IN CONNECTION WITH INTEL<sup>®</sup> PRODUCTS. NO
+LICENSE, EXPRESS OR IMPLIED, BY ESTOPPEL OR OTHERWISE, TO ANY INTELLECTUAL
+PROPERTY RIGHTS IS GRANTED BY THIS DOCUMENT. EXCEPT AS PROVIDED IN INTEL'S TERMS
+AND CONDITIONS OF SALE FOR SUCH PRODUCTS, INTEL ASSUMES NO LIABILITY WHATSOEVER,
+AND INTEL DISCLAIMS ANY EXPRESS OR IMPLIED WARRANTY, RELATING TO SALE AND/OR USE
+OF INTEL PRODUCTS INCLUDING LIABILITY OR WARRANTIES RELATING TO FITNESS FOR A
+PARTICULAR PURPOSE, MERCHANTABILITY, OR INFRINGEMENT OF ANY PATENT, COPYRIGHT OR
+OTHER INTELLECTUAL PROPERTY RIGHT. <U1:P>
+</U1:P>
+</span></p>
+<p class="MsoNormal" style="MARGIN: 5pt 0cm; mso-layout-grid-align: none"><span style="COLOR: windowtext; mso-bidi-font-size: 9.0pt">Intel
+products are not intended for use in medical, life saving, life sustaining,
+critical control or safety systems, or in nuclear facility applications.<span style="mso-spacerun: yes">&nbsp;</span>Intel may make changes to specifications and product descriptions at any
+time, without notice.</span></p>
+
+<h2><a NAME="License_Definitions"></a>License Definitions</h2>
+
+<p>
+
+      By downloading and installing this sample, you hereby agree that the 
+accompanying Materials are being provided to you under the terms and conditions 
+of the End User License Agreement for the Intel<sup>®</sup> Integrated 
+Performance Primitives product previously accepted by you. Please refer to the 
+file <b>ipplic.htm</b> for more information.<span style="mso-bidi-font-size: 10.0pt">&nbsp;</span></p>
+
+<p>JPEG is an international standard promoted by ISO/IEC <span style="COLOR: windowtext; mso-bidi-font-size: 10.0pt">(<a href="http://www.iso.org">ISO
+Website</a>) </span>and other organizations. Implementations of these standards, or the standard
+enabled platforms may require licenses from various entities, including Intel
+Corporation.</p>
+
+<h2><a NAME="Overview"></a>Overview</h2>
+This sample demonstrates how to use the Intel<SUP>&reg;</SUP>
+Integrated Performance Primitives (Intel<SUP>&reg;</SUP>
+ IPP) libraries to increase the performance of
+the Independent JPEG Group (IJG) library. The detailed description of the
+modification of the IJG library by means of<span style="mso-spacerun: yes"> </span>embedded Intel<SUP>&reg;</SUP>
+IPP functions may be found in the document <i>&quot;IJG Library Modification by
+Using IPP&quot;</i> that is included in this package (<a href="doc/ijg_ipp.pdf">ijg_ipp.pdf</a>).
+The JPEG decoder is based on the international standard ISO/IEC 10918-1.
+
+<P>
+Additional information on this software as well as other Intel software 
+performance products is available at 
+<A HREF="http://developer.intel.com/software/products/">
+http://developer.intel.com/software/products/</A>.
+
+<h2><a NAME="System_Requirements"></a>System Requirements</h2>
+
+<font size=-1>
+<B>Recommended hardware:</B>
+&nbsp;
+</font>
+<ul>
+  <li>A system based on the Intel<sup>®</sup> Pentium<sup>®</sup>
+    4 processor with 128 megabytes of RAM, or better</li>
+	<li>A system based on a Intel<sup>®</sup> Pentium<sup>®</sup> D processor 
+	with Intel<sup>®</sup> Extended Memory 64 Technology </li>
+	<li>A system based on a Intel<sup>®</sup> Itanium<sup>®</sup> 2 processor</li>
+	<li>A system based on a Intel<sup>®</sup> IXP4xx processor </li>
+</ul>
+
+<font size=-1>
+<B>Hardware requirements:</B>
+</font>
+<ul>
+  <li>A system based on a Intel<sup>®</sup>
+ Pentium<sup>®</sup>
+    processor, Intel<sup>®</sup>
+ Xeon&#8482; processor, or subsequent IA-32 processor</li>
+	<li>A system based on a Intel<sup>®</sup> Pentium<sup>®</sup> D processor 
+	with Intel<sup>®</sup> Extended Memory 64 Technology </li>
+	<li>A system based on a Intel<sup>®</sup> Itanium<sup>®</sup> processor</li>
+	<li>A system based on a Intel<sup>®</sup> IXP4xx processor </li>
+</ul>
+
+<font size=-1>
+<B>Software requirements:&nbsp;
+</B>
+</font>
+<ul>
+  <li>Intel<sup>®</sup> IPP 5.0 for Linux*, or later<li>Red Hat Linux 8.0, or 
+	later, kernel 2.4 (Montavista Embedded Linux v3.0 for IXP)<li>Intel<sup>®</sup> C++ Compiler 8.1 for Linux*, or later<li>
+	GCC 3.2, or later</li>
+</ul>
+<h2><a NAME="Package_Contents"></a>Package Contents</h2>
+
+<p class="MsoNormal" style="MARGIN-BOTTOM: 12pt">The <b> Intel<sup>®</sup> IPP IJG Implementation for
+Linux*</b> package contains the
+following files:</p>
+<table border="1" cellPadding="0" style="mso-cellspacing: 1.5pt; mso-padding-alt: 0cm 0cm 0cm 0cm" width="99%">
+    <tr>
+		<span style="mso-bidi-font-size: 10.0pt">
+      <td style="padding: 0.75pt" bgcolor="#C0C0C0" colspan="2" width="589">
+        <b>.\ipp_sample\jpeg\</b>
+      </td>
+  </span>
+    </tr>
+	<tr>
+		<span style="mso-bidi-font-size: 10.0pt">
+      <td style="padding: 0.75pt" width="254">
+        ipplic.htm</td>
+      <td style="padding: 0.75pt" width="329">
+        End User License Agreement<span lang=EN-US style='mso-ansi-language:EN-US'> <o:p></o:p></span>
+      </td>
+  </span>
+    </tr>
+	<tr>
+		<span style="mso-bidi-font-size: 10.0pt">
+      <td style="padding: 0.75pt" width="254">
+        <span style="mso-bidi-font-size: 10.0pt">
+        support.txt
+      </span>
+      </td>
+      <td style="padding: 0.75pt" width="329">
+        Contains information for technical support
+      </td>
+  </span>
+    </tr>
+    <tr>
+      <td bgColor="#c0c0c0" colSpan="2" style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="98%"><b>
+		.\ipp_sample\jpeg\ijg\</b></td>
+    </tr>
+    <tr>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt; WIDTH: 39.82%" width="39%">
+        <p class="MsoNormal">readme.htm</p>
+      </td>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="59%">
+        <p class="MsoNormal">This file</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt; WIDTH: 39.82%" width="39%">
+        Makefile</td>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="59%">
+        Makefile to build this sample</td>
+    </tr>
+    <tr>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt; WIDTH: 39.82%" width="39%">
+        linux32.ini, linux64.ini, linuxem64t.ini, linuxixp_le.ini, 
+		linuxixp_be.ini</td>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="59%">
+        Initialization for tools</td>
+    </tr>
+    <tr>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt; WIDTH: 39.82%" width="39%">
+        <p class="MsoNormal">
+build32.sh, build64.sh, buildem64t.sh, buildixp_le.sh, buildixp_be.sh</p>
+      </td>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="59%">
+        <p class="MsoNormal">Command file to build this sample</p>
+      </td>
+    </tr>
+    <tr>
+      <td bgColor="#c0c0c0" colSpan="2" style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="98%"><b>
+		.\ipp_sample\jpeg\ijg\doc\</b></td>
+    </tr>
+    <tr>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt; WIDTH: 39.82%" width="39%">
+        <p class="MsoNormal">change.log, coderules.doc, filelist.doc,
+        install.doc, jconfig.doc, libjpeg.doc, README,
+        structure.doc, usage.doc, wizard.doc, ijg_ipp.xls, IJG_IPP.pdf</p>
+    </td>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="59%">IJG
+        documentation</td>
+    </tr>
+  <tr>
+      <td bgColor="#c0c0c0" colSpan="2" style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="98%"><b>
+		.\ipp_sample\jpeg\ijg\include\</b></td>
+  </tr>
+  <tr>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt; WIDTH: 39.82%" width="39%">
+        <p class="MsoNormal">jconfig.h, jerror.h, jmorecfg.h, jpeglib.h,
+        jversion.h</p>
+    </td>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="59%">External
+        IJG header files</td>
+  </tr>
+  <tr>
+      <td bgColor="#c0c0c0" colSpan="2" style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="98%"><b>
+		.\ipp_sample\jpeg\ijg\_include\</b></td>
+  </tr>
+    <tr>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt; WIDTH: 39.82%" width="39%">jinclude.h,
+        jmemsys.h, jpegint.h, jpegipp.h</td>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="59%">Internal
+        IJG header files</td>
+    </tr>
+  <tr>
+      <td bgColor="#c0c0c0" colSpan="2" style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="98%"><b>
+		.\ipp_sample\jpeg\ijg\_src\</b></td>
+  </tr>
+    <tr>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt; WIDTH: 39.82%" width="39%">jcapimin.c,
+        jcapistd.c, jccoefct.c, jccolor.c, jcdctmgr.c, jchuff.c, jchuff.h,
+        jcinit.c, jcmainct.c, jcmarker.c, jcmaster.c, jcomapi.c, jcparam.c,
+        jcphuff.c, jcprepct.c, jcsample.c, jctrans.c, jdapimin.c, jdapistd.c,
+        jdatadst.c, jdatasrc.c, jdcoefct.c, jdcolor.c, jdct.h, jddctmgr.c,
+        jdhuff.c, jdhuff.h, jdinput.c, jdmainct.c, jdmarker.c, jdmaster.c,
+        jdmerge.c, jdphuff.c, jdpostct.c, jdsample.c, jdtrans.c, jerror.c,
+        jfdctflt.c, jfdctfst.c, jfdctint.c, jidctflt.c, jidctfst.c, jidctint.c,
+        jidctred.c, jmemmgr.c, jmemnobs.c, jquant1.c, jquant2.c, jutils.c</td>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="59%">Source
+        code files</td>
+    </tr>
+  <tr>
+      <td bgColor="#c0c0c0" colSpan="2" style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="98%"><b>
+		.\ipp_sample\jpeg\ijg\samples\utils</b></td>
+  </tr>
+    <tr>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt; WIDTH: 39.82%" width="39%">cderror.h,
+        cdjpeg.c, cdjpeg.h, cjpeg.c, djpeg.c, jpegtran.c, rdbmp.c, rdcolmap.c,
+        rdgif.c, rdjpgcom.c, rdppm.c, rdrle.c, rdswitch.c, rdtarga.c,
+        testimg.bmp, testimg.jpg, testimg.ppm, testimgp.jpg, testorig.jpg,
+        testprog.jpg, transupp.c, transupp.h, wrbmp.c, wrgif.c, wrjpgcom.c,
+        wrppm.c, wrrle.c, wrtarga.c</td>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="59%">IJG
+        sample files</td>
+    </tr>
+  <tr>
+      <td bgColor="#c0c0c0" colSpan="2" style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="98%"><b>
+		.\ipp_sample\jpeg\ijg\samples\ijgtiming</b></td>
+  </tr>
+    <tr>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt; WIDTH: 39.82%" width="39%">ijg_timing.c</td>
+      <td style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" width="59%">Sample
+        to estimate IJG performance</td>
+    </tr>
+</table>
+
+<h2><a NAME="Installation"></a>Installation</h2>
+
+<P>Extract all files in l_ipp-sample-jpeg_*.tgz to a desired folder. Please make 
+sure to preserve the directory structure. The files for this sample will be 
+found in the ./ipp_sample/jpeg/ijg folder.
+
+<h2><a NAME="How_to_Build_Source_Code"></a>How to Build Source Code</h2>
+
+<font size=-1>
+
+      <span style="mso-bidi-font-size: 10.0pt">
+
+    <ul type="disc">
+ <li class=MsoNormal style='color:windowtext;mso-margin-top-alt:auto;
+     mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo12;tab-stops:list .5in'><span lang=EN-US style='mso-bidi-font-size:
+     10.0pt;mso-ansi-language:EN-US'>Set up your build environment by creating
+     an environment variable named <b>IPPROOT</b> that points to the root
+     directory of your Intel</span><o:p>®</o:p><span lang=EN-US style='mso-bidi-font-size:
+     10.0pt;mso-ansi-language:EN-US'> IPP installation. </span><span
+     style='mso-bidi-font-size:10.0pt'>For example: <b>/opt/intel/ipp/5.0/ia32</b> </span>
+
+	</li>
+ 		<li class="MsoNormal">To build for an IA-32 system run build32.sh. 
+        </li>
+	<li class="MsoNormal">To build for an Intel<sup>®</sup> Pentium<sup>®</sup> 
+	D processor with Intel<sup>®</sup> Extended Memory 64 Technology system run buildem64t.sh</li>
+	<li class="MsoNormal">To build for an Intel<o:p>®</o:p>
+Itanium<o:p>®</o:p>
+	processor based system run build64.sh</li>
+	<li class="MsoNormal">To build for an Intel<o:p>®</o:p>
+	IXP4xx Processor little-endian operating system run buildixp_le.sh</li>
+	<li class="MsoNormal">To build for an Intel<o:p>®</o:p>
+	IXP4xx Processor big-endian operating system run buildixp_be.sh</li>
+</ul>
+</font>
+
+<p>As a result of build you will find static IJG library, shared IJG library, 
+set of IJG tools and simple test program in ./bin/linux32 folder (or appropriate 
+for other platform). The output binary 
+files will have the names: libijg.ipp.a, libijg.ipp.so, cjpeg, djpeg, jpegtran, 
+rdjpgcom, wrjpgcom and ijg_timing.</p>
+
+<font size=-1>
+
+      <p><span style='mso-bidi-font-size:
+     10.0pt'>Note, with default settings it will build sample using Intel</span><o:p>®</o:p><span style='mso-bidi-font-size:
+     10.0pt'> C++
+compiler. </span>To change defaults see Makefile
+for brief description of the
+  available variables and additional options.</p>
+
+
+
+</font>
+
+
+
+</span>
+
+<h2><a NAME="Running_the_Software"></a>Running the Software</h2>
+
+<P><span style="mso-bidi-font-size: 10.0pt">You can run the desired JPEG utility
+(for example,</span><span style="FONT-FAMILY: 'Courier New'; FONT-SIZE: 9pt; mso-bidi-font-size: 7.5pt">
+cjpeg</span><span style="mso-bidi-font-size: 7.5pt">, </span><span style="FONT-FAMILY: 'Courier New'; FONT-SIZE: 9pt; mso-bidi-font-size: 7.5pt">djpeg</span><span style="mso-bidi-font-size: 7.5pt">,
+</span><span style="FONT-FAMILY: 'Courier New'; FONT-SIZE: 9pt; mso-bidi-font-size: 7.5pt">ijg_timing</span><span style="mso-bidi-font-size: 10.0pt"><span style="mso-spacerun: yes">&nbsp;
+</span>and so on by typing its name<span style="mso-spacerun: yes">&nbsp; </span>in
+the command line. To see the list of available options a name should be entered
+with the switch </span><span style="FONT-FAMILY: 'Courier New'; FONT-SIZE: 9pt; mso-bidi-font-size: 7.5pt">-?</span><span style="mso-bidi-font-size: 10.0pt">.
+<o:p>
+&nbsp;
+</o:p>
+</span>
+
+<o:p>
+
+<P>In order to run each executable created by this sample, the Intel® IPP shared 
+libraries
+and created IJG shared library must be on the operating system loader search 
+path. At the install stage shared libraries are located in sharedlib
+subdirectory of the root directory of the Intel® IPP installation (IPPROOT).
+You can set up the correct Intel<o:p>®</o:p>
+IPP environment variables manually or invoking
+the appropriate command file, for example for IA32: &quot;$(IPPROOT)/tools/env/ippenv32.sh&quot; from the Intel® IPP
+installationt. You also will need to add this sample's bin folder to LD_LIBRARY_PATH 
+environment variable, for example invoking this line at command prompt: export 
+LD_LIBRARY_PATH=~/</o:p>ipp_sample/jpeg/ijg/bin/linux32:$LD_LIBRARY_PATH<span style="mso-bidi-font-size: 10.0pt">
+</span>
+
+<h2><a NAME="Support"></a>Technical Support and Feedback</h2>
+
+<p>Your feedback on the Intel<o:p>®</o:p>
+IPP samples is very important to us and your input 
+will be considered for future releases. The Intel<o:p>®</o:p>
+IPP sample code is intended 
+only as an example of how to use the APIs to implement algorithms in different 
+development environments. Please submit problems with installation, compiling, 
+linking, runtime errors or incorrect output to
+<a href="https://premier.intel.com/">Intel® Premier Support</a>. </p>
+<p>You can also share and discuss the experience of IPP sample usage with other 
+developers at <a href="http://softwareforums.intel.com/ids">Intel Software 
+Developer Forum</a>.</p>
+
+<font size=-2>
+<p>Intel, the Intel logo, Intel SpeedStep, Intel NetBurst, Intel NetStructure,
+MMX, i386, i486, Intel386, Intel486, Intel740, IntelDX2, IntelDX4,
+IntelSX2,Celeron, Intel Centrino, Intel Xeon, Intel XScale, Itanium, Pentium,
+Pentium II Xeon, Pentium III Xeon, Pentium M, and VTune are trademarks or
+registered trademarks of Intel Corporation or its subsidiaries in the United
+States and other countries. </p>
+<p>* Other names and brands may be claimed as the property of others. <br>
+&nbsp;<br>
+Copyright © 2002-2005 Intel Corporation.</p>
+</BODY>
+</HTML>

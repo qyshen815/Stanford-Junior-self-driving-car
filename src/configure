@@ -1,0 +1,287 @@
+#!/usr/bin/perl
+
+use strict;
+use English;
+use FileHandle;
+
+my $pwd = $ENV{'PWD'};
+$pwd = `pwd` if (!defined($pwd));
+
+my ($root_dir) = $PROGRAM_NAME =~ m!(.*)/[^/]+!;
+
+if(substr($root_dir, 0, 1) ne "/") {
+  $root_dir = $pwd . "/" . $root_dir;
+  ($root_dir) = $root_dir =~ m!(.*)/[^/]+!;
+  ($root_dir) = $root_dir =~ m!(.*)/[^/]+!;
+}
+else {
+  ($root_dir) = $root_dir =~ m!(.*)/[^/]+!;
+}
+
+my $numArgs = $#ARGV + 1;
+
+my $no_ipp = 0;
+my $no_qt = 0;
+my $no_ffmpeg = 0;
+my $no_libcurl = 0;
+my $use_ccache = 0;
+
+my $argnum;
+foreach $argnum (0 .. $#ARGV) {
+    if(lc($ARGV[$argnum]) eq '-help') {
+	print "Usage configure [argument1] ...\n";
+	print "Valid arguments:\n";
+	print "  -help         : show this message\n";
+	print "  -no_ipp       : compile without IPP\n";
+	print "  -no_qt        : compile without QT\n";
+	print "  -no_ffmpeg    : compile without ffmpeg\n";
+	print "  -no_libcurl   : compile without libcurl\n";
+	print "  -use_ccache   : use ccache when compiling.\n";
+	exit(0);
+    }
+    elsif(lc($ARGV[$argnum]) eq '-no_ipp') {
+	$no_ipp = 1;
+    }
+    elsif(lc($ARGV[$argnum]) eq '-no_qt') {
+	$no_qt = 1;
+    }
+    elsif(lc($ARGV[$argnum]) eq '-no_ffmpeg') {
+	$no_ffmpeg = 1;
+    }
+    elsif(lc($ARGV[$argnum]) eq '-no_libcurl') {
+	$no_libcurl = 1;
+    }
+    elsif(lc($ARGV[$argnum]) eq '-use_ccache') {
+	$use_ccache = 1;
+    }
+}
+
+open OUTPUT, "> $root_dir/src/Makefile.conf";
+
+print OUTPUT<<EOF;
+# This is an automatically generated file.
+# DO NOT MODIFY!
+
+EOF
+
+print OUTPUT "VLR_ROOT = $root_dir\n";
+
+# Check system architecture
+my $arch = `uname`;
+print OUTPUT "ARCH            = $arch";
+
+# Check 64 bit status
+my $is_64bit = 0;
+if( `uname -m | grep 64` ne '' ) {
+  $is_64bit = 1;
+}
+print OUTPUT "HAVE_64BIT      = $is_64bit\n";
+
+# set dynamic module directory
+#print OUTPUT "CBO_MODDIR      = $moddir\n";
+
+# Check GCC Version
+my $gcc_str = `gcc --version | head -1 | cut -d \" \" -f 3 | cut -b 1`;
+
+if ($gcc_str == 4) {
+  print OUTPUT "GCC_VERSION     = GCC4\n";
+  print OUTPUT "NO_STRICT_ALIASING = 1\n";
+} else {
+  print OUTPUT "GCC_VERSION     = GCC3\n";
+}
+
+# Check for number of processors for parallel compile
+open CPUINFO, "< /proc/cpuinfo";
+my $cpucount = 0;
+while (my $input = <CPUINFO>) {
+        chop $input;
+	if( $input =~ "processor" ) {
+            $input =~ s/processor\s*:\s//;
+            if( $input > $cpucount ) { 
+                $cpucount = $input;
+            }
+	}
+    }
+$cpucount += 1;
+print OUTPUT   "CPUCOUNT        = $cpucount\n";
+close CPUINFO;
+
+# check for libcurl library
+if($no_libcurl) {
+    print stderr "* libcurl support manually disabled.\n";
+    print stderr "    You may be able to continue, but not all programs/libraries will be built\n";
+}
+elsif (-e "/usr/include/curl") {
+    print OUTPUT "HAVE_LIBCURL    = 1\n";
+} 
+else {
+    print stderr "* ERROR: libcurl not found.\n";
+    print stderr "* You may be able to continue, but not all programs/libraries will be built\n";
+}
+
+# Check for ffmpeg libavcodec/libavformat library
+my $libavcodec_exists = `pkg-config --print-errors --errors-to-stdout --exists 'libavcodec >= 40.0'`;
+
+if($no_ffmpeg) {
+    printf OUTPUT "HAVE_VIDEOOUT     = 0\n";
+    print stderr "* FFMPEG manually disabled.\n";
+    print stderr "    You may be able to continue, but not all programs/libraries will be built\n";
+}
+elsif ($libavcodec_exists eq "") {
+    printf OUTPUT "HAVE_VIDEOOUT   = 1\n";
+    if ((-e "/usr/lib/libswscale.so" )) {
+	printf OUTPUT "HAVE_SWSCALE    = 1\n";
+    } 
+}
+else {
+    printf OUTPUT "HAVE_VIDEOOUT     = 0\n";
+    print stderr "* ERROR: FFMPEG libavcodec/libavformat not found.\n";
+    print stderr "* You may be able to continue, but not all programs/libraries will be built\n";
+}
+
+# Check for eigen2 library
+my $eigen2_exists = `pkg-config --print-errors --errors-to-stdout --exists 'eigen2'`;
+
+if ($eigen2_exists eq "") {
+  $eigen2_exists = `pkg-config --cflags eigen2`;
+  printf OUTPUT "EIGEN2_IFLAGS   = $eigen2_exists\n"
+}
+else {
+  if (-d "/usr/include/eigen2") {
+    printf OUTPUT "EIGEN2_IFLAGS   = -I/usr/include/eigen2\n"
+  }
+}
+
+# Check for libdc1394 v2 library
+my $libdc1394_exists = `pkg-config --print-errors --errors-to-stdout --exists 'libdc1394-2'`;
+
+if ($libdc1394_exists eq "") {
+  printf OUTPUT "HAVE_DC1394     = 1\n";
+}
+else {
+  printf OUTPUT "HAVE_DC1394     = 0\n";
+}
+
+if($use_ccache) {
+    printf OUTPUT "USE_CCACHE      = 1\n";
+}
+
+# Check for QT
+my $qtroot;
+if(!$no_qt) {
+    if( "$ENV{QTDIR}" eq  "" ) {
+      if(-d "/usr/lib/qt-3.3") {
+        $qtroot = "/usr/lib/qt-3.3";
+      }
+      elsif(-d "/usr/share/qt3") {
+        $qtroot = "/usr/share/qt3";
+      }
+      print stderr "\$QTDIR not set, using default $qtroot\n";
+    }
+    else {
+      $qtroot = "$ENV{QTDIR}";
+    }
+}
+if($no_qt) {
+    printf OUTPUT "HAVE_QT         = 0\n";
+    print stderr "* QT manually disabled.\n";
+    print stderr "    You may be able to continue, but not all programs/libraries will be built\n";
+}
+elsif ( -e "$qtroot/include/qt.h" ) {
+    printf OUTPUT "HAVE_QT         = 1\n";
+    printf OUTPUT "QTROOT          = $qtroot\n";
+} 
+else {
+    printf OUTPUT "NO_QT           = 1\n";
+    print stderr "* ERROR: QT3 not found.\n";
+}
+
+# Check for Intel Performance Primitives (IPP)
+my $ipproot;
+if(!$no_ipp) {
+    if( "$ENV{IPPROOT}" eq  "" ) {
+	print stderr "\$IPPROOT not set.  ";
+	if (-d "/opt/intel/ipp") {
+    my @dirlist = </opt/intel/ipp/*>;
+    if( @dirlist == 1) {
+      @dirlist = <$dirlist[0]/*>;
+      if( @dirlist == 1) {
+        print stderr "Found IPP at $dirlist[0]\n";
+        $ipproot = $dirlist[0];
+      }
+    }
+  }
+	else {
+	    print stderr "Could not find IPP.  Setting ipproot to /opt/intel/ipp/5.0/ia32\n";
+	    $ipproot = "/opt/intel/ipp/5.0/ia32";
+	}
+    }
+    else {
+	$ipproot = "$ENV{IPPROOT}";
+    }
+}
+
+if($no_ipp) {
+  print OUTPUT "HAVE_IPP        = 0\n";
+  print stderr "* IPP manually disabled.\n";    
+  print stderr "    You may be able to continue, but not all programs/libraries will be built\n";
+}
+elsif( -e "$ipproot/include/ippi.h" ) {
+  print OUTPUT "HAVE_IPP        = 1\n";
+  print OUTPUT "IPPROOT         = '$ipproot'\n";
+} 
+else {
+  print OUTPUT "HAVE_IPP        = 0\n";
+  print stderr "* ERROR: IPP headers not found. Please install and set IPPROOT variable\n";
+  print stderr "* You may be able to continue, but not all programs/libraries will be built\n";
+}
+#find qt3 and qt4 binaries
+my @mocs = qt($ENV{"MOC3"}, $ENV{"MOC4"}, `which moc-qt3`, `which moc-qt4`, "/usr/bin/moc", "/usr/local/bin/moc", "/usr/local/stow/qt-4.2.2/bin/moc", "/usr/lib/qt-3.3/bin/moc");
+my @uics = qt($ENV{"UIC3"}, $ENV{"UIC4"}, `which uic-qt3`, `which uic-qt4`, "/usr/bin/uic", "/usr/local/bin/uic", "/usr/local/stow/qt-4.2.2/bin/uic", "/usr/lib/qt-3.3/bin/uic");
+my @qmakes = qt($ENV{"QMAKE3"}, $ENV{"QMAKE4"}, `which qmake-qt3`, `which qmake-qt4`, "/usr/bin/qmake", "/usr/local/bin/qmake", "/usr/local/stow/qt-4.2.2/bin/qmake", "/usr/lib/qt-3.3/bin/qmake");
+my @rccs = qt($ENV{"RCC"}, $ENV{"QEMBED"}, `which rcc`, `which qembed`, "/usr/bin/rcc", "/usr/bin/qembed", "/usr/local/bin/qembed", "/usr/local/bin/rcc", "/usr/local/stow/qt-4.2.2/bin/rcc", "/usr/local/stow/qt-4.2.2/bin/qembed", "/usr/lib/qt-3.3/bin/rcc", "/usr/lib/qt-3.3/bin/qembed");
+print OUTPUT "MOC3               = $mocs[0]\n";
+print OUTPUT "MOC4               = $mocs[1]\n";
+print OUTPUT "UIC3               = $uics[0]\n";
+print OUTPUT "UIC4               = $uics[1]\n";
+print OUTPUT "QMAKE3             = $qmakes[0]\n";
+print OUTPUT "QMAKE4             = $qmakes[1]\n";
+print OUTPUT "QEMBED             = $rccs[0]\n";
+print OUTPUT "QRCC               = $rccs[1]\n";
+
+print OUTPUT "\ninclude \$(VLR_ROOT)/src/Makefile.statconf\n";
+
+sub qt_get_version {
+  my $path = shift;
+  my $info_string = `$path -v 2>&1`;
+  my $version = 3;
+  if ($info_string =~ /([0-9])\.[0-9]\.[0-9]/) {
+    $version = $1;
+  }
+  return $version;
+}
+sub qt {
+  my @names=@_;
+  my $bin3 = undef;
+  my $bin4 = undef;
+  foreach (@names) {
+    my $path = $_;
+    $path =~ s/^\s*(.*)\s*$/$1/;
+    if (-e $path) {
+      if (defined($bin3) && defined($bin4)) {
+        return ($bin3, $bin4);
+      }
+      my $version = qt_get_version $path;
+      if ($version == 3) {
+      	$bin3 = $path;
+      }
+      if ($version == 4) {
+        $bin4 = $path;
+      }
+    }
+  }
+  return ($bin3, $bin4);
+}
+
+close OUTPUT;
+

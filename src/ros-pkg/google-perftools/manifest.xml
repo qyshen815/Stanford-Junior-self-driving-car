@@ -1,0 +1,20 @@
+<package>
+  <description brief="google-perftools">
+
+     google-perftools
+
+  </description>
+  <author>teichman</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/google-perftools</url>
+
+  <export>
+    <cpp cflags="" lflags="-Wl,-rpath,${prefix}/build/google-perftools-1.6/.libs -L${prefix}/build/google-perftools-1.6/.libs -lprofiler" />
+  </export>
+
+
+  
+</package>
+
+

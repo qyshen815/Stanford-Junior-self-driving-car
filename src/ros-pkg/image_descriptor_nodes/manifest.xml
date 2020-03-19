@@ -1,0 +1,23 @@
+<package>
+  <description brief="image_descriptor_nodes">
+
+     image_descriptor_nodes
+
+  </description>
+  <author>Alex Teichman</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/image_descriptor_nodes</url>
+  <depend package="pipeline"/>
+  <depend package="eigen"/>
+  <depend package="google-perftools"/>
+  <depend package="opencv2"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -Wl,-rpath ${prefix}/lib -limage_descriptor_nodes"/>
+  </export>
+
+
+</package>
+
+

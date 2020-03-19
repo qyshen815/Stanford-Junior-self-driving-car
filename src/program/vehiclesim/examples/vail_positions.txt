@@ -1,0 +1,11 @@
+37.431579242668 -122.1833850249103  1.2		after_traffic_light_but_before_leaving_parking_lot
+37.430792	-122.183164	3		normal_vail_demo_start
+37.431500	-122.183900	-2.3 		approaching_intersection_from_left
+37.4313080017408 -122.183739000514  1.2		after_traffic_light_but_before_leaving_parking_lot
+37.4307660011360 -122.1785949999871 0.250000	fake_car_3_intersection_prediction_test
+37.430650	-122.183786	3 		driving_down_to_intersection
+37.430650	-122.183752	3 		
+37.431000	-122.184200	-1.57 		approaching_intersection_from_left_close
+37.427078	-122.181312	-1.57
+37.429862 	-122.180358	-1.57
+0		0		0

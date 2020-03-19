@@ -1,0 +1,25 @@
+#!/usr/bin/python
+
+import serial
+import sys
+
+if len(sys.argv) != 3:
+  print "Usage:\n\t", sys.argv[0], "[L,R,ext] [oldpro,nuthouse]"
+  sys.exit(0)
+
+port = serial.Serial('/dev/ttyS0', 19200)
+if sys.argv[2] == 'oldpro':
+  if sys.argv[1] == 'L':
+    port.write('6')
+  if sys.argv[1] == 'R':
+    port.write('2')
+  if sys.argv[1] == 'ext':
+    port.write('a')
+if sys.argv[2] == 'nuthouse':
+  if sys.argv[1] == 'L':
+    port.write('5')
+  if sys.argv[1] == 'R':
+    port.write('1')
+  if sys.argv[1] == 'ext':
+    port.write('9')
+port.close()

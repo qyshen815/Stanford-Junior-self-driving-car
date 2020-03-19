@@ -1,0 +1,21 @@
+<package>
+  <description brief="epnp">
+
+     epnp
+
+  </description>
+  <author>teichman</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/epnp</url>
+  <depend package="eigen"/>
+  <depend package="opencv2"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -Wl,-rpath ${prefix}/lib -lepnp"/>
+  </export>
+
+
+</package>
+
+

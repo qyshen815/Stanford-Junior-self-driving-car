@@ -1,0 +1,77 @@
+----------
+HCI Module
+----------
+This module handles HCI issues.  Right now it plays sound files through
+the audio card based on dgc_hci_audio ipc messages to alert the driver.
+
+-----
+Files
+-----
+development/src/program/hci - module that plays audio
+development/src/program/hci/sounds - where sound clips live
+development/src/program/hci/sound-config.txt - specifies available sounds
+development/src/interface/hci - functions to use hci module
+
+---------------------
+Compiling and Running
+---------------------
+This module uses SDL and SDL_mixer libraries to play audio.  These should
+be easy to install using the package managers in Ubuntu or Fedora.  They
+are named:
+  libsdl1.2-dev
+  libsdl-mixer1.2-dev
+in Ubuntu and
+  SDL-devel
+  SDL_mixer-devel
+in Fedora.
+
+Type make in development/src/program/hci and development/src/interface/hci
+to compile the module and interface
+
+To run the module just type ./hci from driving/bin.  Also, do not run any
+other audio software (like mplayer or xmms) at the same time, as Linux will
+not allow the module to grab the sound card.  If you see output from the
+module of "Failed to initialize audio" it's probably due to something else
+using the audio card (or sound is just not working at all).
+
+-----
+Usage
+-----
+Using the hci module is easy, just send it strings to speak with dgc_hci_send_audio.
+The string consists of tokens, separated by whitespace, that the module
+will use to lookup sound clips to play.  This is a very simple poor-man's text
+to speech system.  For example:
+
+(add -lhci_interface in Makefile)
+#include <hci_interface.h>
+...
+dgc_hci_send_audio("warning returnlane 4");
+...
+
+Will make the module say "warning, returned to lane four".  The available sound clips
+and their keys are specified in sound-config.txt.  This file lists key/file path
+pairs (paths are relative to /bin) :
+
+warning   ../development/src/program/hci/sounds/warning.ogg
+2         ../development/src/program/hci/sounds/two.ogg
+3         ../development/src/program/hci/sounds/three.ogg
+
+To add new sound clips of your own, just edit this file.  Use oggenc to convert
+.wav to .ogg to save space.
+
+-----
+Notes
+-----
+The HCI module will ignore any string tokens that it does not find a corresponding
+sound clip for.  Also it will completely speak one message before speaking the
+next one.  The module will also throw away duplicate messages while the same message
+is playing, so if you send 20 identical messages in one second, but the message
+actually takes a few seconds to play, then the message will only get spoken once.
+
+Numbers with more then one digit will be split and spoken one digit at a time, so
+"65" will be spoken as "six five".  Hope to improve this later.
+
+
+
+
+

@@ -1,0 +1,4 @@
+<package>
+  <depend package="multibooster"/>
+  <depend package="descriptors_3d"/>
+</package>

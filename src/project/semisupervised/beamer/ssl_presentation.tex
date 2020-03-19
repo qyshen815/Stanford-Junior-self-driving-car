@@ -1,0 +1,183 @@
+\documentclass{beamer}
+\mode<presentation>
+{
+  \usetheme{PaloAlto}
+}
+
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\renewcommand{\S}{\mathbb{S}}
+\newcommand{\U}{\mathbb{U}}
+\newcommand{\B}{\mathbb{B}}
+\newcommand{\W}{\mathbb{W}}
+\newcommand{\C}{\mathbb{C}}
+
+
+\newcommand{\static}{../latex/static_img}
+\newcommand{\img}{../latex/img}
+\include{latex_macros}
+\newcommand{\todo}[1]{\textcolor{red}{[[#1]]}}
+\newcommand{\outline}[1]{\paragraph{#1}}
+\newcommand{\logodds}[1]{\log \frac{\Pr(Y = 1 | #1)}{\Pr(Y = -1 | #1)}}
+\newcommand{\logprior}{\log \frac{\Pr(Y = 1)}{\Pr(Y = -1)}}
+\newcommand{\zT}{z_{1:T}}
+
+\title{Tracking-based semi-supervised learning}
+\author{Alex Teichman}
+\institute{Stanford University}
+\AtBeginSection[]{} % for optional outline or other recurrent slide
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Introduction}
+
+
+\begin{frame}
+  \frametitle{Intuition}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{\static/ssl_intuition2.jpg}
+    \label{fig:ssl_intuition}
+  \end{figure}
+  
+  \begin{itemize}
+  \item Labeling sucks
+  \item Use tracking information to avoid the need to label large amounts of data
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Tracking errors}
+  \begin{figure}
+    \centering
+    \includegraphics[width=1.25in]{\static/tracking_error.jpg}
+    \label{fig:tracking_error}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Algorithm}
+  \begin{algorithm}[H]
+    
+    \label{alg:ssl}
+    \begin{algorithmic}
+      \tiny{
+      \STATE $\tau$ is a confidence threshold chosen by hand
+      \STATE $\S$ is a small set of seed tracks, labeled by hand
+      \STATE $\U$ is a large set of unlabeled tracks
+      \STATE $\B$ is a large set of background tracks
+      \STATE $\W := \S \cup \B$
+      \STATE
+      \REPEAT
+      \STATE Train frame classifier $\C$ on $\W$
+      \STATE $\W := \S \cup \B$
+      \FOR{$u \in \U$}
+      \STATE Classify track $u$ using $\C$
+      \STATE $c := \operatorname{confidence}(u)$
+      \STATE $l := \operatorname{classification}(u)$
+      \IF{$c \geq \tau$ and $l \neq \mbox{``background''}$}
+      \STATE Add $u$ to $\W$ with label $l$
+      \ENDIF
+      \ENDFOR
+      \UNTIL{converged}
+      }
+    \end{algorithmic}
+  \end{algorithm}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example objects}
+  \begin{figure}
+  \centering
+  \includegraphics[width=0.7\linewidth]{\static/example_objects_blurred.pdf}
+  \label{fig:example_objs}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dataset}
+  \begin{table}
+    \centering
+    \tiny{
+    \input{\static/stc_table}
+    }
+    \label{tab:stc_tab}
+  \end{table}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Accuracy}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{\img/ssl_accuracy.pdf}
+  \label{fig:core}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Confusion matrices}
+\begin{figure}
+  \caption{\tiny{Left: baseline. Right: semi-supervised.}}
+  \centering
+  \includegraphics[width=0.4\linewidth]{\img/baseline_confusion_matrix.pdf}
+%  \vspace{0.1in}
+  \includegraphics[width=0.4\linewidth]{\img/ssl_confusion_matrix.pdf}
+  \label{fig:conf}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Tracking is essential}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.4\linewidth]{\img/frame_induction.pdf} \\
+  \vspace{0.1in}
+  \includegraphics[width=0.4\linewidth]{\img/ssl_induction.pdf}
+  \label{fig:tracking_vs_not}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Incremental training}
+  
+  \begin{algorithm}[H]
+    \label{alg:rr}
+  \begin{algorithmic}
+    \tiny{
+    \STATE Recompute the log prior odds $\widetilde{\L_0} \approx \logprior$
+    \STATE Reset the training example weights to be $\exp(-y_m \L_0)$
+    \FOR{$k \in \{1 \dots K\}$}
+    \STATE Compute $M' = \{m : ||f_k(z_m) - x_k||_2 < \theta_k\}$
+    \STATE $a_k := \left( \sum_{m \in M'} w_m y_m \right) /  \left( \sum_{m \in M'} w_m \right)$
+    \FOR{$m \in M'$}
+    \STATE $w_m := w_m \exp(-y_m a_k)$
+    \ENDFOR
+    \ENDFOR
+    \STATE Learn new weak classifiers until converged
+    }
+  \end{algorithmic}
+\end{algorithm}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Speedup}
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{\img/ssl_vs_cssl.pdf}
+  \label{fig:cssl}
+\end{figure}
+\end{frame}
+
+
+
+\end{document}
+

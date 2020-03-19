@@ -1,0 +1,533 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>QHealthWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>QHealthWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>701</width>
+            <height>461</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Healthmonitor</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QGroupBox" row="0" column="0">
+            <property name="name">
+                <cstring>machine</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="lineWidth">
+                <number>1</number>
+            </property>
+            <property name="margin">
+                <number>0</number>
+            </property>
+            <property name="title">
+                <string>Machine</string>
+            </property>
+            <property name="alignment">
+                <set>AlignTop</set>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget" row="0" column="0">
+                    <property name="name">
+                        <cstring>layout14</cstring>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout9</cstring>
+                            </property>
+                            <hbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout1</cstring>
+                                    </property>
+                                    <vbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>cpu1Label</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>CPU 1</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QwtThermo">
+                                            <property name="name">
+                                                <cstring>cpu1</cstring>
+                                            </property>
+                                            <property name="fillColor">
+                                                <color>
+                                                    <red>255</red>
+                                                    <green>0</green>
+                                                    <blue>0</blue>
+                                                </color>
+                                            </property>
+                                        </widget>
+                                    </vbox>
+                                </widget>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout1_2</cstring>
+                                    </property>
+                                    <vbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>cpu2Label</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>CPU 2</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QwtThermo">
+                                            <property name="name">
+                                                <cstring>cpu2</cstring>
+                                            </property>
+                                            <property name="fillColor">
+                                                <color>
+                                                    <red>255</red>
+                                                    <green>0</green>
+                                                    <blue>0</blue>
+                                                </color>
+                                            </property>
+                                        </widget>
+                                    </vbox>
+                                </widget>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout1_3</cstring>
+                                    </property>
+                                    <vbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>cpu3Label</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>CPU 3</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QwtThermo">
+                                            <property name="name">
+                                                <cstring>cpu3</cstring>
+                                            </property>
+                                            <property name="fillColor">
+                                                <color>
+                                                    <red>255</red>
+                                                    <green>0</green>
+                                                    <blue>0</blue>
+                                                </color>
+                                            </property>
+                                        </widget>
+                                    </vbox>
+                                </widget>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout1_4</cstring>
+                                    </property>
+                                    <vbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>cpu4Label</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>CPU 4</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QwtThermo">
+                                            <property name="name">
+                                                <cstring>cpu4</cstring>
+                                            </property>
+                                            <property name="fillColor">
+                                                <color>
+                                                    <red>255</red>
+                                                    <green>0</green>
+                                                    <blue>0</blue>
+                                                </color>
+                                            </property>
+                                        </widget>
+                                    </vbox>
+                                </widget>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout5</cstring>
+                                    </property>
+                                    <vbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QwtPlot">
+                                            <property name="name">
+                                                <cstring>temp</cstring>
+                                            </property>
+                                            <property name="font">
+                                                <font>
+                                                    <pointsize>6</pointsize>
+                                                </font>
+                                            </property>
+                                            <property name="midLineWidth">
+                                                <number>1</number>
+                                            </property>
+                                            <property name="canvasLineWidth">
+                                                <number>1</number>
+                                            </property>
+                                            <property name="xBottomAxis" stdset="0">
+                                                <bool>false</bool>
+                                            </property>
+                                            <property name="xTopAxis" stdset="0">
+                                                <bool>false</bool>
+                                            </property>
+                                            <property name="title">
+                                                <string>Temperature / Voltage</string>
+                                            </property>
+                                            <property name="titleFont">
+                                                <font>
+                                                    <family>DejaVu LGC Sans</family>
+                                                    <pointsize>8</pointsize>
+                                                    <bold>1</bold>
+                                                </font>
+                                            </property>
+                                            <property name="legendFont">
+                                                <font>
+                                                    <pointsize>6</pointsize>
+                                                </font>
+                                            </property>
+                                            <property name="legendPosition">
+                                                <enum>Right</enum>
+                                            </property>
+                                        </widget>
+                                    </vbox>
+                                </widget>
+                            </hbox>
+                        </widget>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout13</cstring>
+                            </property>
+                            <hbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout6</cstring>
+                                    </property>
+                                    <vbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>memLabel</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Memory (MB)</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QwtThermo">
+                                            <property name="name">
+                                                <cstring>memory</cstring>
+                                            </property>
+                                            <property name="scalePosition">
+                                                <enum>Bottom</enum>
+                                            </property>
+                                            <property name="fillColor">
+                                                <color>
+                                                    <red>255</red>
+                                                    <green>0</green>
+                                                    <blue>0</blue>
+                                                </color>
+                                            </property>
+                                        </widget>
+                                    </vbox>
+                                </widget>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout7</cstring>
+                                    </property>
+                                    <vbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>swapLabel</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Swap (MB)</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QwtThermo">
+                                            <property name="name">
+                                                <cstring>swap</cstring>
+                                            </property>
+                                            <property name="scalePosition">
+                                                <enum>Bottom</enum>
+                                            </property>
+                                            <property name="fillColor">
+                                                <color>
+                                                    <red>255</red>
+                                                    <green>0</green>
+                                                    <blue>0</blue>
+                                                </color>
+                                            </property>
+                                        </widget>
+                                    </vbox>
+                                </widget>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout12</cstring>
+                                    </property>
+                                    <vbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>loadLabel</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Load</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QLayoutWidget">
+                                            <property name="name">
+                                                <cstring>layout11</cstring>
+                                            </property>
+                                            <hbox>
+                                                <property name="name">
+                                                    <cstring>unnamed</cstring>
+                                                </property>
+                                                <widget class="QLabel">
+                                                    <property name="name">
+                                                        <cstring>load1</cstring>
+                                                    </property>
+                                                    <property name="minimumSize">
+                                                        <size>
+                                                            <width>50</width>
+                                                            <height>0</height>
+                                                        </size>
+                                                    </property>
+                                                    <property name="maximumSize">
+                                                        <size>
+                                                            <width>70</width>
+                                                            <height>32767</height>
+                                                        </size>
+                                                    </property>
+                                                    <property name="font">
+                                                        <font>
+                                                            <pointsize>12</pointsize>
+                                                        </font>
+                                                    </property>
+                                                    <property name="frameShape">
+                                                        <enum>TabWidgetPanel</enum>
+                                                    </property>
+                                                    <property name="frameShadow">
+                                                        <enum>Sunken</enum>
+                                                    </property>
+                                                    <property name="text">
+                                                        <string>0.0</string>
+                                                    </property>
+                                                    <property name="alignment">
+                                                        <set>AlignCenter</set>
+                                                    </property>
+                                                </widget>
+                                                <widget class="QLabel">
+                                                    <property name="name">
+                                                        <cstring>load2</cstring>
+                                                    </property>
+                                                    <property name="minimumSize">
+                                                        <size>
+                                                            <width>50</width>
+                                                            <height>0</height>
+                                                        </size>
+                                                    </property>
+                                                    <property name="maximumSize">
+                                                        <size>
+                                                            <width>50</width>
+                                                            <height>32767</height>
+                                                        </size>
+                                                    </property>
+                                                    <property name="font">
+                                                        <font>
+                                                            <pointsize>12</pointsize>
+                                                        </font>
+                                                    </property>
+                                                    <property name="frameShape">
+                                                        <enum>TabWidgetPanel</enum>
+                                                    </property>
+                                                    <property name="frameShadow">
+                                                        <enum>Sunken</enum>
+                                                    </property>
+                                                    <property name="text">
+                                                        <string>0.0</string>
+                                                    </property>
+                                                    <property name="alignment">
+                                                        <set>AlignCenter</set>
+                                                    </property>
+                                                </widget>
+                                                <widget class="QLabel">
+                                                    <property name="name">
+                                                        <cstring>load3</cstring>
+                                                    </property>
+                                                    <property name="minimumSize">
+                                                        <size>
+                                                            <width>50</width>
+                                                            <height>0</height>
+                                                        </size>
+                                                    </property>
+                                                    <property name="maximumSize">
+                                                        <size>
+                                                            <width>50</width>
+                                                            <height>32767</height>
+                                                        </size>
+                                                    </property>
+                                                    <property name="font">
+                                                        <font>
+                                                            <pointsize>12</pointsize>
+                                                        </font>
+                                                    </property>
+                                                    <property name="frameShape">
+                                                        <enum>TabWidgetPanel</enum>
+                                                    </property>
+                                                    <property name="frameShadow">
+                                                        <enum>Sunken</enum>
+                                                    </property>
+                                                    <property name="text">
+                                                        <string>0.0</string>
+                                                    </property>
+                                                    <property name="alignment">
+                                                        <set>AlignCenter</set>
+                                                    </property>
+                                                </widget>
+                                            </hbox>
+                                        </widget>
+                                    </vbox>
+                                </widget>
+                            </hbox>
+                        </widget>
+                        <widget class="QListView">
+                            <column>
+                                <property name="text">
+                                    <string>% CPU</string>
+                                </property>
+                                <property name="clickable">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="resizable">
+                                    <bool>true</bool>
+                                </property>
+                            </column>
+                            <column>
+                                <property name="text">
+                                    <string>Mem</string>
+                                </property>
+                                <property name="clickable">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="resizable">
+                                    <bool>true</bool>
+                                </property>
+                            </column>
+                            <column>
+                                <property name="text">
+                                    <string>PID</string>
+                                </property>
+                                <property name="clickable">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="resizable">
+                                    <bool>true</bool>
+                                </property>
+                            </column>
+                            <column>
+                                <property name="text">
+                                    <string>Process </string>
+                                </property>
+                                <property name="clickable">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="resizable">
+                                    <bool>true</bool>
+                                </property>
+                            </column>
+                            <property name="name">
+                                <cstring>process</cstring>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>32767</width>
+                                    <height>260</height>
+                                </size>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<customwidgets>
+</customwidgets>
+<variables>
+    <variable access="public">double ps_y[50];</variable>
+    <variable access="public">double ps_x[50];</variable>
+    <variable access="public">double core_y[50];</variable>
+    <variable access="public">double core_x[50];</variable>
+    <variable access="public">double hdd_y[50];</variable>
+    <variable access="public">double hdd_x[50];</variable>
+    <variable access="public">double volt_y[50];</variable>
+    <variable access="public">double volt_x[50];</variable>
+    <variable access="public">long ps_curve;</variable>
+    <variable access="public">long core_curve;</variable>
+    <variable access="public">long hdd_curve;</variable>
+    <variable access="public">long volt_curve;</variable>
+    <variable access="public">QListViewItem **proc;</variable>
+</variables>
+<layoutdefaults spacing="2" margin="4"/>
+<includehints>
+    <includehint>qwt_thermo.h</includehint>
+    <includehint>qwt_thermo.h</includehint>
+    <includehint>qwt_thermo.h</includehint>
+    <includehint>qwt_thermo.h</includehint>
+    <includehint>qwt_plot.h</includehint>
+    <includehint>qwt_scale.h</includehint>
+    <includehint>qwt_thermo.h</includehint>
+    <includehint>qwt_thermo.h</includehint>
+</includehints>
+</UI>

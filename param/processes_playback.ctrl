@@ -1,0 +1,21 @@
+# By default, processes print their output, are not restarted, and are local
+# Command names that begin with a '/' are treated as absolute paths, otherwise
+# they are run from the repository's bin directory
+#
+# @quiet supresses output 
+# @restart automatically restarts them
+# @sleep on its own line is a sleep in seconds
+# @host=hostname[:portnum] specifies host and port of central - no spaces!
+# $1 $2 etc... are replaced with commandline arguments passed to the script
+
+./central -u -p1382   @quiet  
+@sleep 1
+./param_server        @host=localhost:1382
+@sleep 1
+./param_set velodyne_shm_key 7482938 @host=localhost:1382
+@sleep 1
+./dgc_playback_control  @host=localhost:1382
+./dgc_playback $1     @host=localhost:1382 
+@sleep 1
+./perception          @host=localhost:1382 @quiet
+./perception_view     @host=localhost:1382 @quiet

@@ -1,0 +1,925 @@
+@article{Tipaldi2009,
+abstract = {Moving objects are present in many robotic applications. An accurate detection and motion estimation of these objects can be crucial for the success and safety of the robot and people surrounding it. This paper presents a new probabilistic framework for clustering dependent or relational data, applied to the problem of motion clustering and estimation. While conventional techniques such as scan differencing perform well in many cases, they usually assume that a good pose estimate is available and fail when points belonging to dynamic objects show some overlap in consecutive readings. The technique proposed, CRF-Clustering, by explicitly reasoning about the underlying motion of the object, is able to deal with poor initial motion estimate and overlapping points. Moreover, it is able to consider the dependencies between neighbor points in the scans to reduce the noise in the clustering assignment. The model parameters can be estimated from labeled data in a statistically sound learning procedure. Experiments show that CRF-Clustering is able to detect moving objects, cluster them and estimate their motion.},
+author = {Tipaldi, Gian Diego and Ramos, Fabio},
+journal = {Proceedings of the 2009 IEEE/RSJ International Conference on Intelligent Robots and Systems},
+pages = {872--877},
+title = {{Motion clustering and estimation with conditional random fields}},
+year = {2009}
+}
+@article{Schulz2003,
+author = {Schulz, Dirk and Burgard, Wolfram and Fox, Dieter and Cremers, Armin B.},
+doi = {10.1177/0278364903022002002},
+file = {:home/teichman/Downloads/10.1.1.5.3946.pdf:pdf},
+issn = {00000000},
+journal = {The International Journal of Robotics Research},
+month = feb,
+number = {2},
+pages = {99--116},
+title = {{People Tracking with Mobile Robots Using Sample-Based Joint Probabilistic Data Association Filters}},
+volume = {22},
+year = {2003}
+}
+@article{Schulz2001,
+author = {Schulz, D. and Burgard, W. and Fox, D. and Cremers, A.B.},
+doi = {10.1109/CVPR.2001.990499},
+file = {:home/teichman/Downloads/10.1.1.5.3878.pdf:pdf},
+isbn = {0-7695-1272-0},
+journal = {Conference on Computer Vision and Pattern Recognition},
+pages = {371--377},
+publisher = {IEEE Comput. Soc},
+title = {{Tracking multiple moving objects with a mobile robot}},
+year = {2001}
+}
+@article{Bohren2008,
+author = {Bohren, Jonathan and Foote, Tully and Keller, Jim and Kushleyev, Alex and Lee, Daniel and Stewart, Alex and Vernaza, Paul and Satterfield, Brian},
+doi = {10.1002/rob},
+file = {:home/teichman/Downloads/20260\_ftp.pdf:pdf},
+journal = {Journal of Field Robotics},
+number = {9},
+pages = {598--614},
+title = {{Little Ben: The Ben Franklin Racing Team’s Entry in the 2007 DARPA Urban Challenge}},
+volume = {25},
+year = {2008}
+}
+@inproceedings{Kanezaki2010,
+annote = {This paper does 3D + 2D object recognition in single scenes.
+
+        
+Textured spin images might be interesting.
+
+      },
+author = {Kanezaki, Asako and Nakayama, Hideki and Harada, Tatsuya and Kuniyoshi, Yasuo},
+booktitle = {International Conference on Robotics and Automation},
+file = {:home/teichman/Documents/ICRA2010WeD116.pdf:pdf},
+title = {{High-speed 3D Object Recognition Using Additive Features in A Linear Subspace}},
+year = {2010}
+}
+@inproceedings{Bjorkman2010,
+annote = {This paper concerns the segmentation of 3D scenes into arbitrary objects. There's no classification component. Temporal information is used, but not explicit tracking.
+
+      },
+author = {Bjorkman, Marten and Kragic, Danica},
+booktitle = {International Conference on Robotics and Automation},
+file = {:home/teichman/Documents/bjorkman\_icra10.pdf:pdf},
+title = {{Active 3D scene segmentation and detection of unknown objects}},
+year = {2010}
+}
+@inproceedings{Vernaza2010,
+annote = {Camera-based image segmentation and classification.  Similar to what Paul worked on at Willow.},
+author = {Vernaza, Paul and Lee, Daniel D},
+booktitle = {International Conference on Robotics and Automation},
+file = {:home/teichman/Documents/mrfrecog.pdf:pdf},
+title = {{Scalable real-time object recognition and segmentation via cascaded , discriminative Markov random fields}},
+year = {2010}
+}
+@article{Spinello2010,
+annote = {
+        Summary
+        
+2D laser segmentation and tracking of arbitrary objects, classification of cars and pedestrians using boosting + extension of implicit shape models.
+
+        
+They use multiple Kalman filters with different motion models to do tracking.  Their state includes the class probabilities.
+
+        
+          
+Useful stuff
+        
+They mention Bourgeois and Lassalle as having a better method of resolving the correspondence problem optimally.
+          
+
+          
+Weaknesses
+        
+Very small test set - about 22-44 seconds of data, depending on their framerate.
+
+        
+They claim data comes from a 1km drive and that they do tracking, and yet have only 1675 synchronized frames.  Erm, what?
+
+        
+
+      },
+author = {Spinello, Luciano and Triebel, Rudolph and Siegwart, Roland},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Spinello, Triebel, Siegwart - 2010 - Multiclass Multimodal Detection and Tracking in Urban Environments(2).pdf:pdf},
+journal = {International Journal of Robotics Research},
+pages = {1--35},
+title = {{Multiclass Multimodal Detection and Tracking in Urban Environments}},
+year = {2010}
+}
+@inproceedings{Spinello2010a,
+author = {Spinello, Luciano and Arras, Kai and Triebel, Rudolph and Siegwart, Roland},
+booktitle = {AAAI},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Spinello et al. - 2010 - A Layered Approach to People Detection in 3D Range Data.pdf:pdf},
+number = {2007},
+title = {{A Layered Approach to People Detection in 3D Range Data}},
+year = {2010}
+}
+@inproceedings{Raina2004,
+annote = {This paper trains a naive Bayes model, then learns parameters which are essentially the information factors that I am proposing in work with discrete Bayes filters.
+
+        
+I will need to spend some effort distinguishing my own work from this one.
+
+        
+They use only 2 of these parameters, so their model can't learn that groups of words tend to be highly correlated - it does learn that word presences tend to be highly correlated, and that it should weight the subject line much higher than it should the rest of the document.
+
+        
+
+      },
+author = {Raina, Rajat and Shen, Yirong and Ng, Andrew Y and McCallum, Andrew},
+booktitle = {Neural Information Processing Systems},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Raina et al. - 2004 - Classification with Hybrid Generative Discriminative Models.pdf:pdf},
+title = {{Classification with Hybrid Generative / Discriminative Models}},
+year = {2004}
+}
+@inproceedings{Abbeel2005,
+annote = {This paper uses learning methods to choose the noise model for EKFs.  It blows my mind that no one has done this before.  Really, we've been hand tuning all this time?  That's crazy.
+
+        
+The optimization is coordinate descent over the entries of the covariance matrices.  Strangely, they don't mention any provisions for ensuring that the matrices remain SPSD.},
+author = {Abbeel, Pieter and Coates, Adam and Montemerlo, Michael and Ng, Andrew Y and Thrun, Sebastian},
+booktitle = {Robotics: Science and Systems},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Abbeel et al. - 2005 - Discriminative Training of Kalman Filters.pdf:pdf},
+title = {{Discriminative Training of Kalman Filters}},
+year = {2005}
+}
+@article{Sivic2009,
+annote = {This paper does face tracking to do better recognition of characters in tv shows.
+
+        
+It's surprisingly implementation-oriented.},
+author = {Sivic, J. and Everingham, M. and Zisserman, A.},
+doi = {10.1109/CVPR.2009.5206513},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Sivic, Everingham, Zisserman - 2009 - “Who are you” - Learning person specific classifiers from video.pdf:pdf},
+isbn = {978-1-4244-3992-8},
+journal = {IEEE Conference on Computer Vision and Pattern Recognition},
+month = jun,
+number = {i},
+pages = {1145--1152},
+publisher = {Ieee},
+title = {{“Who are you?” - Learning person specific classifiers from video}},
+year = {2009}
+}
+@inproceedings{Golovinskiy2009,
+author = {Golovinskiy, Aleksey and Kim, Vladimir and Funkhouser, Thomas},
+booktitle = {International Conference on Computer Vision},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Golovinskiy, Kim, Funkhouser - 2009 - Shape-based Recognition of 3D Point Clouds in Urban Environments.pdf:pdf},
+title = {{Shape-based Recognition of 3D Point Clouds in Urban Environments}},
+year = {2009}
+}
+@inproceedings{Posner2008,
+author = {Posner, I and Cummins, M and Newman, P},
+booktitle = {Robotics: Science and Systems},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Posner, Cummins, Newman - 2008 - Fast probabilistic labeling of city maps.pdf:pdf},
+title = {{Fast probabilistic labeling of city maps}},
+year = {2008}
+}
+@inproceedings{Douillard2009,
+annote = {Segmentation is key here.  A CRF model finds the ground, rather than stupid ground plane finding.
+
+        
+Very similar ground-plane extension algorithm as in Dahlkamp 2006.
+
+        
+LogitBoosting decision stumps in HSV space is used to classify ground vs not ground.  This produces probabilistic output.  Classifier is asphalt and grass - get sidewalks wrong.
+
+        
+Clustering is first 2D, then in 3D.  We should do this too.  "Approximate ray-tracing" refers to considering clusters closest to the vehicle first, then considering those further away + constraining the ROI to not overlap with any previously evaluated ROI.
+
+        
+If all features cannot be extracted, then no classification is attempted.  I can probably make boosting work for the case of missing features.
+
+        
+Read Douillard's thesis for details on the classifier.
+
+        
+How good is 90\% really?},
+author = {Douillard, Bertrand and Brooks, Alex and Ramos, Fabio},
+booktitle = {Conference on Intelligent Sensors, Sensor Networks and Information Processing},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Douillard, Brooks, Ramos - 2009 - A 3D Laser and Vision Based Classifier.pdf:pdf},
+number = {c},
+title = {{A 3D Laser and Vision Based Classifier}},
+volume = {1},
+year = {2009}
+}
+@article{Viola2004,
+annote = {The classic Viola-Jones paper.  Integral image features, boosting cascades.
+
+      },
+author = {Viola, Paul and Jones, Michael J.},
+doi = {10.1023/B:VISI.0000013087.49260.fb},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Viola, Jones - 2004 - Robust Real-Time Face Detection.pdf:pdf},
+issn = {0920-5691},
+journal = {International Journal of Computer Vision},
+keywords = {boosting,face detection,human sensing},
+month = may,
+number = {2},
+pages = {137--154},
+title = {{Robust Real-Time Face Detection}},
+volume = {57},
+year = {2004}
+}
+@inproceedings{Ramos2006,
+abstract = {This paper presents an algorithm for recognition and segmentation of natural features in unstructured environments. By providing a Bayesian solution for the density estimation problem, the algorithm needs significantly less training data than conventional techniques and is applicable to different environments. The algorithm is based on colour and wavelet convolution of image patches to model the information contained in natural features. Dimensionality reduction techniques are applied to map data points to a lower dimensional space where Bayesian density estimation is computed. Experiments were performed in underwater, aerial and terrestrial domains demonstrating the accuracy and generalisation properties of the algorithm for recognition and segmentation. Comparisons with conventional density estimation techniques are provided to illustrate the benefits of the new approach},
+author = {Ramos, F.T. and Upcroft, B. and Kumar, S. and Durrant-Whyte, H.F.},
+booktitle = {International Conference on Intelligent Robots and Systems},
+doi = {10.1109/IROS.2006.282463},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Ramos et al. - 2006 - Recognising and Segmenting Objects in Natural Environments.pdf:pdf},
+isbn = {1-4244-0258-1},
+pages = {5866--5871},
+publisher = {IEEE},
+title = {{Recognising and Segmenting Objects in Natural Environments}},
+year = {2006}
+}
+@article{Urmson2008,
+abstract = {Boss is an autonomous vehicle that uses on-board sensors (global positioning system, lasers, radars, and cameras) to track other vehicles, detect static obstacles, and localize itself relative to a road model. A three-layer planning system combines mission, behavioral, and motion planning to drive in urban environments. The mission planning layer considers which street to take to achieve a mission goal. The behavioral layer determines when to change lanes and precedence at intersections and performs error recovery maneuvers. The motion planning layer selects actions to avoid obstacles while making progress toward local goals. The system was developed from the ground up to address the requirements of the DARPA Urban Challenge using a spiral system development process with a heavy emphasis on regular, regressive system testing. During the National Qualification Event and the 85-km Urban Challenge Final Event, Boss demonstrated some of its capabilities, qualifying first and winning the challenge. © 2008 Wiley Periodicals, Inc.},
+author = {Urmson, Chris and Anhalt, Joshua and Bagnell, Drew and Baker, Christopher and Bittner, Robert and Clark, M. N. and Dolan, John and Duggins, Dave and Galatali, Tugrul and Geyer, Chris and Gittleman, Michele and Harbaugh, Sam and Hebert, Martial and Howard, Thomas M. and Kolski, Sascha and Kelly, Alonzo and Likhachev, Maxim and McNaughton, Matt and Miller, Nick and Peterson, Kevin and Pilnick, Brian and Rajkumar, Raj and Rybski, Paul and Salesky, Bryan and Seo, Young-Woo and Singh, Sanjiv and Snider, Jarrod and Stentz, Anthony and ldquoRedrdquo Whittaker, William and Wolkowicki, Ziv and Ziglar, Jason and Bae, Hong and Brown, Thomas and Demitrish, Daniel and Litkouhi, Bakhtiar and Nickolaou, Jim and Sadekar, Varsha and Zhang, Wende and Struble, Joshua and Taylor, Michael and Darms, Michael and Ferguson, Dave},
+doi = {10.1002/rob.20255},
+issn = {15564959},
+journal = {Journal of Field Robotics},
+number = {8},
+pages = {425--466},
+title = {{Autonomous driving in urban environments: Boss and the Urban Challenge}},
+volume = {25},
+year = {2008}
+}
+@article{Montemerlo2008,
+abstract = {This article presents the architecture of Junior, a robotic vehicle capable of navigating urban environments autonomously. In doing so, the vehicle is able to select its own routes, perceive and interact with other traffic, and execute various urban driving skills including lane changes, U-turns, parking, and merging into moving traffic. The vehicle successfully finished and won second place in the DARPA Urban Challenge, a robot competition organized by the U.S. Government. © 2008 Wiley Periodicals, Inc.},
+author = {Montemerlo, Michael and Becker, Jan and Bhat, Suhrid and Dahlkamp, Hendrik and Dolgov, Dmitri and Ettinger, Scott and Haehnel, Dirk and Hilden, Tim and Hoffmann, Gabe and Huhnke, Burkhard and Johnston, Doug and Klumpp, Stefan and Langer, Dirk and Levandowski, Anthony and Levinson, Jesse and Marcil, Julien and Orenstein, David and Paefgen, Johannes and Penny, Isaac and Petrovskaya, Anna and Pflueger, Mike and Stanek, Ganymed and Stavens, David and Vogt, Antone and Thrun, Sebastian},
+issn = {1556-4959},
+journal = {Journal of Field Robotics},
+number = {9},
+title = {{Junior: The Stanford entry in the Urban Challenge}},
+volume = {25},
+year = {2008}
+}
+@inproceedings{Andriluka2008,
+abstract = {Both detection and tracking people are challenging problems, especially in complex real world scenes that commonly involve multiple people, complicated occlusions, and cluttered or even moving backgrounds. People detectors have been shown to be able to locate pedestrians even in complex street scenes, but false positives have remained frequent. The identification of particular individuals has remained challenging as well. Tracking methods are able to find a particular individual in image sequences, but are severely challenged by real-world scenarios such as crowded street scenes. In this paper, we combine the advantages of both detection and tracking in a single framework. The approximate articulation of each person is detected in every frame based on local features that model the appearance of individual body parts. Prior knowledge on possible articulations and temporal coherency within a walking cycle are modeled using a hierarchical Gaussian process latent variable model (hGPLVM). We show how the combination of these results improves hypotheses for position and articulation of each person in several subsequent frames. We present experimental results that demonstrate how this allows to detect and track multiple people in cluttered scenes with reoccurring occlusions.},
+author = {Andriluka, M. and Roth, S. and Schiele, B.},
+booktitle = {Computer Vision and Pattern Recognition},
+doi = {10.1109/CVPR.2008.4587583},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Andriluka, Roth, Schiele - 2008 - People-tracking-by-detection and people-detection-by-tracking.pdf:pdf},
+isbn = {978-1-4244-2242-5},
+pages = {1--8},
+publisher = {IEEE},
+title = {{People-tracking-by-detection and people-detection-by-tracking}},
+year = {2008}
+}
+@inproceedings{Bose2007,
+abstract = {We propose a framework for detecting and tracking multiple interacting objects, while explicitly handling the dual problems of fragmentation (an object may be broken into several blobs) and grouping (multiple objects may appear as a single blob). We use foreground blobs obtained by background subtraction from a stationary camera as measurements. The main challenge is to associate blob measurements with objects, given the fragment-object-group ambiguity when the number of objects is variable and unknown, and object-class-specific models are not available. We first track foreground blobs till they merge or split. We then build an inference graph representing merge-split relations between the tracked blobs. Using this graph and a generic object model based on spatial connectedness and coherent motion, we label the tracked blobs as whole objects, fragments of objects or groups of interacting objects. The outputs of our algorithm are entire tracks of objects, which may include corresponding tracks from groups during interactions. Experimental results on multiple video sequences are shown.},
+author = {Bose, B. and Xiaogang, Wang and Grimson, E.},
+booktitle = {Computer Vision and Pattern Recognition},
+doi = {10.1109/CVPR.2007.383175},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Bose, Xiaogang, Grimson - 2007 - Multi-class object tracking algorithm that handles fragmentation and grouping.pdf:pdf},
+isbn = {1-4244-1179-3},
+pages = {1--8},
+publisher = {IEEE},
+title = {{Multi-class object tracking algorithm that handles fragmentation and grouping}},
+year = {2007}
+}
+@inproceedings{Torralba2004,
+abstract = {We consider the problem of detecting a large number of different object classes in cluttered scenes. Traditional approaches require applying a battery of different classifiers to the image, which can be slow and require much training data. We present a multi-class boosting procedure (joint boosting) that reduces both the computational and sample complexity, by finding common features that can be shared across the classes. The detectors for each class are trained jointly, rather than independently. For a given performance level, the total number of features required is observed to scale approximately logarithmically with the number of classes. In addition, we find that the features selected by independently trained classifiers are often specific to the class, whereas the features selected by the jointly trained classifiers are more generic features, such as lines and edges.},
+author = {Torralba, A. and Murphy, K.P. and Freeman, W.T.},
+booktitle = {Computer Vision and Pattern Recognition},
+doi = {10.1109/CVPR.2004.1315241},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Torralba, Murphy, Freeman - 2004 - Sharing features efficient boosting procedures for multiclass object detection.pdf:pdf},
+isbn = {0-7695-2158-4},
+pages = {762--769},
+publisher = {IEEE},
+title = {{Sharing features: efficient boosting procedures for multiclass object detection}},
+volume = {2},
+year = {2004}
+}
+@inproceedings{Dalal2005,
+abstract = {We study the question of feature sets for robust visual object recognition; adopting linear SVM based human detection as a test case. After reviewing existing edge and gradient based descriptors, we show experimentally that grids of histograms of oriented gradient (HOG) descriptors significantly outperform existing feature sets for human detection. We study the influence of each stage of the computation on performance, concluding that fine-scale gradients, fine orientation binning, relatively coarse spatial binning, and high-quality local contrast normalization in overlapping descriptor blocks are all important for good results. The new approach gives near-perfect separation on the original MIT pedestrian database, so we introduce a more challenging dataset containing over 1800 annotated human images with a large range of pose variations and backgrounds.},
+author = {Dalal, N. and Triggs, B.},
+booktitle = {Computer Vision and Pattern Recognition},
+doi = {10.1109/CVPR.2005.177},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Dalal, Triggs - 2005 - Histograms of Oriented Gradients for Human Detection.pdf:pdf},
+isbn = {0-7695-2372-2},
+pages = {886--893},
+publisher = {IEEE},
+title = {{Histograms of Oriented Gradients for Human Detection}},
+volume = {1},
+year = {2005}
+}
+@book{Medioni,
+abstract = {This book represents a summary of the research we have been conducting since the early 1990s, and describes a conceptual framework which addresses some current shortcomings, and proposes a unified approach for a broad class of problems. While the framework is defined, our research continues, and some of the elements presented here will no doubt evolve in the coming years.It is organized in eight chapters. In the Introduction chapter, we present the definition of the problems, and give an overview of the proposed approach and its implementation. In particular, we illustrate the limitations of the 2.5D sketch, and motivate the use of a representation in terms of layers instead. In chapter 2, we review some of the relevant research in the literature. The discussion focuses on general computational approaches for early vision, and individual methods are only cited as references. Chapter 3 is the fundamental chapter, as it presents the elements of our salient feature inference engine, and their interaction. It introduced tensors as a way to represent information, tensor fields as a way to encode both constraints and results, and tensor voting as the communication scheme. Chapter 4 describes the feature extraction steps, given the computations performed by the engine described earlier. In chapter 5, we apply the generic framework to the inference of regions, curves, and junctions in 2-D. The input may take the form of 2-D points, with or without orientation. We illustrate the approach on a number of examples, both basic and advanced. In chapter 6, we apply the framework to the inference of surfaces, curves and junctions in 3-D. Here, the input consists of a set of 3-D points, with or without as associated normal or tangent direction. We show a number of illustrative examples, and also point to some applications of the approach. In chapter 7, we use our framework to tackle 3 early vision problems, shape from shading, stereo matching, and optical flow computation. In chapter 8, we conclude this book with a few remarks, and discuss future research directions. We include 3 appendices, one on Tensor Calculus, one dealing with proofs and details of the Feature Extraction process, and one dealing with the companion software packages.},
+author = {Medioni, Gerard and Lee, Mi-Suen and Tang, Chi-Keung},
+publisher = {Elsevier},
+title = {{A computational framework for segmentation and grouping}},
+}
+@article{Johnson1999,
+abstract = {We present a 3D shape-based object recognition system for
+simultaneous recognition of multiple objects in scenes containing
+clutter and occlusion. Recognition is based on matching surfaces by
+matching points using the spin image representation. The spin image is a
+data level shape descriptor that is used to match surfaces represented
+as surface meshes. We present a compression scheme for spin images that
+results in efficient multiple object recognition which we verify with
+results showing the simultaneous recognition of multiple objects from a
+library of 20 models. Furthermore, we demonstrate the robust performance
+of recognition in the presence of clutter and occlusion through analysis
+of recognition trials on 100 scenes},
+author = {Johnson, A.E. and Hebert, M.},
+doi = {10.1109/34.765655},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Johnson, Hebert - 1999 - Using spin images for efficient object recognition in cluttered 3D scenes.pdf:pdf},
+issn = {01628828},
+journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+number = {5},
+pages = {433--449},
+title = {{Using spin images for efficient object recognition in cluttered 3D scenes}},
+volume = {21},
+year = {1999}
+}
+@inproceedings{Fuerstenberg2002,
+abstract = {Vehicle-mounted laser scanners are able to observe the vehicles environment in order to detect, track and classify the surrounding objects and thus providing data for active safety systems. The latest development of IBEO combines several innovations. The receiver diodes are arranged in an array, which enables simultaneous measurements in 4 horizontal planes, e.g. to compensate pitching of the vehicle. In addition a multi target capability is integrated. This technique enables the detection of two distances with a single measurement, thus enhancing the robustness against rain. This paper introduces improved high speed object detection and high performance object tracking algorithms for real-time data processing. Additionally a classification of the road users is possible. A system architecture for detection and modelling of dynamic traffic scenes is introduced in order to provide a general idea of the different tasks necessary to reach the aim of a complete environmental model using a sensor for a wide range of applications.},
+author = {Fuerstenberg, K.Ch. and Dietmayer, K.C.J. and Willhoeft, V.},
+booktitle = {Intelligent Vehicle Symposium},
+doi = {10.1109/IVS.2002.1187923},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Fuerstenberg, Dietmayer, Willhoeft - 2002 - Pedestrian recognition in urban traffic using a vehicle based multilayer laserscanner.pdf:pdf},
+isbn = {0-7803-7346-4},
+pages = {31--35},
+publisher = {IEEE},
+title = {{Pedestrian recognition in urban traffic using a vehicle based multilayer laserscanner}},
+volume = {1},
+year = {2002}
+}
+@inproceedings{Luber2008,
+abstract = {For robots operating in real-world environments, the ability to deal with dynamic entities such as humans, animals, vehicles, or other robots is of fundamental importance. The variability of dynamic objects, however, is large in general, which makes it hard to manually design suitable models for their appearance and dynamics. In this paper, we present an unsupervised learning approach to this model-building problem. We describe an exemplar-based model for representing the time-varying appearance of objects in planar laser scans as well as a clustering procedure that builds a set of object classes from given observation sequences. Extensive experiments in real environments demonstrate that our system is able to autonomously learn useful models for, e.g., pedestrians, skaters, or cyclists without being provided with external class information.},
+annote = {Handles arbitrary object tracks, does segmentation and tracking, then learns a model for the object.
+
+        
+Line scanner only.},
+author = {Luber, Matthias and Arras, Kai O. and Plagemann, Christian and Burgard, Wolfram},
+booktitle = {Robotics: Science and Systems},
+issn = {0929-5593},
+number = {2},
+title = {{Classifying dynamic objects: An unsupervised approach}},
+volume = {26},
+year = {2008}
+}
+@inproceedings{Douillard2007,
+abstract = {This paper presents a general framework for multi-sensor object recognition through a discriminative probabilistic approach modelling spatial and temporal correlations. The algorithm is developed in the context of Conditional Random Fields (CRFs) trained with virtual evidence boosting. The resulting system is able to integrate arbitrary sensor information and incorporate features extracted from the data. The spatial relationships captured by are further integrated into a smoothing algorithm to improve recognition over time. We demonstrate the benefits of modelling spatial and temporal relationships for the problem of detecting cars using laser and vision data in outdoor environments.},
+annote = {Segmentation, but no tracking.},
+author = {Douillard, B. and Fox, D. and Ramos, F.},
+booktitle = {IEEE/RSJ International Conference on Intelligent Robots and Systems},
+doi = {10.1109/IROS.2007.4399537},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Douillard, Fox, Ramos - 2007 - A spatio-temporal probabilistic model for multi-sensor object recognition.pdf:pdf},
+isbn = {978-1-4244-0911-2},
+pages = {2402--2408},
+publisher = {IEEE},
+title = {{A spatio-temporal probabilistic model for multi-sensor object recognition}},
+year = {2007}
+}
+@inproceedings{Premebida2006,
+annote = {2D laser + camera.
+
+        
+Pretty good performance overall, but test set looks staged.  Cars that are static and far away don't do as well.
+
+        
+Test set is super tiny.  962 frames, so that's either 16 or 32 seconds of data.  Lame.
+
+        
+What is the training set?  They don't say.  I'm skeptical.},
+author = {Premebida, Cristiano and Peixoto, Paulo and Nunes, Urbano},
+booktitle = {IEEE/RSJ Internation Conference on Intelligent Robots and Systems},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Premebida, Peixoto, Nunes - 2006 - Tracking and Classification of Dynamic Obstacles Using Laser Range Finder and Vision.pdf:pdf},
+title = {{Tracking and Classification of Dynamic Obstacles Using Laser Range Finder and Vision}},
+year = {2006}
+}
+@inproceedings{Gould2008,
+author = {Gould, Stephen and Baumstarck, Paul and Quigley, Morgan and Ng, Andrew Y and Koller, Daphne},
+booktitle = {ECCV workshop on Multi-camera and Multi-modal Sensor Fusion Algorithms and Applications},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Gould et al. - 2008 - Integrating Visual and Range Data for Robotic Object Detection.pdf:pdf},
+title = {{Integrating Visual and Range Data for Robotic Object Detection}},
+year = {2008}
+}
+@article{Wu2007,
+abstract = {Abstract\&nbsp;\&nbsp;Detection and tracking of humans in video streams is important for many applications. We present an approach to automatically
+  detect and track multiple, possibly partially occluded humans in a walking or standing pose from a single camera, which may
+  be stationary or moving. A human body is represented as an assembly of body parts. Part detectors are learned by boosting
+  a number of weak classifiers which are based on edgelet features. Responses of part detectors are combined to form a joint likelihood model that includes an analysis of possible
+  occlusions. The combined detection responses and the part detection responses provide the observations used for tracking.
+  Trajectory initialization and termination are both automatic and rely on the confidences computed from the detection responses.
+  An object is tracked by data association and meanshift methods. Our system can track humans with both inter-object and scene
+  occlusions with static or non-static backgrounds. Evaluation results on a number of images and videos and comparisons with
+  some previous methods are given.},
+author = {Wu, Bo and Nevatia, Ram},
+doi = {10.1007/s11263-006-0027-7},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Wu, Nevatia - 2007 - Detection and Tracking of Multiple, Partially Occluded Humans by Bayesian Combination of Edgelet based Part Detectors.pdf:pdf},
+issn = {0920-5691},
+journal = {International Journal of Computer Vision},
+month = nov,
+number = {2},
+pages = {247--266},
+title = {{Detection and Tracking of Multiple, Partially Occluded Humans by Bayesian Combination of Edgelet based Part Detectors}},
+volume = {75},
+year = {2007}
+}
+@article{Gavrila2006,
+abstract = {Abstract\&nbsp;\&nbsp;This paper presents a multi-cue vision system for the real-time detection and tracking of pedestrians from a moving vehicle.
+  The detection component involves a cascade of modules, each utilizing complementary visual criteria to successively narrow
+  down the image search space, balancing robustness and efficiency considerations. Novel is the tight integration of the consecutive
+  modules: (sparse) stereo-based ROI generation, shape-based detection, texture-based classification and (dense) stereo-based
+  verification. For example, shape-based detection activates a weighted combination of texture-based classifiers, each attuned
+  to a particular body pose.
+  
+  Performance of individual modules and their interaction is analyzed by means of Receiver Operator Characteristics (ROCs).
+  A sequential optimization technique allows the successive combination of individual ROCs, providing optimized system parameter
+  settings in a systematic fashion, avoiding ad-hoc parameter tuning. Application-dependent processing constraints can be incorporated
+  in the optimization procedure.
+  
+  
+  
+  Results from extensive field tests in difficult urban traffic conditions suggest system performance is at the leading edge.},
+annote = {A pedestrian detection system built by Daimler Chrysler is described.   Sounds pretty standard, though many references are bizarrely old.  They choose a pedestrian detection method that was written by the same 1st author in 1999, and use neural nets over SVMs, without a rigorous study justifying it.
+
+        
+Stereo finds candidate BBs.  Alpha-beta tracker (simpler than Kalman) used to track people.  
+
+        
+This study probably overfits their dataset.  The testing and training set were the exact same route, with actors waiting to do the exact same thing for both passes.  (All parameters are tuned an run 1, which is nearly identical to the test set run 2).
+
+        
+The Hungarian Method is mentioned for target assignment.  This might be interesting to apply to the car.},
+author = {Gavrila, D. and Munder, S.},
+doi = {10.1007/s11263-006-9038-7},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Gavrila, Munder - 2007 - Multi-cue Pedestrian Detection and Tracking from a Moving Vehicle.pdf:pdf},
+issn = {0920-5691},
+journal = {International Journal of Computer Vision},
+month = jun,
+number = {1},
+pages = {41--59},
+title = {{Multi-cue Pedestrian Detection and Tracking from a Moving Vehicle}},
+volume = {73},
+year = {2007}
+}
+@article{Wang2007,
+abstract = {Simultaneous localization, mapping and moving object tracking (SLAMMOT) involves both simultaneous localization and mapping (SLAM) in dynamic environments and detecting and tracking these dynamic objects. In this paper, a mathematical framework is established to integrate SLAM and moving object tracking. Two solutions are described: SLAM with generalized objects, and SLAM with detection and tracking of moving objects (DATMO). SLAM with generalized objects calculates a joint posterior over all generalized objects and the robot. Such an approach is similar to existing SLAM algorithms, but with additional structure to allow for motion modeling of generalized objects. Unfortunately, it is computationally demanding and generally infeasible. SLAM with DATMO decomposes the estimation problem into two separate estimators. By maintaining separate posteriors for stationary objects and moving objects, the resulting estimation problems are much lower dimensional than SLAM with generalized objects. Both SLAM and moving object tracking from a moving vehicle in crowded urban areas are daunting tasks. Based on the SLAM with DATMO framework, practical algorithms are proposed which deal with issues of perception modeling, data association, and moving object detection. The implementation of SLAM with DATMO was demonstrated using data collected from the CMU Navlab11 vehicle at high speeds in crowded urban environments. Ample experimental results shows the feasibility of the proposed theory and algorithms.},
+annote = {Too many moving objects can make SLAM fail, so this paper addresses how to do SLAM and moving object detection simultaneously.
+
+        
+SLAMMOT: Simo Localization, Mapping, and Moving Object Tracking.
+
+        
+This paper feels very abstract and vague still.
+
+        
+Moving object detection is assumed to be correct for this approach.  Approaches: number of moving points per segment, and something vague that makes no sense.  
+
+        
+SICK lasers.  Segmentation of the 1d scan is used.  
+
+        
+How do they do the tracking?
+
+        
+Videos: http://www.ijrr.org/historic/contents/26\_09/abstract/889.html},
+author = {Wang, Chieh-Chih and Thorpe, Charles and Thrun, Sebastian and Hebert, Martial and Durrant-Whyte, Hugh},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Wang et al. - 2007 - Simultaneous Localization, Mapping and Moving Object Tracking.pdf:pdf},
+issn = {0278-3649},
+journal = {International Journal of Robotics Research},
+keywords = {detection,localization,mapping,mobile robotics,robotic perception,tracking},
+number = {9},
+pages = {27},
+title = {{Simultaneous Localization, Mapping and Moving Object Tracking}},
+volume = {26},
+year = {2007}
+}
+@inproceedings{ZuWhan2008,
+abstract = {Object detection and tracking has various application areas including intelligent transportation systems. We introduce an object detection and tracking approach that combines the background subtraction algorithm and the feature tracking and grouping algorithm. We first present an augmented background subtraction algorithm which uses a low-level feature tracking as a cue. The resulting background subtraction cues are used to improve the feature detection and grouping result. We then present a dynamic multi-level feature grouping approach that can be used in real time applications and also provides high-quality trajectories. Experimental results from video clips of a challenging transportation application are presented.},
+annote = {Background subtraction and a camera system is used to track vehicles, pedestrians, and bicycles.  
+
+        
+Experimental results are extremely small: 9 cars, 7 bikes, and "many" peds in an 80s clip.},
+author = {ZuWhan, Kim},
+booktitle = {IEEE Conference on Computer Vision and Pattern Recognition},
+doi = {10.1109/CVPR.2008.4587551},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/ZuWhan - 2008 - Real time object tracking based on dynamic feature grouping with background subtraction.pdf:pdf},
+isbn = {978-1-4244-2242-5},
+pages = {1--8},
+publisher = {IEEE},
+title = {{Real time object tracking based on dynamic feature grouping with background subtraction}},
+year = {2008}
+}
+@inproceedings{Zhou2009,
+abstract = {Building detection using LiDAR data is a popular topic in LiDAR data processing. The object classification can play an important role in the detection. In this paper, a new algorithm based on LiDAR point clouds is developed to resolve the object classification difficulties in the case of trees close to buildings. Compared with other algorithms, the methods can work effectively due to use the combination of height texture and regular geometric element. The experiment results is also given and discussed to improve the validity of the proposed algorithm.},
+author = {Zhou, Mei and Xia, Bing and Su, Guozhong and Tang, Lingli and Li, Chanrong},
+booktitle = {2009 Joint Urban Remote Sensing Event},
+doi = {10.1109/URS.2009.5137608},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Zhou et al. - 2009 - A classification method for building detection based on LiDAR point clouds.pdf:pdf},
+isbn = {978-1-4244-3460-2},
+pages = {1--5},
+publisher = {IEEE},
+title = {{A classification method for building detection based on LiDAR point clouds}},
+year = {2009}
+}
+@inproceedings{Thornton2008,
+annote = {Small test set: 18-27 minutes of 8 humans 
+
+        
+They use dense 3D LADAR, not a line scanner.},
+author = {Thornton, Susan M and Hoffelder, Mike and Morris, Daniel D},
+booktitle = {IEEE Workshop on Human Detection from Mobile Platforms},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Thornton, Hoffelder, Morris - 2008 - Multi-sensor Detection and Tracking of Humans for Safe Operations with Unmanned Ground Vehicles.pdf:pdf},
+title = {{Multi-sensor Detection and Tracking of Humans for Safe Operations with Unmanned Ground Vehicles}},
+year = {2008}
+}
+@inproceedings{Darms2008,
+abstract = {Future driver assistance systems are likely to use a multisensor approach with heterogeneous sensors for tracking dynamic objects around the vehicle. The quality and type of data available for a data fusion algorithm depends heavily on the sensors detecting an object. This article presents a general framework which allows the use sensor specific advantages while abstracting the specific details of a sensor. Different tracking models are used depending on the current set of sensors detecting the object. A sensor independent algorithm for classifying objects regarding their current and past movement state is presented. The described architecture and algorithms have been successfully implemented in Tartan racingpsilas autonomous vehicle for the urban grand challenge. Results are presented and discussed.},
+annote = {This paper is mainly concerned with the tracking problem.  They only classify whether an object is moving or not moving - not what class the object is.
+
+        
+There is no explicit mention of segmentation, but presumably they subtract away the ground plane as we do and then look at clusters.
+
+        
+Very simple laser features are used - they basically just look for L shapes.},
+author = {Darms, M. and Rybski, P. and Urmson, C.},
+booktitle = {IEEE Intelligent Vehicles Symposium},
+doi = {10.1109/IVS.2008.4621259},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Darms, Rybski, Urmson - 2008 - Classification and tracking of dynamic objects with multiple sensors for autonomous driving in urban environments.pdf:pdf},
+isbn = {978-1-4244-2568-6},
+number = {3},
+pages = {1197--1202},
+publisher = {IEEE},
+title = {{Classification and tracking of dynamic objects with multiple sensors for autonomous driving in urban environments}},
+volume = {10},
+year = {2008}
+}
+@article{Gupte2002,
+abstract = {This paper presents algorithms for vision-based detection and
+classification of vehicles in monocular image sequences of traffic
+scenes recorded by a stationary camera. Processing is done at three
+levels: raw images, region level, and vehicle level. Vehicles are
+modeled as rectangular patches with certain dynamic behavior. The
+proposed method is based on the establishment of correspondences between
+regions and vehicles, as the vehicles move through the image sequence.
+Experimental results from highway scenes are provided which demonstrate
+the effectiveness of the method. We also briefly describe an interactive
+camera calibration tool that we have developed for recovering the camera
+parameters using features in the image selected by the user},
+author = {Gupte, S. and Masoud, O. and Martin, R.F.K. and Papanikolopoulos, N.P.},
+doi = {10.1109/6979.994794},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Gupte et al. - 2002 - Detection and classification of vehicles.pdf:pdf},
+issn = {15249050},
+journal = {IEEE Transactions on Intelligent Transportation Systems},
+number = {1},
+pages = {37--47},
+title = {{Detection and classification of vehicles}},
+volume = {3},
+year = {2002}
+}
+@inproceedings{Morris2006,
+abstract = {The widespread use of cameras for traffic monitoring coupled with the availability of robust tracking algorithms has led to volumes of data. It is necessary to process this data for higher level tasks. One of these processing tasks is vehicle type classification, which can be used in a query based management system. This paper presents a tracking system with the ability to classify vehicles into three classes \{sedan, semi, truck+SUV+van\}. This system was developed after comparing classification schemes using both vehicle images and measurements. The most accurate of these learned classifiers was integrated into tracking software. This merging of classification and tracking greatly improved the accuracy on low resolution traffic video},
+author = {Morris, B. and Trivedi, M.},
+booktitle = {IEEE Intelligent Transportation Systems},
+doi = {10.1109/ITSC.2006.1707365},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Morris, Trivedi - 2006 - Robust classification and tracking of vehicles in traffic video streams.pdf:pdf},
+isbn = {1-4244-0093-7},
+pages = {1078--1083},
+title = {{Robust classification and tracking of vehicles in traffic video streams}},
+year = {2006}
+}
+@article{Rad2005,
+abstract = {Real time road traffic monitoring is one of the challenging problems in machine vision, especially when one is using commercially available PCs as the main processor. In this paper, we describe a real-time method for extracting a few traffic parameters in highways such as, lane change detection, vehicle classification and vehicle counting. In addition, we will explain a real time method for multiple vehicles tracking that has the capability of occlusion detection. Our tracing algorithm uses Kalman filter and background differencing techniques. We used morphological operations for vehicle contour extraction and its recognition. Our algorithm has three phases, detection of pixels on moving objects, detection of a “Shape of Interest” in frame sequences and finally determination of relation among objects also in frame sequences. Our system is implemented on a PC with Pentium II 800 MHZ CPU. Its processing speed was measured to be 11 frames per second. The accuracy of measurement was 96\%.},
+annote = {Stationary cameras and background subtraction are used to make a highway monitoring system.  Tracking is used on the cars.
+
+        
+Poorly written, very simple methodology, not terribly interesting.  Hard thresholds for distinguishing cars / bikes / buses (based an speed and bounding box sizes).
+
+        
+Test set is 400 frames, less than 15 seconds of data!},
+author = {Rad, Roya and Jamzad, Mansour},
+doi = {10.1016/j.patrec.2005.01.010},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Rad, Jamzad - 2005 - Real time classification and tracking of multiple vehicles in highways.pdf:pdf},
+issn = {01678655},
+journal = {Pattern Recognition Letters},
+keywords = {Classification,Highway,Occlusion removal,Tracking,Vehicle type},
+number = {10},
+pages = {1597--1607},
+title = {{Real time classification and tracking of multiple vehicles in highways}},
+volume = {26},
+year = {2005}
+}
+@inbook{Zang2003,
+abstract = {The design of a video surveillance system is directed on automatic identification of events of interest, especially on tracking and classification of moving vehicles or pedestrians. In case of any abnormal activities, an alert should be issued. Normally a video surveillance system combines three phases of data processing: moving object extraction, moving object recognition and tracking, and decisions about actions. The extraction of moving objects, followed by object tracking and recognition, can often be defined in very general terms. The final component is largely depended upon the application context, such as pedestrian counting or traffic monitoring. In this paper, we review previous research on moving object tracking techniques, analyze some experimental results, and finally provide our conclusions for improved performances of traffic surveillance systems. One stationary camera has been used.},
+author = {Zang, Qi and Klette, Reinhard},
+booktitle = {Computer Analysis of Images and Patterns},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Zang, Klette - 2003 - Object Classification and Tracking in Video Surveillance.pdf:pdf},
+pages = {198--205},
+title = {{Object Classification and Tracking in Video Surveillance}},
+year = {2003}
+}
+@article{Darms2009,
+annote = {This paper is very similar to Urmson 2008.  They only classify whether an object is moving or not, and are primarily concerned with the tracking problem.},
+author = {Darms, M.S. and Rybski, P.E. and Baker, C. and Urmson, C.},
+doi = {10.1109/TITS.2009.2018319},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Darms et al. - 2009 - Obstacle Detection and Tracking for the Urban Challenge.pdf:pdf},
+issn = {1524-9050},
+journal = {IEEE Transactions on Intelligent Transportation Systems},
+month = sep,
+number = {3},
+pages = {475--485},
+title = {{Obstacle Detection and Tracking for the Urban Challenge}},
+volume = {10},
+year = {2009}
+}
+@article{Morris2008,
+author = {Morris, Daniel and Haley, Paul and Zachar, William and Mclean, Steve and Dynamics, General and Systems, Robotic},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Morris et al. - 2008 - LADAR-Based Vehicle Tracking and Trajectory Estimation for Urban Driving.pdf:pdf},
+number = {June},
+pages = {1--15},
+title = {{LADAR-Based Vehicle Tracking and Trajectory Estimation for Urban Driving}},
+year = {2008}
+}
+@inproceedings{Navarro-serment2008,
+author = {Navarro-serment, Luis E and Mertz, Christoph and Vandapel, Nicolas and Hebert, Martial},
+booktitle = {1st. Workshop on Human Detection from Mobile Robot Platforms, IEEE ICRA 2008},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Navarro-serment et al. - 2008 - LADAR-based Pedestrian Detection and Tracking.pdf:pdf},
+publisher = {IEEE},
+title = {{LADAR-based Pedestrian Detection and Tracking}},
+year = {2008}
+}
+@article{Sun2006,
+abstract = {Developing on-board automotive driver assistance systems aiming to alert drivers about driving environments, and possible collision with other vehicles has attracted a lot of attention lately. In these systems, robust and reliable vehicle detection is a critical step. This paper presents a review of recent vision-based on-road vehicle detection systems. Our focus is on systems where the camera is mounted on the vehicle rather than being fixed such as in traffic/driveway monitoring systems. First, we discuss the problem of on-road vehicle detection using optical sensors followed by a brief review of intelligent vehicle research worldwide. Then, we discuss active and passive sensors to set the stage for vision-based vehicle detection. Methods aiming to quickly hypothesize the location of vehicles in an image as well as to verify the hypothesized locations are reviewed next. Integrating detection with tracking is also reviewed to illustrate the benefits of exploiting temporal continuity for vehicle detection. Finally, we present a critical overview of the methods discussed, we assess their potential for future deployment, and we present directions for future research.},
+author = {Sun, Zehang and Bebis, George and Miller, Ronald},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Sun, Bebis, Miller - 2006 - On-Road Vehicle Detection A Review.pdf:pdf},
+issn = {0162-8828},
+journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+keywords = {Vehicle detection,computer vision,intelligent vehicles.},
+number = {5},
+title = {{On-Road Vehicle Detection: A Review}},
+volume = {28},
+year = {2006}
+}
+@inproceedings{Morris2008a,
+author = {Morris, Daniel and Hoffman, Regis and Mclean, Steve},
+booktitle = {26th Army Science Conference},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Morris, Hoffman, Mclean - 2008 - Ladar-based vehicle detection and tracking in cluttered environments.pdf:pdf},
+title = {{Ladar-based vehicle detection and tracking in cluttered environments}},
+year = {2008}
+}
+@article{Ge2009,
+author = {Ge, Junfeng and Luo, Yupin and Tei, Gyomei},
+doi = {10.1109/TITS.2009.2018961},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Ge, Luo, Tei - 2009 - Real-Time Pedestrian Detection and Tracking at Nighttime for Driver-Assistance Systems.pdf:pdf},
+issn = {1524-9050},
+journal = {IEEE Transactions on Intelligent Transportation Systems},
+month = jun,
+number = {2},
+pages = {283--298},
+title = {{Real-Time Pedestrian Detection and Tracking at Nighttime for Driver-Assistance Systems}},
+volume = {10},
+year = {2009}
+}
+@inproceedings{Denzler1994,
+abstract = {In this contribution we describe steps towards the implementation
+of an active robot vision system. In a sequence of images taken by a
+camera mounted on the hand of a robot, we detect, track, and estimate
+the position and orientation (pose) of a three-dimensional moving
+object. The extraction of the region of interest is done automatically
+by a motion tracking step. For learning 3-D objects using
+two-dimensional views and estimating the object's pose, a uniform
+statistical method is presented which is based on the
+expectation-maximization-algorithm (EM-algorithm). An explicit matching
+between features of several views is not necessary. The acquisition of
+the training sequence required for the statistical learning process
+needs the correlation between the image of an object and its pose; this
+is performed automatically by the robot. The robot's camera parameters
+are determined by a hand/eye-calibration and a subsequent computation of
+the camera position using the robot position. During the motion
+estimation stage the moving object is computed using active, elastic
+contours (snakes). We introduce a new approach for online initializing
+the snake on the first images of the given sequence, and show that the
+method of snakes is suited for real time motion tracking},
+author = {Denzler, J. and Bess, R. and Hornegger, J. and Niemann, H. and Paulus, D.},
+booktitle = {Proceedings of IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS'94)},
+doi = {10.1109/IROS.1994.407405},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Denzler et al. - 1994 - Learning, tracking and recognition of 3D objects.pdf:pdf},
+isbn = {0-7803-1933-8},
+pages = {89--96},
+publisher = {IEEE},
+title = {{Learning, tracking and recognition of 3D objects}},
+volume = {1},
+year = {1994}
+}
+@inproceedings{Dahlkamp2006,
+annote = {This paper uses SICKs to find nearby areas of driveable terrain, then builds a Gaussian Mixture Model in RGB space (seriously? not hsv?).
+
+        
+This allowed Stanley to win the Urban Challenge.},
+author = {Dahlkamp, Hendrik and Kaehler, Adrian and Stavens, David and Thrun, Sebastian and Bradski, Gary},
+booktitle = {Robotics: Science and Systems},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Dahlkamp et al. - 2006 - Self-supervised Monocular Road Detection in Desert Terrain.pdf:pdf},
+title = {{Self-supervised Monocular Road Detection in Desert Terrain}},
+year = {2006}
+}
+@inproceedings{Schulz2006,
+annote = {This paper uses a SICK and a camera to track people.  A collapsed particle filter per person is used.
+
+        
+Runs in real time, but was only tested on 2 people.  A little over 100 seconds of training data was used.
+
+        
+You have to choose the right number of particle filters to use (know the number of people to track), so this isn't really practical.  (Track initialization is ignored.)
+
+        
+No quantitative results other than to say: it worked on our sequence.  One anecdote.  Not convincing.},
+author = {Schulz, Dirk},
+booktitle = {Robotics: Science and Systems},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Schulz - 2006 - A Probabilistic Exemplar Approach to Combine Laser and Vision for Person Tracking.pdf:pdf},
+title = {{A Probabilistic Exemplar Approach to Combine Laser and Vision for Person Tracking}},
+year = {2006}
+}
+@article{Vallespi-Gonzalez2008,
+annote = {This paper uses camera-based obstacle detection using a fancy kernel CRF.
+
+        
+Labeled data is acquired from laser range finders.},
+author = {Vallespi-Gonzalez, Carlos and Stentz, Tony},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Vallespi-Gonzalez, Stentz - 2008 - Prior Data and Kernel Conditional Random Fields for Obstacle Detection.pdf:pdf},
+journal = {Robotics: Science and Systems},
+title = {{Prior Data and Kernel Conditional Random Fields for Obstacle Detection}},
+year = {2008}
+}
+@inproceedings{Douillard2008,
+abstract = {Multiclass, multisensor CRF to recognize objects as a car drives around.  },
+annote = {SICK + camera. The CRF makes the results go from 90.4\% (logitboost) to 91\%. Lame. Logitboost is doing the heavy lifting. 
+
+        
+Results seem suspiciously strong. 10x CV was used - how was the dataset broken up? It doesn't say. 
+
+        
+Background was not the majority label, so the 91\% number is pretty good.
+
+        
+Transfer learning was tried, but didn't work. Authors try to claim that they opened this line of research. (!?)
+
+        
+Tracking is not used at all in this paper - the goal is only to accumulate points and predict their labels.
+
+        
+The ground plane has apparently been removed, but the authors don't mention this.},
+author = {Douillard, Bertrand and Fox, Dieter and Ramos, Fabio},
+booktitle = {Robotics: Science and Systems},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Douillard, Fox, Ramos - 2008 - Laser and Vision Based Outdoor Object Mapping.pdf:pdf},
+title = {{Laser and Vision Based Outdoor Object Mapping}},
+year = {2008}
+}
+@inproceedings{Lai2009,
+annote = {This paper uses velodyne pointclouds and a segmentation algorithm to find objects.  The classifier is trained on some real data and some data from Google's 3d warehouse, making this a transfer learning problem.
+
+        
+Many segmentations are used - there is a segmentation "soup".   This makes it super slow.
+
+        
+The total set of labeled data is only 10 (nonoverlapping) scans.  This is pathetically small.  Training and testing sets are made by splitting the 10 scans into two groups.  Holy cow. },
+author = {Lai, K and Fox, D},
+booktitle = {Robotics: Science and Systems},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Lai, Fox - 2009 - 3D Laser Scan Classification Using Web Data and Domain Adaptation.pdf:pdf},
+title = {{3D Laser Scan Classification Using Web Data and Domain Adaptation}},
+year = {2009}
+}
+@inproceedings{Wojek2008,
+abstract = {Over the years a number of powerful people detectors have been proposed. While it is standard to test complete detectors on publicly available datasets, it is often unclear how the different components (e.g. features and classifiers) of the respective detectors compare. Therefore, this paper contributes a systematic comparison of the most prominent and successful people detectors. Based on this evaluation we also propose a new detector that outperforms the state-of-art on the INRIA person dataset by combining multiple features.},
+author = {Wojek, Christian and Schiele, Bernt},
+booktitle = {DAGM Symposium},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Wojek, Schiele - 2008 - A Performance Evaluation of Single and Multi-feature People Detection.pdf:pdf},
+pages = {82--91},
+title = {{A Performance Evaluation of Single and Multi-feature People Detection}},
+year = {2008}
+}
+@inproceedings{Dollar2009,
+abstract = {Actual pedestrian detection performance is miserable.
+ 
+(... if the detectors used here perform similarly when trained on the Caltech Pedestrian Dataset.)},
+annote = {Ideas for tracking and classification paper:
+* Split dataset into distance and occlusion brackets, show performance for each.  Probably we can say medium distance unoccluded objects are solved.* If occluded objects are where we are failing, then get ray tracing going and use some new features or algs that are smart wrt to occlusions.
+Medium scale pedestrians (30-80 pixels high) aren't detected well, but need to be.
+
+        
+They aren't releasing the test set so as to prevent overfitting by the community.  This is a great idea.
+
+        
+Occlusions are almost always low to the ground on pedestrians.
+
+        
+Difficult or ambiguous cases are labeled as "Person?".  Groups of people are labeled "People".  In the evaluation, both of these are *always ignored* (detections there are not false positives, and no detection there is not a false negative).
+
+        
+They evaluate pre-trained pedestrian detectors.  This is probably unfair.  Do the training sets match the test sets as closely as possible?  No.  The authors do no comparisons with classifiers trained on their data, and that really makes me wonder if this is OK.},
+author = {Dollar, P. and Wojek, C. and Schiele, B. and Perona, P.},
+booktitle = {IEEE Conference on Computer Vision and Pattern Recognition},
+doi = {10.1109/CVPRW.2009.5206631},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Dollar et al. - 2009 - Pedestrian detection A benchmark.pdf:pdf},
+isbn = {978-1-4244-3992-8},
+pages = {304--311},
+publisher = {IEEE},
+title = {{Pedestrian detection: A benchmark}},
+year = {2009}
+}
+@article{Triebel2007,
+abstract = {In this paper, we present an algorithm to identify different types of objects from 2D and 3D laser range data. Our method is a combination of an instance-based feature extraction similar to the Nearest-Neighbor classifier (NN) and a collective classification method that utilizes associative Markov networks (AMNs). Compared to previous approaches, we transform the feature vectors so that they are better separable by linear hyperplanes, which are learned by the AMN classifier. We present results of extensive experiments in which we evaluate the performance of our algorithm on several recorded indoor scenes and compare it to the standard AMN approach as well as the NN classifier. The classification rate obtained with our algorithm substantially exceeds those of the AMN and the NN.},
+annote = {This paper, and markov nets in general, compute the segmentation for you, but do not operate on tracks.
+
+        
+Results are generally good, but suffer from the usual very tiny dataset problem. },
+author = {Triebel, Rudolph and Schmidt, Richard and Mozos, \'{O}scar Mart\'{\i}nez and Burgard, Wolfram},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Triebel et al. - 2007 - Instance-based AMN classification for improved object recognition in 2D and 3D laser range data.pdf:pdf},
+journal = {International Joint Conference On Artificial Intelligence},
+pages = {5},
+title = {{Instance-based AMN classification for improved object recognition in 2D and 3D laser range data}},
+year = {2007}
+}
+@article{Roller1993,
+abstract = {Moving vehicles are detected and tracked automatically in monocular image sequences from road traffic scenes recorded by a stationary camera. In order to exploit the a priori knowledge about shape and motion of vehicles in traffic scenes, a parameterized vehicle model is used for an intraframe matching process and a recursive estimator based on a motion model is used for motion estimation. An interpretation cycle supports the intraframe matching process with a state MAP-update step. Initial model hypotheses are generated using an image segmentation component which clusters coherently moving image features into candidate representations of images of a moving vehicle. The inclusion of an illumination model allows taking shadow edges of the vehicle into account during the matching process. Only such an elaborate combination of various techniques has enabled us to track vehicles under complex illumination conditions and over long (over 400 frames) monocular image sequences. Results on various real-world road traffic scenes are presented and open problems as well as future work are outlined.},
+author = {Roller, D. and Daniilidis, K. and Nagel, H. H.},
+doi = {10.1007/BF01539538},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Roller, Daniilidis, Nagel - 1993 - Model-based object tracking in monocular image sequences of road traffic scenes.pdf:pdf},
+issn = {0920-5691},
+journal = {International Journal of Computer Vision},
+month = jun,
+number = {3},
+pages = {257--281},
+title = {{Model-based object tracking in monocular image sequences of road traffic scenes}},
+volume = {10},
+year = {1993}
+}
+@inproceedings{Wiedemann2008,
+abstract = {This paper describes a method for recognizing and tracking 3D objects in a single camera image and for determining their 3D
+  poses. A model is trained solely based on the geometry information of a 3D CAD model of the object. We do not rely on texture
+  or reflectance information of the object’s surface, making this approach useful for a wide range of object types and complementary
+  to descriptor-based approaches.
+  
+  An exhaustive search, which ensures that the globally best matches are always found, is combined with an efficient hierarchical
+  search, a high percentage of which can be computed offline, making our method suitable even for time-critical applications.
+  The method is especially suited for, but not limited to, the recognition and tracking of untextured objects like metal parts,
+  which are often used in industrial environments.},
+author = {Wiedemann, Christian and Ulrich, Markus and Steger, Carsten},
+booktitle = {30th DAGM symposium on Pattern Recognition},
+doi = {10.1007/978-3-540-69321-5},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Wiedemann, Ulrich, Steger - 2008 - Recognition and Tracking of 3D Objects.pdf:pdf},
+isbn = {978-3-540-69320-8},
+issn = {0302-9743},
+pages = {132--141},
+publisher = {Springer-Verlag},
+series = {Lecture Notes in Computer Science},
+title = {{Recognition and Tracking of 3D Objects}},
+volume = {5096},
+year = {2008}
+}
+@article{Hoiem2008,
+annote = {An uncalibrated, single color camera is used to get 3d reconstruction and classification of objects.
+
+        
+Significant improvement is shown when getting the 3d information, but the performance is still extremely low overall: at 5 FPPI the recall is about 50-60\% for cars.},
+author = {Hoiem, Derek and Efros, Alexei A. and Hebert, Martial},
+doi = {10.1007/s11263-008-0137-5},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Hoiem, Efros, Hebert - 2008 - Putting Objects in Perspective.pdf:pdf},
+issn = {0920-5691},
+journal = {International Journal of Computer Vision},
+number = {1},
+pages = {3--15},
+title = {{Putting Objects in Perspective}},
+volume = {80},
+year = {2008}
+}
+@article{Petrovskaya2009,
+annote = {I looked at this paper for hints on how to do cluster tracking in the Velodyne.
+
+        
+They use a particle filter for each car and uniformly sample velocity changes from an allowed range.  
+
+        
+Track initialization is clearly a black art with no real mathematical backing.  
+
+      },
+author = {Petrovskaya, A and Thrun, S},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Petrovskaya, Thrun - 2009 - Model based vehicle detection and tracking for autonomous urban driving.pdf:pdf},
+journal = {Robotics: Science and Systems},
+title = {{Model based vehicle detection and tracking for autonomous urban driving}},
+year = {2009}
+}
+@inproceedings{Felzenszwalb2008,
+author = {Felzenszwalb, P and McAllester, D and Ramanan, D},
+booktitle = {Computer Vision and Pattern Recognition},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Felzenszwalb, McAllester, Ramanan - 2008 - A discriminatively trained, multiscale, deformable part model.pdf:pdf},
+publisher = {IEEE},
+title = {{A discriminatively trained, multiscale, deformable part model}},
+year = {2008}
+}
+@article{Friedman2000,
+abstract = {Boosting is one of the most important recent developments in classification methodology. Boosting works by sequentially applying a classification algorithm to reweighted versions of the training data and then taking a weighted majority vote of the sequence of classifiers thus produced. For many classification algorithms, this simple strategy results in dramatic improvements in performance. We show that this seemingly mysterious phenomenon can be understood in terms of well-known statistical principles, namely additive modeling and maximum likelihood. For the two-class problem, boosting can be viewed as an approximation to additive modeling on the logistic scale using maximum Bernoulli likelihood as a criterion. We develop more direct approximations and show that they exhibit nearly identical results to boosting. Direct multiclass generalizations based on multinomial likelihood are derived that exhibit performance comparable to other recently proposed multiclass generalizations of boosting in most situations, and far superior in some. We suggest a minor modification to boosting that can reduce computation, often by factors of 10 to 50. Finally, we apply these insights to produce an alternative formulation of boosting decision trees. This approach, based on best-first truncated tree induction, often leads to better performance, and can provide interpretable descriptions of the aggregate decision rule. It is also much faster computationally, making it more suitable to large-scale data mining applications.},
+annote = {
+        Regarding "Weight trimming":  In my case, you still have to compute the distances to *all* training examples, and this is a very significant portion of the computation time.  I suspect it is only possible to see the speedup of 30-50x when the form of your weak classifiers doesn't force you to do an expensive distance computation to all training examples.},
+author = {Friedman, Jerome and Hastie, Trevor and Tibshirani, Robert},
+file = {:home/teichman/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Friedman, Hastie, Tibshirani - 2000 - Special Invited Paper. Additive Logistic Regression A Statistical View of Boosting.pdf:pdf},
+journal = {The Annals of Statistics},
+number = {2},
+pages = {337 -- 374},
+title = {{Special Invited Paper. Additive Logistic Regression: A Statistical View of Boosting}},
+volume = {28},
+year = {2000}
+}

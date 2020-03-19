@@ -1,0 +1,73 @@
+#!/usr/bin/perl
+
+use strict;
+use English;
+use FileHandle;
+
+print "What would you like the patch to be called [patch.diff]: ";
+my $patch_name = <STDIN>;
+chomp $patch_name;
+if($patch_name eq "") {
+  $patch_name = "patch.diff";
+}
+
+print "\nAdding differences from CVS:\n";
+system "cvs diff -Nu 2>/dev/null > /tmp/$patch_name";
+
+my $basedir;
+my $endname;
+
+print "\nChecking for files that are not in the repository:\n";
+open (CVS, "cvs update 2>/dev/null |");
+while(my $input = <CVS>) {
+  chomp $input;
+  if($input =~ /\? (.*)/) {
+    my $filename = $1;
+    if(-d $1) {
+      my $dirname = $filename;
+
+      if($dirname =~ /(.*)\/(.*?)\Z/) {
+        $basedir = $1;
+        $endname = $2;
+      }
+      else {
+        $basedir = ".";
+        $endname = $filename;
+      }
+
+      print "\nAdd $filename to the patch? [y/n]: ";
+      my $answer = <STDIN>;
+      if($answer =~ /[yY]/) {
+        if(-f "$filename.tar") {
+          print "$filename.tar already exists. Overwrite? [y/n]: ";
+          my $answer2 = <STDIN>;
+          if($answer2 =~ /[yY]/) {
+            system "tar -C $basedir -czf $filename.tar.gz $endname";
+            system "diff -au /dev/null $filename.tar.gz >> /tmp/patch.diff";
+            system "rm -f $filename.tar.gz";
+          }
+        }
+        else {
+          system "tar -C $basedir -czf $filename.tar.gz $endname";
+          system "diff -au /dev/null $filename.tar.gz >> /tmp/patch.diff";
+          system "rm -f $filename.tar.gz";
+        }
+      }
+    }
+    else {
+      if($filename =~ /.tar\Z/) {
+
+      }
+      else {
+        print "\nAdd $filename to the patch? [y/n]: ";
+        my $answer = <STDIN>;
+        if($answer =~ /[yY]/) {
+          system "diff -au /dev/null $filename >> /tmp/patch.diff";
+        }
+      }
+    }
+  }
+}
+close CVS;
+
+system "mv /tmp/$patch_name .";

@@ -1,0 +1,17 @@
+# By default, processes print their output, are not restarted, and are local
+# @quiet supresses output, @restart automatically restarts them
+# @sleep on its own line is a sleep in seconds
+
+./power               @restart
+@sleep 2
+./power_set 0 1
+./power_set 1 1
+./power_set 5 1
+./power_set 10 1
+@sleep 1
+./passat              @restart
+./can                 @restart
+./controller          @restart
+@sleep 2
+./radar 3             @restart
+./radar 6             @restart

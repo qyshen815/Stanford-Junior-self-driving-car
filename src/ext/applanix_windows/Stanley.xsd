@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="Stanley">
+<xs:complexType><xs:sequence>
+<xs:element name="data" type="data">
+<xs:complexType><xs:sequence>
+<xs:element name="Time" type="double" subtype="datetime" select="Seconds of the Week" format="&quot;%.6f&quot;" offset="0"/>
+<xs:element name="Latitude" type="double" subtype="radians_lat" select="Decimal Degrees (signed)" format="&quot;%.9f&quot;" offset="16"/>
+<xs:element name="Longitude" type="double" subtype="radians_lon" select="Decimal Degrees (signed)" format="&quot;%.9f&quot;" offset="24"/>
+<xs:element name="Ellipsoid height" type="double" subtype="distance" select="Meters" format="&quot;%.6f&quot;" offset="48"/>
+<xs:element name="Roll" type="double" subtype="angle" select="Degrees" format="&quot;%.6f&quot;" offset="112"/>
+<xs:element name="Pitch" type="double" subtype="angle" select="Degrees" format="&quot;%.6f&quot;" offset="120"/>
+<xs:element name="Heading" type="double" subtype="angle" select="Degrees" format="&quot;%.6f&quot;" offset="128"/>
+<xs:element name="North velocity" type="double" subtype="velocity" select="Meters per second" format="&quot;%.6f&quot;" offset="144"/>
+<xs:element name="East velocity" type="double" subtype="velocity" select="Meters per second" format="&quot;%.6f&quot;" offset="136"/>
+<xs:element name="Up velocity" type="double" subtype="velocity" select="Meters per second" format="&quot;%.6f&quot;" offset="152"/>
+<xs:element name="Northing Std Dev" type="double" subtype="distance" select="Meters" format="&quot;%.6f&quot;" offset="344"/>
+<xs:element name="Easting Std Dev" type="double" subtype="distance" select="Meters" format="&quot;%.6f&quot;" offset="336"/>
+<xs:element name="Height Std Dev" type="double" subtype="distance" select="Meters" format="&quot;%.6f&quot;" offset="352"/>
+<xs:element name="Roll Std Dev" type="double" subtype="angle" select="Degrees" format="&quot;%.6f&quot;" offset="384"/>
+<xs:element name="Pitch Std Dev" type="double" subtype="angle" select="Degrees" format="&quot;%.6f&quot;" offset="392"/>
+<xs:element name="Heading Std Dev" type="double" subtype="angle" select="Degrees" format="&quot;%.6f&quot;" offset="400"/>
+</xs:sequence></xs:complexType>
+</xs:element>
+<xs:element name="header" type="header">
+<xs:complexType><xs:sequence>
+<xs:text xml:space="preserve">Time (UTC Seconds of Week), Latitude (deg), Longitude (deg), Altitude (m), Roll (deg), Pitch (deg), Heading (deg), V North (m/s), V East (m/s), V Up (m/s), RMS North (m), RMS East (m), RMS Up (m), RMS Roll (deg), RMS Pitch (deg), RMS Heading (deg)</xs:text>
+</xs:sequence></xs:complexType>
+</xs:element>
+<xs:element name="footer" type="footer">
+<xs:complexType><xs:sequence>
+</xs:sequence></xs:complexType>
+</xs:element>
+</xs:sequence></xs:complexType>
+</xs:element>
+</xs:schema>

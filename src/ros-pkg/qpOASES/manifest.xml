@@ -1,0 +1,17 @@
+<package>
+  <description brief="qpOASES">
+
+     qpOASES is a QP solver.  See the URL for more information.
+
+  </description>
+  <author>Hans Joachim Ferreau, et al.</author>
+  <license>LGPL</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://www.kuleuven.be/optec/index.php/software/qpOASES</url>
+  <export>
+    <cpp cflags="-I${prefix}/include -I${prefix}/include/qpOASES" lflags="-L${prefix}/build/qpOASES-2.0/SRC/ -Wl,-rpath,${prefix}/build/qpOASES-2.0/SRC/ -lqpOASES"/>
+  </export>
+
+</package>
+
+

@@ -1,0 +1,16 @@
+<package>
+  <description brief="segmentation_and_tracking">
+
+     segmentation_and_tracking
+
+  </description>
+  <author>Alex Teichman</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/segmentation_and_tracking</url>
+  <depend package="opencv2"/>
+  <depend package="eigen_extensions"/>
+  <depend package="image_labeler"/>
+</package>
+
+

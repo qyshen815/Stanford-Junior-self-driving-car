@@ -1,0 +1,29 @@
+This code implements the min-cut/max-flow algorithm described in:
+
+An Experimental Comparison of Min-Cut/Max-Flow Algorithms for Energy
+Minimization in Vision
+
+Yuri Boykov and Vladimir Kolmogorov
+
+This implementation follows the algorithm described in the paper but
+has some additional optimizations that increase speed and save
+memory for vision problems. Although tuned for neighbor relations such
+as those found in vision, it also works on general graph structures.
+
+This code it presents the fundamental data structure of the BKGraph
+which can be initialized for generic graphs and have the maxflow
+computed on it. It should be quite straightforward to use.
+
+This code has been tested on x86 Linux machines and Windows 2000. It
+should work on all platforms. If you cannot get it to work on your
+platform, please let me know, as I'd like it to be available to anyone
+who would like to use it.
+
+I have only included code to the graph cut algorithm because I
+couldn't think of a useful suitable driver program. If you have a good
+idea for a generic driver program, please let me know.
+
+There are no restrictions on this software, but I would appreciate bug
+reports and as well as information as to how people are using this code.
+
+Walter Bell (wbell@cs.cornell.edu)
