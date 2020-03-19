@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>
+      SoftwareInstallation – Stanford Autonomous Driving Project
+    </title>
+        <link rel="search" href="https://localhost:10443/trac/search">
+        <link rel="help" href="https://localhost:10443/trac/wiki/TracGuide">
+        <link rel="alternate" href="https://localhost:10443/trac/wiki/SoftwareInstallation?format=txt" type="text/x-trac-wiki" title="Plain Text">
+        <link rel="start" href="https://localhost:10443/trac/wiki">
+        <link rel="stylesheet" href="SoftwareInstallation_files/trac.css" type="text/css"><link rel="stylesheet" href="SoftwareInstallation_files/wiki.css" type="text/css">
+        <link rel="shortcut icon" href="https://localhost:10443/trac/chrome/common/trac.ico" type="image/x-icon">
+        <link rel="icon" href="https://localhost:10443/trac/chrome/common/trac.ico" type="image/x-icon">
+      <link type="application/opensearchdescription+xml" rel="search" href="https://localhost:10443/trac/search/opensearch" title="Search Stanford Autonomous Driving Project">
+    <script type="text/javascript" src="SoftwareInstallation_files/jquery.js"></script><script type="text/javascript" src="SoftwareInstallation_files/trac.js"></script><script type="text/javascript" src="SoftwareInstallation_files/search.js"></script>
+    <!--[if lt IE 7]>
+    <script type="text/javascript" src="/trac/chrome/common/js/ie_pre7_hacks.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+      jQuery(document).ready(function($) {
+        $("#content").find("h1,h2,h3,h4,h5,h6").addAnchor("Link to this section");
+      });
+    </script>
+  </head>
+  <body>
+    <div id="banner">
+      <div id="header">
+        <a id="logo" href="http://driving.stanford.edu/trac/"><img src="SoftwareInstallation_files/srtheader.gif" alt=""></a>
+      </div>
+      <form id="search" action="/trac/search" method="get">
+        <div>
+          <label for="proj-search">Search:</label>
+          <input id="proj-search" name="q" size="18" type="text">
+          <input value="Search" type="submit">
+        </div>
+      </form>
+      <div id="metanav" class="nav">
+    <ul>
+      <li class="first">logged in as teichman</li><li><a href="https://localhost:10443/trac/logout">Logout</a></li><li><a href="https://localhost:10443/trac/wiki/TracGuide">Help/Guide</a></li><li><a href="https://localhost:10443/trac/about">About Trac</a></li><li class="last"><a href="https://localhost:10443/trac/prefs">Preferences</a></li>
+    </ul>
+  </div>
+    </div>
+    <div id="mainnav" class="nav">
+    <ul>
+      <li class="first active"><a href="https://localhost:10443/trac/wiki">Wiki</a></li><li><a href="https://localhost:10443/trac/timeline">Timeline</a></li><li><a href="https://localhost:10443/trac/roadmap">Roadmap</a></li><li><a href="https://localhost:10443/trac/browser">Browse Source</a></li><li><a href="https://localhost:10443/trac/report">View Tickets</a></li><li><a href="https://localhost:10443/trac/newticket">New Ticket</a></li><li><a href="https://localhost:10443/trac/search">Search</a></li><li class="last"><a href="https://localhost:10443/trac/build" accesskey="5">Build Status</a></li>
+    </ul>
+  </div>
+    <div id="main">
+      <div id="ctxtnav" class="nav">
+        <h2>Context Navigation</h2>
+          <ul>
+              <li class="first"><a href="https://localhost:10443/trac/wiki/WikiStart">Start Page</a></li><li><a href="https://localhost:10443/trac/wiki/TitleIndex">Index</a></li><li><a href="https://localhost:10443/trac/wiki/SoftwareInstallation?action=history">History</a></li><li class="last"><a href="https://localhost:10443/trac/wiki/SoftwareInstallation?action=diff&amp;version=94">Last Change</a></li>
+          </ul>
+        <hr>
+      </div>
+    <div id="content" class="wiki">
+      <div class="wikipage searchable">
+        
+          <h1 id="SoftwareInstallation">Software Installation<a title="Link to this section" href="#SoftwareInstallation" class="anchor"> ¶</a></h1>
+<p>
+These instructions are currently being updated as the repository 
+changes, if anything seems incorrect please contact me (Mike mvs@) or if
+ you know what you're doing correct it yourself.
+</p>
+<h2 id="AFSPermissionss">AFS Permissionss<a title="Link to this section" href="#AFSPermissionss" class="anchor"> ¶</a></h2>
+<p>
+In order to access the Mercurial repository, you will need to have a 
+CSID and access to the AI lab computers.  If you're reading this on the 
+wiki, you probably already have this.  Once you get an account, email 
+Mike (mvs@) with your username to get added to the appropriate AFS list 
+so you can check out the repository.
+</p>
+<h2 id="BuildSystems">Build Systems<a title="Link to this section" href="#BuildSystems" class="anchor"> ¶</a></h2>
+<p>
+The only tested system for running software is currently 64-bit Ubuntu 
+10.04.  In general it should build on most *NIX distributions with the 
+appropriate libraries and tools installed.  If you're not using Ubuntu 
+10.04 you're basically on your own to get it working.
+</p>
+<h2 id="GettingtheCode">Getting the Code<a title="Link to this section" href="#GettingtheCode" class="anchor"> ¶</a></h2>
+<p>
+For more detailed information see the page on <a class="wiki" href="https://localhost:10443/trac/wiki/MercurialInstructions">Mercurial</a> and the <a class="wiki" href="https://localhost:10443/trac/wiki/RepositoryStructure">Repository</a>.
+</p>
+<p>
+To install mercurial, run <tt>sudo apt-get install mercurial</tt>
+</p>
+<p>
+To check out the main development branch, run <tt>hg clone ssh://userid@robo.stanford.edu//afs/cs/group/driving/repos/stable</tt>.
+</p>
+<h2 id="Dependencies">Dependencies<a title="Link to this section" href="#Dependencies" class="anchor"> ¶</a></h2>
+<p>
+There is no currently master list of dependencies, since the code is 
+significantly changing and some of the newer components have heavily 
+duplicated libraries.  We're working on getting everything up to date in
+ the list
+</p>
+<p>
+On Ubuntu 10.04 you will need to install the following packages:
+</p>
+<pre class="wiki">sudo apt-get install libcurl4-gnutls-dev libavformat-dev libqt3-mt-dev libwrap0-dev freeglut3-dev \
+libncurses5-dev libproj-dev libmagick++-dev libgtk2.0-dev libswscale-dev libsdl1.2-dev libsdl-mixer1.2-dev \
+libgtop2-dev libdc1394-22-dev libraw1394-dev nvidia-cg-toolkit libftgl-dev libqt4-dev libeigen2-dev g++ \
+libgsl0-dev libdevil-dev cmake doxygen libqt4-opengl-dev libgmp3-dev libmpfr-dev liblapack-dev libglut3-dev \
+libavcodec-extra-52 python-qt4
+</pre><p>
+You will also need ROS.  The following (which you can copy and paste 
+into a terminal) will add the repository and install the necessary 
+packages.
+</p>
+<pre class="wiki">sudo sh -c 'echo "deb http://code.ros.org/packages/ros/ubuntu lucid main" &gt; /etc/apt/sources.list.d/ros-latest.list'
+wget http://code.ros.org/packages/ros.key -O - | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install ros-diamondback-desktop-full
+</pre><p>
+ROS requires some environment variables to be set on terminal startup.  Add the following to your ~/.bashrc.
+</p>
+<pre class="wiki">#*** DO NOT TYPE THIS COMMAND - ADD IT TO .bashrc!!! ***
+
+source /opt/ros/diamondback/setup.bash
+</pre><p>
+ROS Users: If you are already setting RACE_ROOT and/or ROS_PACKAGE_PATH 
+in your bashrc file, be aware that the driving makefile now 
+automatically appends the working repository root to the end of 
+ROS_PACKAGE_PATH.
+</p>
+<p>
+Now re-source your .bashrc and check that the ROS packages are being found.
+</p>
+<pre class="wiki">. ~/.bashrc
+roscd sicktoolbox
+</pre><p>
+This should make you cd to /opt/ros/diamondback/stacks/laser_drivers/sicktoolbox.
+</p>
+<p>
+For detailed ROS notes, see <a class="wiki" href="https://localhost:10443/trac/wiki/RosNotes">RosNotes</a>
+</p>
+<p>
+<strong>Intel Performance Primitives</strong>
+</p>
+<p>
+Several modules (like the Planner and Ladybug) rely on an low-level library of heavily optimized routines from Intel called <strong>IPP</strong>.
+  This is a proprietary and non-free library.  We are currently using 
+version 6, and need to work out licenses for everyone using the code on 
+their own machines.  Get in touch with Mike for information about 
+getting IPP installed on your machine.
+</p>
+<p>
+Once you have IPP installed you will need to setup ldconfig to reference the library location:
+</p>
+<pre class="wiki">#IMPORTANT: you will need to replace the version number and architecture with the version and architecture folders for your machine!!!
+
+sudo sh -c "echo "/opt/intel/ipp/6.1.2.051/em64t/sharedlib" &gt;&gt; /etc/ld.so.conf.d/ipp.conf"
+sudo ldconfig
+</pre><h2 id="Compiling">Compiling<a title="Link to this section" href="#Compiling" class="anchor"> ¶</a></h2>
+<p>
+The configure script was not created with autoconf and is a custom Perl 
+script.  It has not been kept up to date, but still provides some useful
+ setup.  Open the repository directory on your computer and cd into the <tt>src</tt> directory, then run:
+</p>
+<pre class="wiki">./configure
+</pre><p>
+This automatically detects some (but by no means all) of the required 
+libraries and disables components that rely on them if not present, 
+especially ffmpeg, qt3, ipp, and dc1394.
+</p>
+<p>
+To speed compilation it is recommended that you install ccache.  Run <tt>sudo apt-get install ccache</tt>.  There are several ways to enable the cache for compiling, the easiest way to do so globally is to create links in <tt>/usr/local/bin</tt> as such:
+</p>
+<pre class="wiki">sudo ln -s /usr/bin/ccache /usr/local/bin/gcc
+sudo ln -s /usr/bin/ccache /usr/local/bin/g++
+sudo ln -s /usr/bin/ccache /usr/local/bin/cc
+</pre><p>
+This assumes /usr/local/bin is before /usr/bin in your PATH.
+</p>
+<p>
+Now to compile, run <tt>make</tt> in the <tt>src</tt> directory after 
+configuration.  NOTE:::  The first time you compile the repository you 
+will need internet access, as both ROS and several packages in our 
+repository will fetch binary data from servers during the make process. 
+ There may be occasions when these files are updated and internet access
+ will be required after a code update as well.
+</p>
+<pre class="wiki">make
+</pre><p>
+If you run into an error compiling, take a few minutes to see if it's an
+ obvious missing library.  If you're unable to resolve an error 
+yourself, for now e-mailing Mike (mvs@) with your errors is probably the
+ best way to get an answer.
+</p>
+<h2 id="PreemptivekernelOptionalrequiredforcarinstalls">Preemptive kernel (Optional, required for car installs)<a title="Link to this section" href="#PreemptivekernelOptionalrequiredforcarinstalls" class="anchor"> ¶</a></h2>
+<p>
+You will significantly better real-time performance when using a 
+preemptive kernel with a 1kHz task clock.  While things should run okay 
+with the default Ubuntu kernel latencies and packet bunching should be 
+significantly reduced using the preemptive kernel.  To install, run 
+</p>
+<pre class="wiki">sudo apt-get install linux-headers-preempt linux-image-preempt
+</pre><p>
+Reboot manually after this and in the grub boot screen select the 
+highest-numbered preemptive kernel to boot from to confirm that you are 
+able to boot cleanly from the image and that all modules (especially the
+ nvidia kernel module) are working correctly.
+</p>
+<p>
+There is unfortunately no easy way to boot into the most recent 
+preemptive-kernel by default, unless you remove all of the generic 
+kernels.  One option is to edit <tt>/etc/default/grub</tt> and change the line <tt>GRUB_DEFAULT="Exact name of grub entry to boot"</tt>.
+  However when a new kernel is available this will continue to boot the 
+old kernel.  It's recommended on the car to simply uninstall all 
+linux-generic kernels and headers and leave just the preemptive kernel, 
+which will then by default boot into the newest version.  For a personal
+ machine it is up to how how to manage this.
+</p>
+<h2 id="CarNotes">Car Notes<a title="Link to this section" href="#CarNotes" class="anchor"> ¶</a></h2>
+<p>
+See <a class="wiki" href="https://localhost:10443/trac/wiki/JuniorOSNotes">Junior Installation Notes</a>
+ for more settings and changes to Ubuntu for an install that will be 
+actually running on the car.  For now this applies to Kalman and Canny.
+</p>
+<h3 id="Example:GettingStarted">Example: Getting Started<a title="Link to this section" href="#Example:GettingStarted" class="anchor"> ¶</a></h3>
+<p>
+See <a class="wiki" href="https://localhost:10443/trac/wiki/BuildLog">Jake's Source Build Log</a> for an example of how to get started and how to avoid some of the common pitfalls.
+</p>
+<h3 id="OldInstructions">Old Instructions<a title="Link to this section" href="#OldInstructions" class="anchor"> ¶</a></h3>
+<p>
+<a class="wiki" href="https://localhost:10443/trac/wiki/OldInstallInstructions">Here</a> is a list of outdated instructions which may contain some useful information about gettin the software to run on other systems.
+</p>
+
+        
+        
+      </div>
+          <div class="buttons">
+              <form method="get" action="/trac/wiki/SoftwareInstallation" id="modifypage">
+                <div>
+                  <input name="action" value="edit" type="hidden">
+                      <input value="Edit this page" type="submit">
+                </div>
+              </form>
+    <form method="get" action="/trac/attachment/wiki/SoftwareInstallation/" id="attachfile">
+      <div>
+        <input name="action" value="new" type="hidden">
+        <input name="attachfilebutton" value="Attach file" type="submit">
+      </div>
+    </form>
+              <form method="get" action="/trac/wiki/SoftwareInstallation">
+                <div id="delete">
+                  <input name="action" value="delete" type="hidden">
+                  <input name="version" value="94" type="hidden">
+                    <input name="delete_version" value="Delete this version" type="submit">
+                  <input value="Delete page" type="submit">
+                </div>
+              </form>
+          </div>
+    </div>
+    <div id="altlinks">
+      <h3>Download in other formats:</h3>
+      <ul>
+        <li class="last first">
+          <a rel="nofollow" href="https://localhost:10443/trac/wiki/SoftwareInstallation?format=txt">Plain Text</a>
+        </li>
+      </ul>
+    </div>
+    </div>
+    <div id="footer" xml:lang="en" lang="en"><hr>
+      <a id="tracpowered" href="http://trac.edgewall.org/"><img src="SoftwareInstallation_files/trac_logo_mini.png" alt="Trac Powered" height="30" width="107"></a>
+      <p class="left">
+        Powered by <a href="https://localhost:10443/trac/about"><strong>Trac 0.11.6</strong></a><br>
+        By <a href="http://www.edgewall.org/">Edgewall Software</a>.
+      </p>
+      <p class="right">Visit the Trac open source project at<br><a href="http://trac.edgewall.org/">http://trac.edgewall.org/</a></p>
+    </div>
+  
+</body></html>
